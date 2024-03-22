@@ -54,11 +54,22 @@ public class AssetLoader {
         return t;
     }
 
+    /**
+     * Get Dimensions based on a string size WidthxHeight
+     * @param size_str
+     * @return
+     */
     private int[] getDims(String size_str){
         String[] spl  = size_str.split("x");
         return new int[]{ Integer.parseInt(spl[0]), Integer.parseInt(spl[1])};
     }
 
+    /**
+     * Convert the index into a 2d coord we can use for the tile map 
+     * @param index
+     * @param width
+     * @return
+     */
     private int[] convertTo2DPoint(int index, int width) {
         int[] point = new int[2];
         point[0] = index % width; // x-coordinate
@@ -66,7 +77,12 @@ public class AssetLoader {
         return point;
     }
 
-    // Get the texture region from a texture
+    /**
+     * Load a texture region based on a texture name and the item chocie. returns null if unable to find the texture in the loaded texture 
+     * @param textureName
+     * @param areaChoice
+     * @return
+     */
     public TextureRegion loadTextureRegion(String textureName, int areaChoice){
         int area, tX, tY, tArea;
         int dim[];

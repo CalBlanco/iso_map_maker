@@ -130,7 +130,7 @@ public class MapLoader {
         if (i < 0 || j < 0 || i > strMap.length-1 || j > strMap[i].length-1) return null;
         
         TextureData td = tileMap[i][j];
-        return "Type: " + td.name +", \nSelection: " + td.selection +"\nTile: ("+td.tilePos.x +", " +td.tilePos.y+")\nWorld: ("+td.pos.x+", "+td.pos.y+")";
+        return "Tile: " + td.name +"-"+ td.selection +"\nTile-Pos: ("+td.tilePos.x +", " +td.tilePos.y+")\nWorld-Pos: ("+td.pos.x+", "+td.pos.y+")";
     }
 
 
