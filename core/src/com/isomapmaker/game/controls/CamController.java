@@ -30,8 +30,7 @@ public class CamController implements InputProcessor {
     private Vector2 hoverTile;
 
 
-    private OnScreenText hoverTileInfo;
-    private OnScreenText hoverTilePosInfo;
+    
     public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult){
         TileClicked = new Vector2();
         this.zoomSpeed = zoomSpeed;
@@ -44,17 +43,12 @@ public class CamController implements InputProcessor {
         this.hoverWorldPos = new Vector2();
         this.hoverTile = new Vector2();
 
-        this.hoverTileInfo = new OnScreenText("", hoverWorldPos);
-        this.hoverTilePosInfo = new OnScreenText("", hoverWorldPos);
     }
 
-    public void render(SpriteBatch batch, MapLoader m){
+    public void render(SpriteBatch batch){
         panCamera();
-
         batch.draw(this.nullTexture,hoverWorldPos.x,hoverWorldPos.y);
-        hoverTileInfo.render(batch);
-        displayTileData(m);
-        
+    
     }
 
 
@@ -145,7 +139,6 @@ public class CamController implements InputProcessor {
         Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
         Vector2 world = new Vector2(v.x,v.y).add(HOVER_OFFSET);
         hoverTile = IsoUtil.isometricToWorld(world, FLOOR_SIZE);
-        hoverTile.x = hoverTile.x;
         hoverWorldPos = IsoUtil.worldToIsometric(hoverTile, FLOOR_SIZE);
         return false;
     }
@@ -171,17 +164,11 @@ public class CamController implements InputProcessor {
         return TileClicked;
     }
 
-    public void displayTileData(MapLoader m){
-        TextureData t = m.getTextureData(this.hoverTile.x, this.hoverTile.y);
-        if (t == null) return;
-        hoverTileInfo.setPos(hoverWorldPos);
-        hoverTileInfo.setText(generateTileData(t));
+    public Vector2 getHoverTile(){
+        return this.hoverTile;
     }
-
-    private String generateTileData(TextureData td){
-        return "Type: " + td.name +", \nSelection: " + td.selection +"\nTile: ("+hoverTile.x +", " +hoverTile.y+")\nWorld: ("+hoverWorldPos.x+", "+hoverWorldPos.y+")";
-    }
-
     
 
+
+    
 }

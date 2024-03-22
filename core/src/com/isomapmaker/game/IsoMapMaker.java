@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.map.AssetLoader;
 import com.isomapmaker.game.map.MapLoader;
+import com.isomapmaker.game.ui.MapHud;
 import com.isomapmaker.game.ui.MapMakerUI;
 
 
@@ -30,13 +31,17 @@ public class IsoMapMaker extends Game {
 
 	InputMultiplexer ip;
 
+	MapHud mh;
+	SpriteBatch hudBatch;
+
 	@Override
 	public void create () {
 		assets = new AssetLoader();
 		batch = new SpriteBatch();
 		tr = assets.loadTextureRegion("Thick_72x100_23", 5);
 		
-	
+		mh = new MapHud(assets);
+		hudBatch = new SpriteBatch();
 
 		ml = new MapLoader(StartMap, assets);
 		ml.printMap();
@@ -60,19 +65,22 @@ public class IsoMapMaker extends Game {
 		this.batch.setProjectionMatrix(cam.combined);
 		cam.update();
 
-		batch.begin();
-		
+		batch.begin(); // map batch
 		ml.render(batch);
-		ccont.render(batch,ml);
-		
-		//batch.draw(tr, 0, 0);
+		ccont.render(batch);
 		batch.end();
+
+		hudBatch.begin();
+		mh.render(hudBatch, ccont, ml);
+		hudBatch.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
+		hudBatch.dispose();
 		assets.dispose();
+
 		
 	}
 }

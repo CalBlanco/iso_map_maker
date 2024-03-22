@@ -122,5 +122,18 @@ public class MapLoader {
     }
 
 
+    public String textureDataString(float row, float column){
+        int i,j;
+        i = (int)Math.floor(row);
+        j = (int)Math.floor(column);
+        
+        if (i < 0 || j < 0 || i > strMap.length-1 || j > strMap[i].length-1) return null;
+        
+        TextureData td = tileMap[i][j];
+        Vector2 hoverTile = IsoUtil.isometricToWorld(new Vector2(i,j), new Vector2(128,64));
+        return "Type: " + td.name +", \nSelection: " + td.selection +"\nTile: ("+hoverTile.x +", " +hoverTile.y+")\nWorld: ("+td.pos.x+", "+td.pos.y+")";
+    }
+
+
 
 }
