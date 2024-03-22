@@ -8,12 +8,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.isomapmaker.game.map.MapLoader;
+import com.isomapmaker.game.map.MapLoader.TextureData;
+import com.isomapmaker.game.ui.OnScreenText;
 import com.isomapmaker.game.util.IsoUtil;
 
 
 public class CamController implements InputProcessor {
     final private static float MIN_ZOOM = .5f;
     final private static float MAX_ZOOM = 12.0f;
+    final private static Vector2 HOVER_OFFSET = new Vector2(-32f,-16f);
+    final private static Vector2 FLOOR_SIZE = new Vector2(128,64);
     private OrthographicCamera camera;
 
     private float zoomSpeed, zoomScrollMult, panSpeed, panMult;
@@ -21,8 +26,12 @@ public class CamController implements InputProcessor {
     private Vector2 TileClicked;
     Texture nullTexture;
 
-    private Vector2 highlightTile;
+    private Vector2 hoverWorldPos;
     private Vector2 hoverTile;
+
+
+    private OnScreenText hoverTileInfo;
+    private OnScreenText hoverTilePosInfo;
     public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult){
         TileClicked = new Vector2();
         this.zoomSpeed = zoomSpeed;
@@ -32,14 +41,20 @@ public class CamController implements InputProcessor {
         this.panMult = panMult;
         this.camera = camera;
         this.nullTexture = new Texture(Gdx.files.internal("my_iso_assets/floor_highlight_128x64.png"));
-        this.highlightTile = new Vector2();
+        this.hoverWorldPos = new Vector2();
         this.hoverTile = new Vector2();
+
+        this.hoverTileInfo = new OnScreenText("", hoverWorldPos);
+        this.hoverTilePosInfo = new OnScreenText("", hoverWorldPos);
     }
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch, MapLoader m){
         panCamera();
 
-        batch.draw(this.nullTexture,highlightTile.x,highlightTile.y);
+        batch.draw(this.nullTexture,hoverWorldPos.x,hoverWorldPos.y);
+        hoverTileInfo.render(batch);
+        displayTileData(m);
+        
     }
 
 
@@ -103,7 +118,7 @@ public class CamController implements InputProcessor {
         if (button == Input.Buttons.LEFT){
             Vector3 tPos = new Vector3(Gdx.input.getX(),Gdx.input.getY(),0);
             Vector3 worldPos = camera.unproject(tPos); 
-            Vector2 adjPos = IsoUtil.isometricToWorld(new Vector2(worldPos.x, worldPos.y), new Vector2(128,64));
+            Vector2 adjPos = IsoUtil.isometricToWorld(new Vector2(worldPos.x, worldPos.y), FLOOR_SIZE);
             TileClicked.set((int)adjPos.x, (int)adjPos.y);
             return true;
         }
@@ -128,10 +143,10 @@ public class CamController implements InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
-        Vector2 world = new Vector2(v.x,v.y);
-        hoverTile = IsoUtil.isometricToWorld(world, new Vector2(128,64));
-        hoverTile.x = hoverTile.x-1;
-        highlightTile = IsoUtil.worldToIsometric(hoverTile, new Vector2(128,64));
+        Vector2 world = new Vector2(v.x,v.y).add(HOVER_OFFSET);
+        hoverTile = IsoUtil.isometricToWorld(world, FLOOR_SIZE);
+        hoverTile.x = hoverTile.x;
+        hoverWorldPos = IsoUtil.worldToIsometric(hoverTile, FLOOR_SIZE);
         return false;
     }
 
@@ -155,5 +170,18 @@ public class CamController implements InputProcessor {
     public Vector2 getTileClicked(){
         return TileClicked;
     }
+
+    public void displayTileData(MapLoader m){
+        TextureData t = m.getTextureData(this.hoverTile.x, this.hoverTile.y);
+        if (t == null) return;
+        hoverTileInfo.setPos(hoverWorldPos);
+        hoverTileInfo.setText(generateTileData(t));
+    }
+
+    private String generateTileData(TextureData td){
+        return "Type: " + td.name +", \nSelection: " + td.selection +"\nTile: ("+hoverTile.x +", " +hoverTile.y+")\nWorld: ("+hoverWorldPos.x+", "+hoverWorldPos.y+")";
+    }
+
+    
 
 }

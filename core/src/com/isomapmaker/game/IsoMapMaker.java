@@ -3,6 +3,7 @@ package com.isomapmaker.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,11 +22,13 @@ public class IsoMapMaker extends Game {
 	SpriteBatch batch;
 	AssetLoader assets;
 	TextureRegion tr;
-	MapMakerUI mui;
+	
 	MapLoader ml;
 
 	OrthographicCamera cam;
 	CamController ccont;
+
+	InputMultiplexer ip;
 
 	@Override
 	public void create () {
@@ -33,12 +36,17 @@ public class IsoMapMaker extends Game {
 		batch = new SpriteBatch();
 		tr = assets.loadTextureRegion("Thick_72x100_23", 5);
 		
+	
+
 		ml = new MapLoader(StartMap, assets);
 		ml.printMap();
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		ccont = new CamController(cam, 0.05f, 2f, 2f);
-		Gdx.input.setInputProcessor(ccont);
+
+		ip = new InputMultiplexer();
+		ip.addProcessor(ccont);
+		Gdx.input.setInputProcessor(ip);
 
 		if(tr==null){
 			System.out.println("Not able to get texture region");
@@ -55,7 +63,8 @@ public class IsoMapMaker extends Game {
 		batch.begin();
 		
 		ml.render(batch);
-		ccont.render(batch);
+		ccont.render(batch,ml);
+		
 		//batch.draw(tr, 0, 0);
 		batch.end();
 	}
@@ -64,6 +73,6 @@ public class IsoMapMaker extends Game {
 	public void dispose () {
 		batch.dispose();
 		assets.dispose();
-		mui.dispose();
+		
 	}
 }

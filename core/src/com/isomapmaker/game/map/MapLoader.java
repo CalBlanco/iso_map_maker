@@ -25,16 +25,18 @@ public class MapLoader {
     /**
      * Struct for managing texture data
      */
-    private class TextureData{
+    public class TextureData{
         public TextureRegion tr;
         public String name;
         public Vector2 size;
         public Vector2 pos;
         public Vector2 tilePos;
-        public TextureData(TextureRegion tr, String name, String size_str, int row, int col){
+        public int selection;
+        public TextureData(TextureRegion tr, String name, String size_str, int row, int col, int sel){
             this.tr = tr;
             this.name = name;
             int width,height;
+            this.selection = sel;
             width = Integer.parseInt(size_str.split("x",2)[0]);
             height = Integer.parseInt(size_str.split("x",2)[1]);
             tilePos = new Vector2(row,col);
@@ -57,7 +59,7 @@ public class MapLoader {
         String [] split = tileStr.split(":",2);
         String[] info = assets.get(split[0]);
 
-        return new TextureData(assets.loadTextureRegion(split[0], Integer.parseInt(split[1])), split[0], info[1], row, col);
+        return new TextureData(assets.loadTextureRegion(split[0], Integer.parseInt(split[1])), split[0], info[1], row, col, Integer.parseInt(split[1]));
     }
 
     
@@ -101,6 +103,22 @@ public class MapLoader {
 
     public void render(SpriteBatch batch){
         drawTileMap(batch);
+    }
+
+    /**
+     * Get Texture data at a certain tile or return null if unable to locate (this relies on the tile being present in the string map as the tile map is pre-allocated to a certain size)
+     * @param i
+     * @param j
+     * @return
+     */
+    public TextureData getTextureData(float row, float column){
+        int i,j;
+        i = (int)Math.floor(row);
+        j = (int)Math.floor(column);
+        
+        if (i < 0 || j < 0 || i > strMap.length-1 || j > strMap[i].length-1) return null;
+        
+        return tileMap[i][j];
     }
 
 

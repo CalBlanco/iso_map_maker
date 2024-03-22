@@ -12,7 +12,7 @@ public class MapMakerUI  {
     
     public MapMakerUI(){
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage();
 
         final TextButton button = new TextButton("Click Me", skin, "default");
         button.setWidth(200);
@@ -28,5 +28,9 @@ public class MapMakerUI  {
     public void dispose(){
         stage.dispose();
         skin.dispose();
+    }
+
+    public Stage getStage(){
+        return stage;
     }
 }
