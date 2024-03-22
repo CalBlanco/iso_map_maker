@@ -14,6 +14,6 @@ public class IsoUtil {
     public static Vector2 isometricToWorld(Vector2 isoPos, Vector2 size) {
         float x = (isoPos.x / (size.x / 2f) + isoPos.y / (size.y / 2f)) / 2f;
         float y = (isoPos.y / (size.y / 2f) - isoPos.x / (size.x / 2f)) / 2f;
-        return new Vector2(x, y);
+        return new Vector2((int)x, (int)y);
     }
 }

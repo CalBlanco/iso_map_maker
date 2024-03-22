@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -11,14 +12,17 @@ import com.isomapmaker.game.util.IsoUtil;
 
 
 public class CamController implements InputProcessor {
-    final private static float MIN_ZOOM = 1.0f;
-    final private static float MAX_ZOOM = 10.0f;
+    final private static float MIN_ZOOM = .5f;
+    final private static float MAX_ZOOM = 12.0f;
     private OrthographicCamera camera;
 
     private float zoomSpeed, zoomScrollMult, panSpeed, panMult;
     private float finalPanSpeed;
     private Vector2 TileClicked;
+    Texture nullTexture;
 
+    private Vector2 highlightTile;
+    private Vector2 hoverTile;
     public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult){
         TileClicked = new Vector2();
         this.zoomSpeed = zoomSpeed;
@@ -27,10 +31,15 @@ public class CamController implements InputProcessor {
         this.finalPanSpeed = panSpeed;
         this.panMult = panMult;
         this.camera = camera;
+        this.nullTexture = new Texture(Gdx.files.internal("my_iso_assets/floor_highlight_128x64.png"));
+        this.highlightTile = new Vector2();
+        this.hoverTile = new Vector2();
     }
 
     public void render(SpriteBatch batch){
         panCamera();
+
+        batch.draw(this.nullTexture,highlightTile.x,highlightTile.y);
     }
 
 
@@ -118,6 +127,11 @@ public class CamController implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
+        Vector2 world = new Vector2(v.x,v.y);
+        hoverTile = IsoUtil.isometricToWorld(world, new Vector2(128,64));
+        hoverTile.x = hoverTile.x-1;
+        highlightTile = IsoUtil.worldToIsometric(hoverTile, new Vector2(128,64));
         return false;
     }
 
