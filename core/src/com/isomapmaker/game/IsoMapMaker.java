@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.isomapmaker.game.controls.CamController;
+import com.isomapmaker.game.controls.MenuController;
 import com.isomapmaker.game.map.AssetLoader;
 import com.isomapmaker.game.map.MapLoader;
 import com.isomapmaker.game.ui.MapHud;
@@ -28,6 +29,7 @@ public class IsoMapMaker extends Game {
 
 	OrthographicCamera cam;
 	CamController ccont;
+	MenuController menu;
 
 	InputMultiplexer ip;
 
@@ -44,13 +46,16 @@ public class IsoMapMaker extends Game {
 		hudBatch = new SpriteBatch();
 
 		ml = new MapLoader(StartMap, assets);
-		ml.printMap();
+		
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		ccont = new CamController(cam, 0.05f, 2f, 2f);
+		ccont = new CamController(cam, 0.05f, 2f, 2f, assets);
+
+		menu = new MenuController(ml, assets, ccont);
 
 		ip = new InputMultiplexer();
 		ip.addProcessor(ccont);
+		ip.addProcessor(menu);
 		Gdx.input.setInputProcessor(ip);
 
 		if(tr==null){
@@ -72,6 +77,7 @@ public class IsoMapMaker extends Game {
 
 		hudBatch.begin();
 		mh.render(hudBatch, ccont, ml);
+		menu.render(hudBatch);
 		hudBatch.end();
 	}
 	

@@ -6,10 +6,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.isomapmaker.game.map.AssetLoader;
 import com.isomapmaker.game.map.MapLoader;
-import com.isomapmaker.game.map.MapLoader.TextureData;
 import com.isomapmaker.game.ui.OnScreenText;
 import com.isomapmaker.game.util.IsoUtil;
 
@@ -26,12 +27,15 @@ public class CamController implements InputProcessor {
     private Vector2 TileClicked;
     Texture nullTexture;
 
-    private Vector2 hoverWorldPos;
-    private Vector2 hoverTile;
+    public Vector2 hoverWorldPos;
+    public Vector2 hoverTile;
+
+    private AssetLoader assets;
 
 
     
-    public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult){
+    public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult, AssetLoader assets){
+        this.assets = assets;
         TileClicked = new Vector2();
         this.zoomSpeed = zoomSpeed;
         this.zoomScrollMult = 0.5f;
@@ -47,8 +51,9 @@ public class CamController implements InputProcessor {
 
     public void render(SpriteBatch batch){
         panCamera();
-        batch.draw(this.nullTexture,hoverWorldPos.x,hoverWorldPos.y);
-    
+        TextureRegion active = assets.getActiveTextureRegion();
+        batch.draw(active,hoverWorldPos.x-(active.getRegionWidth()/2),hoverWorldPos.y-(active.getRegionHeight()/2));
+        
     }
 
 
@@ -137,9 +142,9 @@ public class CamController implements InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
-        Vector2 world = new Vector2(v.x,v.y).add(HOVER_OFFSET);
-        hoverTile = IsoUtil.isometricToWorld(world, FLOOR_SIZE);
-        hoverWorldPos = IsoUtil.worldToIsometric(hoverTile, FLOOR_SIZE);
+        Vector2 world = new Vector2(v.x,v.y);
+        hoverTile = IsoUtil.worldToIsometric(world, FLOOR_SIZE);
+        hoverWorldPos.set(world.x,world.y);
         return false;
     }
 

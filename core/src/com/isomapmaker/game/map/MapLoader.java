@@ -16,36 +16,19 @@ public class MapLoader {
      * @param assets : The asset loader we are using
      */
     public MapLoader(String[][] map, AssetLoader assets){
-        this.strMap = map; // save the map
+        this.strMap = new String[MAX_SIZE][MAX_SIZE]; // save the map
+
+        for(int i=0; i< map.length; i++){ // copy the map into our allocated map
+            for(int j=0; j<map[i].length; j++){
+                strMap[i][j] = map[i][j];
+            }
+        }
         this.assets = assets;
         this.tileMap = new TextureData[MAX_SIZE][MAX_SIZE];
         //build init map
         buildTileMap();
     }
-    /**
-     * Struct for managing texture data
-     */
-    public class TextureData{
-        public TextureRegion tr;
-        public String name;
-        public Vector2 size;
-        public Vector2 pos;
-        public Vector2 tilePos;
-        public int selection;
-        public TextureData(TextureRegion tr, String name, String size_str, int row, int col, int sel){
-            this.tr = tr;
-            this.name = name;
-            int width,height;
-            this.selection = sel;
-            width = Integer.parseInt(size_str.split("x",2)[0]);
-            height = Integer.parseInt(size_str.split("x",2)[1]);
-            tilePos = new Vector2(row,col);
-            this.size = new Vector2(width,height);
-            pos = IsoUtil.worldToIsometric(tilePos, size);
-        }
-
-               
-    }
+    
 
     /**
      * Create a texture data object from tile info
@@ -55,7 +38,7 @@ public class MapLoader {
      * @return TextureData for that location
      */
     private TextureData parseTile(String tileStr, int row, int col){ // convert a tile like Grass_1:8 into a texture region
-        
+        if (tileStr == null) return null;
         String [] split = tileStr.split(":",2);
         String[] info = assets.get(split[0]);
 
@@ -83,6 +66,7 @@ public class MapLoader {
         for(int i=0; i<strMap.length; i++){
             for(int j=0; j<strMap[i].length; j++){
                 TextureData td = parseTile(strMap[i][j],i,j);
+                if (td == null) continue;
                 tileMap[i][j] = td;
             }
         }
@@ -96,6 +80,7 @@ public class MapLoader {
         for(int i=0; i<strMap.length; i++){
             for(int j=0; j<strMap[i].length; j++){
                 TextureData td = tileMap[i][j];
+                if(td == null)  continue;
                 batch.draw(td.tr,td.pos.x,td.pos.y);
             }
         }
@@ -130,7 +115,17 @@ public class MapLoader {
         if (i < 0 || j < 0 || i > strMap.length-1 || j > strMap[i].length-1) return null;
         
         TextureData td = tileMap[i][j];
+        if (td==null) return "NULL";
         return "Tile: " + td.name +"-"+ td.selection +"\nTile-Pos: ("+td.tilePos.x +", " +td.tilePos.y+")\nWorld-Pos: ("+td.pos.x+", "+td.pos.y+")";
+    }
+
+    // Tile wise are we in bounds
+    public boolean isInBounds(int x, int y){
+        return (x < MAX_SIZE & y < MAX_SIZE & x >=0 & y>=0);
+    }
+
+    public void addTile(TextureData td){
+        tileMap[(int)td.tilePos.x][(int)td.tilePos.y] = td;
     }
 
 

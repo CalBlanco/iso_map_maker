@@ -17,7 +17,7 @@ public class MapHud {
 
      AssetLoader assets;
      public MapHud(AssetLoader assets){
-        tileInfo = new OnScreenText("null", o);
+        tileInfo = new OnScreenText("null", o, "default.fnt");
         this.assets = assets;
      }
 

@@ -3,23 +3,43 @@ import java.io.*;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+
 public class AssetLoader {
     Dictionary<String,String[]> fileAssetMap; //contain mapping information for assets
     Dictionary<String,Texture> loadedTextures;
+    Vector<String> flatMap;
+
+    private int activeDrawTexture;
+    private int activeSelection;
+
+
+   
 
     public AssetLoader(){
+        
         fileAssetMap = new Hashtable<>();
         loadedTextures = new Hashtable<>();
-
+        flatMap = new Vector<String>();
         loadedTextures.put("NULL", new Texture(Gdx.files.internal("my_iso_assets/floor_highlight_128x64.png")));
         readAssetConfig();
+
+        activeDrawTexture = 0;
+        activeSelection = 0 ;
+        for(Enumeration<String> e=this.fileAssetMap.keys(); e.hasMoreElements();){
+            String k = e.nextElement();
+            flatMap.add(k);
+        }
     }
 
+    /**
+     * Load the asset_config.txt 
+     */
     private void readAssetConfig(){
         try (BufferedReader reader = new BufferedReader(new FileReader("asset_config.txt"))) {
             String line; // iterate over lines
@@ -34,18 +54,25 @@ public class AssetLoader {
     }
 
     private void parseLine(String line){
-        String[] split = line.split(":",3);
-        fileAssetMap.put(split[0],new String[]{ split[1], split[2]});
+        String[] split = line.split(":",4);
+        fileAssetMap.put(split[0],new String[]{ split[1], split[2], split[3]});
     }
 
+    /**
+     * Get the loaded asset information [<file>,<size_str>]
+     * @param textureName
+     * @return
+     */
     public String[] get(String textureName){
         return fileAssetMap.get(textureName);
     }
 
+    /**
+     * Load a Texture class into our map based on a file name 
+     * @param textureName
+     * @return
+     */
     public Texture loadTexture(String textureName){
-        /**
-         * Load the texture either by retrieving it from loadedTextures, or loading it and adding it to loadedTextures
-         */
         String[] info = fileAssetMap.get(textureName);
         if (loadedTextures.get(textureName) != null) return loadedTextures.get(textureName);
         Texture t = new Texture(Gdx.files.internal(info[0]));
@@ -111,10 +138,45 @@ public class AssetLoader {
 
     }
 
+    public void incrementTexture(int i){
+        int next = activeDrawTexture+i;
+        if(next > flatMap.size()-1){activeDrawTexture =0; return;}
+        if(next < 0){activeDrawTexture = flatMap.size()-1; return;}
+        activeSelection = 0; // reset the selection
+        activeDrawTexture = next;
+    }
+    public void incrementSelection(int i){
+        int next = activeSelection +i;
+        if(next > getAvailableSelection()-1){activeSelection = 0; return;}
+        if(next < 0){activeSelection =  getAvailableSelection()-1; return;}
+        activeSelection = next;
+    }
+
+
+    public int getAvailableSelection(String textureName){
+        return (int)Float.parseFloat(fileAssetMap.get(textureName)[2]);
+    }
+
+    public int getAvailableSelection(){
+        return (int)Float.parseFloat(fileAssetMap.get(flatMap.get(activeDrawTexture))[2]);
+    }
+
+    public TextureData getActiveTextureData(int x, int y){
+        return new TextureData(this.loadTextureRegion(this.flatMap.get(this.activeDrawTexture), this.activeSelection), fileAssetMap.get(flatMap.get(activeDrawTexture))[2], flatMap.get(activeDrawTexture), x, y, activeSelection);
+    }
+
+    public TextureRegion getActiveTextureRegion(){
+        return loadTextureRegion(flatMap.get(activeDrawTexture), activeSelection);
+    }
+
+    public int getActiveSelection(){return activeSelection;}
+    public String getActiveTextureName(){ return flatMap.get(activeDrawTexture);}
+   
     // Call dispose on all loaded textures
     public void dispose(){
-        for (Enumeration e = this.loadedTextures.keys(); e.hasMoreElements();){
-            this.loadedTextures.get(e).dispose();
+        for (Enumeration<String> e = this.loadedTextures.keys(); e.hasMoreElements();){
+            String k = e.nextElement();
+            this.loadedTextures.get(k).dispose();
         }
     }
 }

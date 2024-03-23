@@ -12,10 +12,10 @@ public class OnScreenText {
     private String text;
     private GlyphLayout gl;
     
-    public OnScreenText(String text, Vector2 pos){
+    public OnScreenText(String text, Vector2 pos, String fnt){
         this.pos = new Vector2(pos.x,pos.y);
         this.text = text;
-        this.font = new BitmapFont(Gdx.files.internal("fonts/badd_mono.fnt"));
+        this.font = new BitmapFont(Gdx.files.internal(fnt));
         this.gl = new GlyphLayout(font,"");
     }
 
