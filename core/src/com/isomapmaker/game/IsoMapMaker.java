@@ -13,8 +13,7 @@ import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.controls.MenuController;
 import com.isomapmaker.game.map.AssetLoader;
 import com.isomapmaker.game.map.MapLoader;
-import com.isomapmaker.game.ui.MapHud;
-import com.isomapmaker.game.ui.MapMakerUI;
+
 
 
 
@@ -33,7 +32,7 @@ public class IsoMapMaker extends Game {
 
 	InputMultiplexer ip;
 
-	MapHud mh;
+	//MapHud mh;
 	SpriteBatch hudBatch;
 
 	@Override
@@ -42,14 +41,14 @@ public class IsoMapMaker extends Game {
 		batch = new SpriteBatch();
 		tr = assets.loadTextureRegion("Thick_72x100_23", 5);
 		
-		mh = new MapHud(assets);
+		//mh = new MapHud(assets);
 		hudBatch = new SpriteBatch();
 
 		ml = new MapLoader(StartMap, assets);
 		
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		ccont = new CamController(cam, 0.05f, 2f, 2f, assets);
+		ccont = new CamController(cam, 0.05f, 5f, 2f, assets);
 
 		menu = new MenuController(ml, assets, ccont);
 
@@ -76,7 +75,7 @@ public class IsoMapMaker extends Game {
 		batch.end();
 
 		hudBatch.begin();
-		mh.render(hudBatch, ccont, ml);
+		//mh.render(hudBatch, ccont, ml);
 		menu.render(hudBatch);
 		hudBatch.end();
 	}

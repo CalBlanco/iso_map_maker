@@ -24,25 +24,27 @@ public class CamController implements InputProcessor {
 
     private float zoomSpeed, zoomScrollMult, panSpeed, panMult;
     private float finalPanSpeed;
-    private Vector2 TileClicked;
+    
     Texture nullTexture;
 
     public Vector2 hoverWorldPos;
     public Vector2 hoverTile;
 
+
+    private Vector2 loadVector;
     private AssetLoader assets;
 
 
     
     public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult, AssetLoader assets){
         this.assets = assets;
-        TileClicked = new Vector2();
         this.zoomSpeed = zoomSpeed;
         this.zoomScrollMult = 0.5f;
         this.panSpeed = panSpeed;
         this.finalPanSpeed = panSpeed;
         this.panMult = panMult;
         this.camera = camera;
+        this.loadVector = new Vector2();
         this.nullTexture = new Texture(Gdx.files.internal("my_iso_assets/floor_highlight_128x64.png"));
         this.hoverWorldPos = new Vector2();
         this.hoverTile = new Vector2();
@@ -52,7 +54,9 @@ public class CamController implements InputProcessor {
     public void render(SpriteBatch batch){
         panCamera();
         TextureRegion active = assets.getActiveTextureRegion();
-        batch.draw(active,hoverWorldPos.x-(active.getRegionWidth()/2),hoverWorldPos.y-(active.getRegionHeight()/2));
+        loadVector = IsoUtil.worldToIsometric(hoverTile, FLOOR_SIZE);
+        batch.draw(nullTexture,loadVector.x,loadVector.y);
+        batch.draw(active,hoverWorldPos.x,hoverWorldPos.y);
         
     }
 
@@ -70,12 +74,12 @@ public class CamController implements InputProcessor {
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
             camera.position.y -= this.finalPanSpeed;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.Z)){
+        if(Gdx.input.isKeyPressed(Input.Keys.E)){
             
             camera.zoom += this.zoomSpeed;
             camera.zoom = camera.zoom > MAX_ZOOM ? MAX_ZOOM : camera.zoom;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.X)){
+        if(Gdx.input.isKeyPressed(Input.Keys.Q)){
             camera.zoom -= this.zoomSpeed;
             camera.zoom = camera.zoom < MIN_ZOOM ? MIN_ZOOM : camera.zoom;
         }
@@ -114,13 +118,6 @@ public class CamController implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (button == Input.Buttons.LEFT){
-            Vector3 tPos = new Vector3(Gdx.input.getX(),Gdx.input.getY(),0);
-            Vector3 worldPos = camera.unproject(tPos); 
-            Vector2 adjPos = IsoUtil.isometricToWorld(new Vector2(worldPos.x, worldPos.y), FLOOR_SIZE);
-            TileClicked.set((int)adjPos.x, (int)adjPos.y);
-            return true;
-        }
         return false;
     }
 
@@ -142,8 +139,8 @@ public class CamController implements InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
-        Vector2 world = new Vector2(v.x,v.y);
-        hoverTile = IsoUtil.worldToIsometric(world, FLOOR_SIZE);
+        Vector2 world = new Vector2(v.x-FLOOR_SIZE.x/2,v.y-FLOOR_SIZE.y/2);
+        hoverTile = IsoUtil.isometricToWorld(world, FLOOR_SIZE);
         hoverWorldPos.set(world.x,world.y);
         return false;
     }
@@ -165,9 +162,7 @@ public class CamController implements InputProcessor {
         return true;
     }
 
-    public Vector2 getTileClicked(){
-        return TileClicked;
-    }
+    
 
     public Vector2 getHoverTile(){
         return this.hoverTile;

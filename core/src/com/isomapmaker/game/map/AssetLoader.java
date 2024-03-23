@@ -162,7 +162,7 @@ public class AssetLoader {
     }
 
     public TextureData getActiveTextureData(int x, int y){
-        return new TextureData(this.loadTextureRegion(this.flatMap.get(this.activeDrawTexture), this.activeSelection), fileAssetMap.get(flatMap.get(activeDrawTexture))[2], flatMap.get(activeDrawTexture), x, y, activeSelection);
+        return new TextureData(this.loadTextureRegion(this.flatMap.get(this.activeDrawTexture), this.activeSelection), flatMap.get(activeDrawTexture), fileAssetMap.get(flatMap.get(activeDrawTexture))[1], x, y, activeSelection);
     }
 
     public TextureRegion getActiveTextureRegion(){

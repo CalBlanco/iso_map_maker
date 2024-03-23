@@ -10,6 +10,8 @@ public class MapLoader {
     private String[][] strMap; //str representation of the map
     private AssetLoader assets; // asset loading 
     private TextureData[][] tileMap; // actual map that gets rendered (ik this is 2x storage for strMap and tile map but )
+
+    private TextureData loadedData;
     /**
      * Constructor for Map Loader
      * @param map : The starting map you would like to render
@@ -17,7 +19,7 @@ public class MapLoader {
      */
     public MapLoader(String[][] map, AssetLoader assets){
         this.strMap = new String[MAX_SIZE][MAX_SIZE]; // save the map
-
+        loadedData = null;
         for(int i=0; i< map.length; i++){ // copy the map into our allocated map
             for(int j=0; j<map[i].length; j++){
                 strMap[i][j] = map[i][j];
@@ -72,6 +74,19 @@ public class MapLoader {
         }
     }
 
+    public void saveTileMap(){
+        for(int i=0; i<tileMap.length; i++){
+            for(int j=0; j < tileMap[i].length; j++){
+                loadedData = tileMap[i][j];
+                if(loadedData != null) {
+                    strMap[i][j] = loadedData.name+":"+loadedData.selection;
+                    continue;
+                }
+                strMap[i][j] = "";
+            }
+        }
+    }
+
     /**
      * Render the classes tile map
      * @param batch
@@ -120,12 +135,23 @@ public class MapLoader {
     }
 
     // Tile wise are we in bounds
-    public boolean isInBounds(int x, int y){
-        return (x < MAX_SIZE & y < MAX_SIZE & x >=0 & y>=0);
+    public boolean isOutOfBounds(int x, int y){
+        
+        return (x < 0 | x > MAX_SIZE-1 | y < 0 | y > MAX_SIZE-1);
     }
 
     public void addTile(TextureData td){
+        if(isOutOfBounds((int)td.tilePos.x, (int)td.tilePos.x)) return;
         tileMap[(int)td.tilePos.x][(int)td.tilePos.y] = td;
+    }
+
+    public void removeTile(int x, int y){
+        if(isOutOfBounds(x,y)) return;
+        tileMap[x][y] = null;
+    }
+
+    public void removeTile(float x, float y){
+        removeTile((int)x, (int)y);
     }
 
 

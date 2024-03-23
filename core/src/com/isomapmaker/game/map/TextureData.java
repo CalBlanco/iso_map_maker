@@ -23,7 +23,7 @@ import com.isomapmaker.game.util.IsoUtil;
             height = Integer.parseInt(size_str.split("x",2)[1]);
             tilePos = new Vector2(row,col);
             this.size = new Vector2(width,height);
-            pos = IsoUtil.worldToIsometric(tilePos, size);
+            this.pos = IsoUtil.worldToIsometric(tilePos, size);
         }
 
                
