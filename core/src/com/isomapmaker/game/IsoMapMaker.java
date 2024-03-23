@@ -1,18 +1,17 @@
 package com.isomapmaker.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.controls.MenuController;
 import com.isomapmaker.game.map.AssetLoader;
-import com.isomapmaker.game.map.MapLoader;
+import com.isomapmaker.game.map.LayerManager;
+import com.isomapmaker.game.map.TileLayer;
 
 
 
@@ -23,8 +22,12 @@ public class IsoMapMaker extends Game {
 	SpriteBatch batch;
 	AssetLoader assets;
 	TextureRegion tr;
-	
-	MapLoader ml;
+
+
+	TileLayer groundLayer;
+	TileLayer wallLayer;
+
+	LayerManager lm;
 
 	OrthographicCamera cam;
 	CamController ccont;
@@ -44,13 +47,19 @@ public class IsoMapMaker extends Game {
 		//mh = new MapHud(assets);
 		hudBatch = new SpriteBatch();
 
-		ml = new MapLoader(StartMap, assets);
-		
+		groundLayer = new TileLayer(assets,StartMap);
+		groundLayer.layerName = "Ground";
+		wallLayer = new TileLayer(assets);
+		wallLayer.layerName = "Walls";
+
+		lm = new LayerManager();
+		lm.addLayer(groundLayer);
+		lm.addLayer(wallLayer);
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		ccont = new CamController(cam, 0.05f, 5f, 2f, assets);
 
-		menu = new MenuController(ml, assets, ccont);
+		menu = new MenuController(lm, assets, ccont);
 
 		ip = new InputMultiplexer();
 		ip.addProcessor(ccont);
@@ -70,7 +79,7 @@ public class IsoMapMaker extends Game {
 		cam.update();
 
 		batch.begin(); // map batch
-		ml.render(batch);
+		lm.render(batch);
 		ccont.render(batch);
 		batch.end();
 

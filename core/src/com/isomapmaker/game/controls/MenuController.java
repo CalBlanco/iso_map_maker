@@ -6,15 +6,17 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.isomapmaker.game.map.AssetLoader;
-import com.isomapmaker.game.map.MapLoader;
+import com.isomapmaker.game.map.LayerManager;
 import com.isomapmaker.game.map.TextureData;
+import com.isomapmaker.game.map.TileLayer;
 import com.isomapmaker.game.ui.OnScreenText;
 
 public class MenuController implements InputProcessor {
     final private static Vector2 MenuPos = new Vector2(20, Gdx.graphics.getHeight()-20);
     final private static Vector2 InfoPos = new Vector2(20,100);
     final static int MAX_SIZE = 400;
-    private MapLoader map;
+    private TileLayer map;
+    private LayerManager lm;
     private AssetLoader assets;
     private CamController ccont;
     
@@ -22,15 +24,19 @@ public class MenuController implements InputProcessor {
     private OnScreenText tileInformation;
     private TextureData loadedData;
 
+    private int layerSelection=0;
 
     private boolean controlModifier;
+
+    private String helpText = "Press UP or DOWN to change tile category\nPress LEFT or RIGHT to change tile selection\nPress C to remove the highlighted tile\nPress H to display this message again";
   
-    public MenuController(MapLoader map, AssetLoader assets, CamController ccont){
-        this.map = map;
+    public MenuController(LayerManager lm, AssetLoader assets, CamController ccont){
+        this.lm = lm;
+        this.map = lm.getLayer(0);
         this.controlModifier = false;
         this.assets = assets;
         this.ccont = ccont;
-        this.tileSelection = new OnScreenText("Press UP or DOWN to change tile category\nPress LEFT or RIGHT to change tile selection", MenuPos, "fonts/badd_mono.fnt");
+        this.tileSelection = new OnScreenText(helpText, MenuPos, "fonts/badd_mono.fnt");
         this.loadedData = null;
         this.tileInformation = new OnScreenText("tile_data", InfoPos, "default.fnt");
         
@@ -41,27 +47,52 @@ public class MenuController implements InputProcessor {
         tileInformation.render(b);
     }
 
+   
+
+    private TileLayer incrementLayer(int i){
+        int next = layerSelection + i;
+        if(next < 0) {layerSelection = lm.maxLayer()-1; return lm.getLayer(lm.maxLayer()-1);}
+        if(next > lm.maxLayer()) {layerSelection=0; return lm.getLayer(0);}
+        layerSelection = next;
+        return lm.getLayer(next);
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Input.Keys.LEFT:
                 assets.incrementSelection(-1);
+                tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());
                 break;
             case Input.Keys.RIGHT:
                 assets.incrementSelection(1);
+                tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());
                 break;
             case Input.Keys.UP:
                 assets.incrementTexture(-1);
+                tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());
                 break;
             case Input.Keys.DOWN:
                 assets.incrementTexture(1);
+                tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());
+                break;
+            case Input.Keys.NUM_1:
+                map = incrementLayer(1);
+                break;
+            case Input.Keys.NUM_2:
+                map = incrementLayer(-1);
                 break;
             case Input.Keys.S:
-                if(controlModifier) map.saveTileMap();
+                if(controlModifier) map.saveMap();
                 break;
             case Input.Keys.C:
                 map.removeTile(ccont.hoverTile.x, ccont.hoverTile.y);
-            default:
+                break;
+            case Input.Keys.H:
+                System.out.print("H Pressed!");
+                tileSelection.setText(helpText);
+                break;
+                default:
                 
         }
 
@@ -69,7 +100,7 @@ public class MenuController implements InputProcessor {
             controlModifier = true;
         }
 
-        tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());
+        
         return true;
         
     }
@@ -130,9 +161,10 @@ public class MenuController implements InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         // TODO Auto-generated method stub
-        loadedData = map.getTextureData(ccont.hoverTile.x, ccont.hoverTile.y);
-        
-        tileInformation.setText((loadedData == null ? "" : "Tile-Name: " + loadedData.name +"\nSize: " +loadedData.size )+"\nTile-Pos: ("+ccont.hoverTile.x+", "+ccont.hoverTile.y+")\n"+"World-Pos: (" + ccont.hoverWorldPos.x +", "+ ccont.hoverWorldPos.y +")" );
+        if(map == null) return false;
+        loadedData = map.getTile(ccont.hoverTile.x, ccont.hoverTile.y);
+        if(loadedData == null) return false;
+        tileInformation.setText("\nTile-Pos: ("+ccont.hoverTile.x+", "+ccont.hoverTile.y+")\n"+"World-Pos: (" + ccont.hoverWorldPos.x +", "+ ccont.hoverWorldPos.y +")\n"+ "Layer: (" + layerSelection +", " + map.layerName+")\n" +(loadedData == null ? "" : "Tile-Name: " + loadedData.name +"\nSize: " +loadedData.size ));
         return false;
     }
 

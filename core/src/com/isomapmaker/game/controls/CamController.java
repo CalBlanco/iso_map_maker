@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.isomapmaker.game.map.AssetLoader;
-import com.isomapmaker.game.map.MapLoader;
 import com.isomapmaker.game.ui.OnScreenText;
 import com.isomapmaker.game.util.IsoUtil;
 

@@ -162,7 +162,7 @@ public class AssetLoader {
     }
 
     public TextureData getActiveTextureData(int x, int y){
-        return new TextureData(this.loadTextureRegion(this.flatMap.get(this.activeDrawTexture), this.activeSelection), flatMap.get(activeDrawTexture), fileAssetMap.get(flatMap.get(activeDrawTexture))[1], x, y, activeSelection);
+        return new TextureData(this.loadTextureRegion(this.flatMap.get(this.activeDrawTexture), this.activeSelection), flatMap.get(activeDrawTexture), fileAssetMap.get(flatMap.get(activeDrawTexture))[1], x, y, activeSelection,false);
     }
 
     public TextureRegion getActiveTextureRegion(){
@@ -179,4 +179,6 @@ public class AssetLoader {
             this.loadedTextures.get(k).dispose();
         }
     }
+
+    //add custom based on file path and data for later so I dont have to add everything to the file 
 }

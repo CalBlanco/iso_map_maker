@@ -14,7 +14,8 @@ import com.isomapmaker.game.util.IsoUtil;
         public Vector2 pos;
         public Vector2 tilePos;
         public int selection;
-        public TextureData(TextureRegion tr, String name, String size_str, int row, int col, int sel){
+        public boolean solid;
+        public TextureData(TextureRegion tr, String name, String size_str, int row, int col, int sel, boolean solid){
             this.tr = tr;
             this.name = name;
             int width,height;
@@ -24,6 +25,7 @@ import com.isomapmaker.game.util.IsoUtil;
             tilePos = new Vector2(row,col);
             this.size = new Vector2(width,height);
             this.pos = IsoUtil.worldToIsometric(tilePos, size);
+            this.solid = solid;
         }
 
                
