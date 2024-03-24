@@ -3,6 +3,7 @@ package com.isomapmaker.game.util;
 import com.badlogic.gdx.math.Vector2;
 
 public class IsoUtil {
+    final public static Vector2 FLOOR_SIZE = new Vector2(128,64);
     // Function to convert world cordinates to IsoMetric cordinates
     public static Vector2 worldToIsometric(Vector2 worldPos, Vector2 size) {
         float x = (worldPos.x - worldPos.y) * (size.x / 2f);

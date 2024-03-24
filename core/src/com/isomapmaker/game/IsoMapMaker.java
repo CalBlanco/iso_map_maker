@@ -18,7 +18,7 @@ import com.isomapmaker.game.map.TileLayer;
 
 public class IsoMapMaker extends Game {
 	final static String[][] StartMap = {{"Pattern_1:1","Grass_1:1","Grass_1:1","Grass_1:1","Grass_1:8", "Dry_1:1"},{"Grass_0:1", "Grass_1:3","Grass_0:1","Grass_1:1","Grass_1:1"}};
-
+	final static String[][] emptyMap = {{}};
 	SpriteBatch batch;
 	AssetLoader assets;
 	TextureRegion tr;
@@ -26,6 +26,7 @@ public class IsoMapMaker extends Game {
 
 	TileLayer groundLayer;
 	TileLayer wallLayer;
+	TileLayer wallLayer2;
 
 	LayerManager lm;
 
@@ -49,12 +50,15 @@ public class IsoMapMaker extends Game {
 
 		groundLayer = new TileLayer(assets,StartMap);
 		groundLayer.layerName = "Ground";
-		wallLayer = new TileLayer(assets);
+		wallLayer = new TileLayer(assets,emptyMap);
 		wallLayer.layerName = "Walls";
+		wallLayer2 = new TileLayer(assets, emptyMap, new int[]{1,1});
+		wallLayer2.layerName = "Walls 2";
 
 		lm = new LayerManager();
 		lm.addLayer(groundLayer);
 		lm.addLayer(wallLayer);
+		lm.addLayer(wallLayer2);
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		ccont = new CamController(cam, 0.05f, 5f, 2f, assets);

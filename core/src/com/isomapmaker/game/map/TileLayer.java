@@ -2,18 +2,20 @@ package com.isomapmaker.game.map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.util.IsoUtil;
 
 public class TileLayer {
     /**
      *  Tile Layer represents a Z cordinate layer of the drawn map
      */
     
-    
     TextureData loadedTexture = null; // temp texture for usage throughout the game
     AssetLoader assets; // assetloader to get textures from
     int[] tileOffset = new int[]{0,0}; // the offset to apply to the tile (my thinking is that something +1 z up will need to be drawn a tile away etc..)
     int maxSize = 400; // var to store max size (i think i might not need the static final and just set the default up here?)
 
+    Vector2 worldOffset = new Vector2(0,0);
     TextureData[][] layerMap = new TextureData[maxSize][maxSize]; // actual map
 
     // Layer meta data? just gonna make it all public so it can be changed whenever by whoever lmao its JUST meta data(words will most definetly not be eaten here idk what you are talking about)
@@ -25,6 +27,7 @@ public class TileLayer {
      */
     public TileLayer(AssetLoader assets){
         this.assets = assets;
+        
     }
 
     /**
@@ -46,6 +49,7 @@ public class TileLayer {
     public TileLayer(AssetLoader assets, String[][] startMap, int[] tileOffset){
         this.assets = assets;
         this.tileOffset = tileOffset;
+        this.worldOffset = IsoUtil.worldToIsometric(new Vector2(tileOffset[0], tileOffset[1]), IsoUtil.FLOOR_SIZE);
         loadMap(startMap);
     }
 
@@ -88,7 +92,7 @@ public class TileLayer {
             for(int j=0; j<this.maxSize; j++){
                 loadedTexture = layerMap[i][j];
                 if(loadedTexture == null) continue;
-                batch.draw(loadedTexture.tr,loadedTexture.pos.x,loadedTexture.pos.y);
+                batch.draw(loadedTexture.tr,loadedTexture.pos.x+this.worldOffset.x,loadedTexture.pos.y+this.worldOffset.y);
             }
         }
     }
@@ -104,8 +108,7 @@ public class TileLayer {
         if (tileStr == null) return null;
         String [] split = tileStr.split(":",2);
         String[] info = assets.get(split[0]);
-
-        return new TextureData(assets.loadTextureRegion(split[0], Integer.parseInt(split[1])), split[0], info[1], row+tileOffset[0], col+tileOffset[1], Integer.parseInt(split[1]), false);
+        return new TextureData(assets.loadTextureRegion(split[0], Integer.parseInt(split[1])), split[0], info[1], row, col, Integer.parseInt(split[1]), false);
     }
 
     /**
@@ -153,7 +156,7 @@ public class TileLayer {
         removeTile((int)x, (int)y);
     }
 
-
+    public int[] getOffset(){return tileOffset;}
 
 
 }
