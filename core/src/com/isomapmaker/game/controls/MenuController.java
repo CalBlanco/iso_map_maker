@@ -93,13 +93,14 @@ public class MenuController implements InputProcessor {
                 if(controlModifier) map.saveMap();
                 break;
             case Input.Keys.C:
-                map.removeTile(ccont.hoverTile.x-map.getOffset()[0], ccont.hoverTile.y-map.getOffset()[1]);
+                if (controlModifier) map.removeWall((int)ccont.hoverTile.x-map.getOffset()[0], (int)ccont.hoverTile.y-map.getOffset()[1]);
+                else map.removeTile(ccont.hoverTile.x-map.getOffset()[0], ccont.hoverTile.y-map.getOffset()[1]);
                 break;
             case Input.Keys.H:
                 tileSelection.setText(helpText);
             case Input.Keys.P:
                 int[] off = {lm.getLayer(lm.maxLayer()-1).getOffset()[0]+1,lm.getLayer(lm.maxLayer()-1).getOffset()[1]+1};
-                lm.addLayer(new TileLayer(assets, new String[][]{{}}, off));
+                lm.addLayer(new TileLayer(assets, new String[][][]{{{}}}, off));
                 break;
                 default:
                 
@@ -144,7 +145,8 @@ public class MenuController implements InputProcessor {
             if(isOutOfBounds((int)ccont.hoverTile.x, (int)ccont.hoverTile.y)) return false;
             TextureData td = assets.getActiveTextureData((int)ccont.hoverTile.x, (int)ccont.hoverTile.y);
             
-            map.addTile(td);
+            if (controlModifier) map.addWall(td);
+            else map.addTile(td);
         }
         return false;
     }

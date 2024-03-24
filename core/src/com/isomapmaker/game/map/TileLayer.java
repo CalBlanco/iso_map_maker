@@ -16,7 +16,7 @@ public class TileLayer {
     int maxSize = 400; // var to store max size (i think i might not need the static final and just set the default up here?)
 
     Vector2 worldOffset = new Vector2(0,0);
-    TextureData[][] layerMap = new TextureData[maxSize][maxSize]; // actual map
+    TextureData[][][] layerMap = new TextureData[maxSize][maxSize][2]; // actual map
     Vector2 loadVector = new Vector2();
     // Layer meta data? just gonna make it all public so it can be changed whenever by whoever lmao its JUST meta data(words will most definetly not be eaten here idk what you are talking about)
     public String layerName = "layer";
@@ -35,7 +35,7 @@ public class TileLayer {
      * @param assets AssetLoader for textures
      * @param startMap initial map to draw
      */
-    public TileLayer(AssetLoader assets, String[][] startMap){
+    public TileLayer(AssetLoader assets, String[][][] startMap){
         this.assets = assets;
         loadMap(startMap);
     }
@@ -46,7 +46,7 @@ public class TileLayer {
      * @param startMap Initial map to draw
      * @param tileOffset Array to offset tiles (should be 2 long  i.e [x,y])
      */
-    public TileLayer(AssetLoader assets, String[][] startMap, int[] tileOffset){
+    public TileLayer(AssetLoader assets, String[][][] startMap, int[] tileOffset){
         this.assets = assets;
         this.tileOffset = tileOffset;
         this.worldOffset = IsoUtil.worldToIsometric(new Vector2(tileOffset[0], tileOffset[1]), IsoUtil.FLOOR_SIZE);
@@ -57,13 +57,26 @@ public class TileLayer {
      * Load a String map into this TileLayer's layerMap  
      * @param loadMap The string map to convert into our layerMap 
      */
-    public void loadMap(String[][] startMap){
-        this.layerMap = new TextureData[this.maxSize][this.maxSize];
+    public void loadMap(String[][][] startMap){
+        this.layerMap = new TextureData[this.maxSize][this.maxSize][2];
         for(int i=0; i <startMap.length; i++){
             for(int j=0; j < startMap[i].length; j++){
-                loadedTexture = parseTile(startMap[i][j], i, j);
-                if(loadedTexture == null) continue;
-                layerMap[i][j] = loadedTexture;
+
+                try{
+                    loadedTexture = parseTile(startMap[i][j][0], i, j);
+                }
+                catch(Exception e){
+                    loadedTexture = null;
+                }
+                layerMap[i][j][0] = loadedTexture;
+
+                try{
+                    loadedTexture = parseTile(startMap[i][j][1], i, j);
+                }
+                catch(Exception e){
+                    loadedTexture = null;
+                }
+                layerMap[i][j][1] = loadedTexture;
             }
         }
     }
@@ -72,13 +85,13 @@ public class TileLayer {
      * Save this TileLayer's layerMap into a String[][] array and return that array
      * @return The layerMap string representation
      */
-    public String[][] saveMap(){
-        String[][] saveMap = new String[this.maxSize][this.maxSize];
+    public String[][][] saveMap(){
+        String[][][] saveMap = new String[this.maxSize][this.maxSize][2];
         for(int i=0; i<this.maxSize; i++){
             for(int j=0; j<this.maxSize; j++){
-                loadedTexture = layerMap[i][j];
+                loadedTexture = layerMap[i][j][0];
                 if (loadedTexture == null) continue;
-                saveMap[i][j] = loadedTexture.name+":"+loadedTexture.selection;
+                saveMap[i][j][0] = loadedTexture.name+":"+loadedTexture.selection;
             }
         }
 
@@ -88,12 +101,23 @@ public class TileLayer {
 
     // Actually draw the layer
     public void render(SpriteBatch batch){
-        for(int i=this.maxSize-1; i>0; i--){
-            for(int j=this.maxSize-1; j>0; j--){
-                loadedTexture = layerMap[i][j];
-                if(loadedTexture == null) continue;
-                loadVector = loadedTexture.getPos();
-                batch.draw(loadedTexture.tr,loadVector.x+this.worldOffset.x,loadVector.y+this.worldOffset.y);
+        for(int i=this.maxSize-1; i >=0; i--){
+            for(int j=this.maxSize-1; j>=0; j--){
+                
+                loadedTexture = layerMap[i][j][0];
+                try{
+                    loadVector = loadedTexture.getPos();
+                    batch.draw(loadedTexture.tr,loadVector.x+this.worldOffset.x,loadVector.y+this.worldOffset.y);
+                }
+                catch(Exception e){}
+
+                loadedTexture = layerMap[i][j][1];
+                try{
+                    loadVector = loadedTexture.getPos();
+                    batch.draw(loadedTexture.tr,loadVector.x+this.worldOffset.x,loadVector.y+this.worldOffset.y);
+                }
+                catch(Exception e){}
+
             }
         }
     }
@@ -135,27 +159,44 @@ public class TileLayer {
 
     //add tile
     public void addTile(TextureData td){
-        if( inBounds(td.tilePos.x, td.tilePos.y)) layerMap[(int)td.tilePos.x][(int)td.tilePos.y] = td;
+        if( inBounds(td.tilePos.x, td.tilePos.y)) layerMap[(int)td.tilePos.x][(int)td.tilePos.y][0] = td;
+        return;
+    }
+
+    public void addWall(TextureData td){
+        if( inBounds(td.tilePos.x, td.tilePos.y)) layerMap[(int)td.tilePos.x][(int)td.tilePos.y][1] = td;
         return;
     }
 
     //remove a tile based on the x and y position
     public void removeTile(int x, int y){
-        if( inBounds(x, y)) layerMap[x][y] = null;
+        if( inBounds(x, y)) layerMap[x][y][0] = null;
         return;
     }
 
+    //remove a tile based on the x and y position
+    public void removeWall(int x, int y){
+        if( inBounds(x, y)) layerMap[x][y][1] = null;
+        return;
+    }
+
+
     //get tile
     public TextureData getTile(int x, int y){
-        if( inBounds(x, y) ) return layerMap[x][y];
+        if( inBounds(x, y) ) return layerMap[x][y][0];
+        return null; 
+    }
+
+     //get tile
+     public TextureData getWall(int x, int y){
+        if( inBounds(x, y) ) return layerMap[x][y][1];
         return null; 
     }
 
     public TextureData getTile(float x, float y){return getTile((int)x, (int)y);}
+    public TextureData getWall(float x, float y){ return getWall((int)x, (int)y);}
 
-    public void removeTile(float x, float y){
-        removeTile((int)x, (int)y);
-    }
+    public void removeTile(float x, float y){ removeTile((int)x, (int)y);}
 
     public int[] getOffset(){return tileOffset;}
     

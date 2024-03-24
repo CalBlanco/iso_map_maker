@@ -17,8 +17,8 @@ import com.isomapmaker.game.map.TileLayer;
 
 
 public class IsoMapMaker extends Game {
-	final static String[][] StartMap = {{"Pattern_1:1","Grass_1:1","Grass_1:1","Grass_1:1","Grass_1:8", "Dry_1:1"},{"Grass_0:1", "Grass_1:3","Grass_0:1","Grass_1:1","Grass_1:1"}};
-	final static String[][] emptyMap = {{}};
+	final static String[][][] StartMap = {{ {"Pattern_1:1"},{"Grass_1:1"},{"Grass_1:1"},{"Grass_1:1"},{"Grass_1:8"}, {"Dry_1:1"}},{{"Grass_0:1"}, {"Grass_1:3"},{"Grass_0:1"},{"Grass_1:1"},{"Grass_1:1"}}};
+	final static String[][][] emptyMap = {{{}}};
 	SpriteBatch batch;
 	AssetLoader assets;
 	TextureRegion tr;
@@ -50,9 +50,9 @@ public class IsoMapMaker extends Game {
 
 		groundLayer = new TileLayer(assets,StartMap);
 		groundLayer.layerName = "Ground";
-		wallLayer = new TileLayer(assets,emptyMap);
+		wallLayer = new TileLayer(assets,emptyMap, new int[]{1,1});
 		wallLayer.layerName = "Walls";
-		wallLayer2 = new TileLayer(assets, emptyMap, new int[]{1,1});
+		wallLayer2 = new TileLayer(assets, emptyMap, new int[]{2,2});
 		wallLayer2.layerName = "Walls 2";
 
 		lm = new LayerManager();
