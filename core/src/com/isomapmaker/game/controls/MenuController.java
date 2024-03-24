@@ -14,6 +14,7 @@ import com.isomapmaker.game.ui.OnScreenText;
 public class MenuController implements InputProcessor {
     final private static Vector2 MenuPos = new Vector2(20, Gdx.graphics.getHeight()-20);
     final private static Vector2 InfoPos = new Vector2(20,100);
+    final private static Vector2 layerInfoPos = new Vector2(Gdx.graphics.getWidth()-20,100);
     final static int MAX_SIZE = 400;
     private TileLayer map;
     private LayerManager lm;
@@ -22,6 +23,7 @@ public class MenuController implements InputProcessor {
     
     private OnScreenText tileSelection;
     private OnScreenText tileInformation;
+    private OnScreenText layerInformation;
     private TextureData loadedData;
 
     private int layerSelection=0;
@@ -38,23 +40,28 @@ public class MenuController implements InputProcessor {
         this.ccont = ccont;
         this.tileSelection = new OnScreenText(helpText, MenuPos, "fonts/badd_mono.fnt");
         this.loadedData = null;
-        this.tileInformation = new OnScreenText("tile_data", InfoPos, "default.fnt");
-        
+        this.tileInformation = new OnScreenText("Tile Info", InfoPos, "default.fnt");
+        this.layerInformation = new OnScreenText("Layer Info", InfoPos, "default.fnt");
     }
 
     public void render(SpriteBatch b){
         tileSelection.render(b);
         tileInformation.render(b);
+        layerInformation.render(b);
     }
 
-   
+    private void incrementIndex(int i){
+        int next = layerSelection + i ;
+        if(next < 0) next = lm.maxLayer()-1;
+        if(next > lm.maxLayer()-1) next = 0;
+        this.layerSelection = next;
+    }
 
-    private TileLayer incrementLayer(int i){
-        int next = layerSelection + i;
-        if(next < 0) {layerSelection = lm.maxLayer()-1; return lm.getLayer(lm.maxLayer()-1);}
-        if(next > lm.maxLayer()) {layerSelection=0; return lm.getLayer(0);}
-        layerSelection = next;
-        return lm.getLayer(next);
+    private void incrementLayer(int i){
+        incrementIndex(i);
+        map = lm.getLayer(layerSelection);
+        System.out.println(layerSelection);
+        layerInformation.setText("Layer: ("+map.layerName+", " + layerSelection +")");
     }
 
     @Override
@@ -77,10 +84,10 @@ public class MenuController implements InputProcessor {
                 tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());
                 break;
             case Input.Keys.NUM_1:
-                map = incrementLayer(1);
+                incrementLayer(1);
                 break;
             case Input.Keys.NUM_2:
-                map = incrementLayer(-1);
+                incrementLayer(-1);
                 break;
             case Input.Keys.S:
                 if(controlModifier) map.saveMap();
