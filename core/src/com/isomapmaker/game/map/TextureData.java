@@ -10,8 +10,6 @@ import com.isomapmaker.game.util.IsoUtil;
     public class TextureData{
         public TextureRegion tr;
         public String name;
-        public Vector2 size;
-        public Vector2 pos;
         public Vector2 tilePos;
         public int selection;
         public boolean solid;
@@ -20,12 +18,12 @@ import com.isomapmaker.game.util.IsoUtil;
             this.name = name;
             this.selection = sel;
             tilePos = new Vector2(row,col);
-            this.size = new Vector2(128,64);
-            this.pos = IsoUtil.worldToIsometric(tilePos, size);
             this.solid = solid;
         }
 
-        
+        public Vector2 getPos(){
+            return IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
+        }
 
                
     }

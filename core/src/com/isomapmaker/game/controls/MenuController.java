@@ -83,21 +83,23 @@ public class MenuController implements InputProcessor {
                 assets.incrementTexture(1);
                 tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());
                 break;
-            case Input.Keys.NUM_1:
+            case Input.Keys.NUM_2:
                 incrementLayer(1);
                 break;
-            case Input.Keys.NUM_2:
+            case Input.Keys.NUM_1:
                 incrementLayer(-1);
                 break;
             case Input.Keys.S:
                 if(controlModifier) map.saveMap();
                 break;
             case Input.Keys.C:
-                map.removeTile(ccont.hoverTile.x, ccont.hoverTile.y);
+                map.removeTile(ccont.hoverTile.x-map.getOffset()[0], ccont.hoverTile.y-map.getOffset()[1]);
                 break;
             case Input.Keys.H:
-                System.out.print("H Pressed!");
                 tileSelection.setText(helpText);
+            case Input.Keys.P:
+                int[] off = {lm.getLayer(lm.maxLayer()-1).getOffset()[0]+1,lm.getLayer(lm.maxLayer()-1).getOffset()[1]+1};
+                lm.addLayer(new TileLayer(assets, new String[][]{{}}, off));
                 break;
                 default:
                 
@@ -171,7 +173,7 @@ public class MenuController implements InputProcessor {
         if(map == null) return false;
         loadedData = map.getTile(ccont.hoverTile.x, ccont.hoverTile.y);
         if(loadedData == null) return false;
-        tileInformation.setText("\nTile-Pos: ("+ccont.hoverTile.x+", "+ccont.hoverTile.y+")\n"+"World-Pos: (" + ccont.hoverWorldPos.x +", "+ ccont.hoverWorldPos.y +")\n"+ "Layer: (" + layerSelection +", " + map.layerName+")\n" +(loadedData == null ? "" : "Tile-Name: " + loadedData.name +"\nSize: " +loadedData.size ));
+        tileInformation.setText("\nTile-Pos: ("+ccont.hoverTile.x+", "+ccont.hoverTile.y+")\n"+"World-Pos: (" + ccont.hoverWorldPos.x +", "+ ccont.hoverWorldPos.y +")\n"+ "Layer: (" + layerSelection +", " + map.layerName+")\n" +(loadedData == null ? "" : "Tile-Name: " + loadedData.name));
         return false;
     }
 

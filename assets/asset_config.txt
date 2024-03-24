@@ -88,3 +88,4 @@ Thick_72x100_20:./flat/Thick_72x100_20.png:72x100:24.0
 Thick_72x100_21:./flat/Thick_72x100_21.png:72x100:24.0
 Thick_72x100_22:./flat/Thick_72x100_22.png:72x100:24.0
 Thick_72x100_23:./flat/Thick_72x100_23.png:72x100:24.0
+My_Walls:./flat/mywalls.png:128x128:16

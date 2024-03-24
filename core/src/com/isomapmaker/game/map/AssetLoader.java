@@ -1,5 +1,6 @@
 package com.isomapmaker.game.map;
 import java.io.*;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -35,6 +36,8 @@ public class AssetLoader {
             String k = e.nextElement();
             flatMap.add(k);
         }
+
+        Collections.sort(flatMap);
     }
 
     /**

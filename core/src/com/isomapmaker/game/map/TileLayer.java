@@ -17,7 +17,7 @@ public class TileLayer {
 
     Vector2 worldOffset = new Vector2(0,0);
     TextureData[][] layerMap = new TextureData[maxSize][maxSize]; // actual map
-
+    Vector2 loadVector = new Vector2();
     // Layer meta data? just gonna make it all public so it can be changed whenever by whoever lmao its JUST meta data(words will most definetly not be eaten here idk what you are talking about)
     public String layerName = "layer";
 
@@ -88,11 +88,12 @@ public class TileLayer {
 
     // Actually draw the layer
     public void render(SpriteBatch batch){
-        for(int i=0; i<this.maxSize; i++){
-            for(int j=0; j<this.maxSize; j++){
+        for(int i=this.maxSize-1; i>0; i--){
+            for(int j=this.maxSize-1; j>0; j--){
                 loadedTexture = layerMap[i][j];
                 if(loadedTexture == null) continue;
-                batch.draw(loadedTexture.tr,loadedTexture.pos.x+this.worldOffset.x,loadedTexture.pos.y+this.worldOffset.y);
+                loadVector = loadedTexture.getPos();
+                batch.draw(loadedTexture.tr,loadVector.x+this.worldOffset.x,loadVector.y+this.worldOffset.y);
             }
         }
     }
@@ -157,6 +158,6 @@ public class TileLayer {
     }
 
     public int[] getOffset(){return tileOffset;}
-
+    
 
 }
