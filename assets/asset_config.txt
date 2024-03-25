@@ -89,3 +89,4 @@ Thick_72x100_21:./flat/Thick_72x100_21.png:72x100:24.0
 Thick_72x100_22:./flat/Thick_72x100_22.png:72x100:24.0
 Thick_72x100_23:./flat/Thick_72x100_23.png:72x100:24.0
 AA-My-Walls:./flat/AA-Walls.png:128x128:16
+Donut:./flat/donut.png:128x64:1
