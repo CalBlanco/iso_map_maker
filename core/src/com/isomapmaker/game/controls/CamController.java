@@ -52,10 +52,8 @@ public class CamController implements InputProcessor {
 
     public void render(SpriteBatch batch){
         panCamera();
-        TextureRegion active = assets.getActiveTextureRegion();
-        loadVector = IsoUtil.worldToIsometric(hoverTile, FLOOR_SIZE);
-        batch.draw(nullTexture,loadVector.x,loadVector.y);
-        batch.draw(active,hoverWorldPos.x,hoverWorldPos.y);
+        
+
         
     }
 

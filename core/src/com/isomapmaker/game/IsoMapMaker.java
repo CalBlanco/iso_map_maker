@@ -63,7 +63,7 @@ public class IsoMapMaker extends Game {
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		ccont = new CamController(cam, 0.05f, 5f, 2f, assets);
 
-		menu = new MenuController(lm, assets, ccont);
+		menu = new MenuController(lm, assets, cam);
 
 		ip = new InputMultiplexer();
 		ip.addProcessor(ccont);
@@ -85,6 +85,7 @@ public class IsoMapMaker extends Game {
 		batch.begin(); // map batch
 		lm.render(batch);
 		ccont.render(batch);
+		menu.mouse_render(batch);
 		batch.end();
 
 		hudBatch.begin();
