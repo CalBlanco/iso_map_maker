@@ -104,7 +104,7 @@ public class IsoMapMaker extends Game {
 		batch.begin(); // map batch
 		tileMapManager.render(batch);
 		cameraController.render(batch);
-		
+		assetPlacer.activeTileRender(batch);
 		batch.end();
 
 		hudBatch.begin();

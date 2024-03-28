@@ -47,7 +47,7 @@ public class TileMap {
         for(int i=0; i< size; i++){
             for(int j=0; j<size; j++){
                 map[i][j] = new Tile(this.defaultTexture);
-                map[i][j].setFloor(defaultFloor);
+                
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.isomapmaker.game.controls;
 
+import java.util.HashMap;
 import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
@@ -34,6 +35,10 @@ public class AssetPlacer implements InputProcessor {
     String quadrant = "top";
     String mode = "Floor";
     String file = "Dry";
+
+    HashMap<String, TextureRegion> quadrantToHighlight = new HashMap<String,TextureRegion>();
+
+    Vector2 tVector = new Vector2(0,0);
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
         this.cam = cam; 
         this.ass= ass; 
@@ -41,8 +46,33 @@ public class AssetPlacer implements InputProcessor {
         this.loader = loader;
         this.map = manager.getLayer(layer);
         this.tilePos = new Vector2(0,0);
+
+        quadrantToHighlight.put("top", loader.floors.get("QuadrantHighlights").get(0).getTexture());
+        quadrantToHighlight.put("right", loader.floors.get("QuadrantHighlights").get(1).getTexture());
+        quadrantToHighlight.put("left", loader.floors.get("QuadrantHighlights").get(2).getTexture());
+        quadrantToHighlight.put("bottom", loader.floors.get("QuadrantHighlights").get(3).getTexture());
     }
 
+
+    public void activeTileRender(SpriteBatch b){
+        tVector = IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
+        b.setColor(1f, 1f, 1f, 0.7f);
+        try{
+        switch (mode) {
+            case "Floor":
+                b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
+                break;
+            case "Wall":
+                b.draw(quadrantToHighlight.get(quadrant), tVector.x, tVector.y);
+                b.draw(loader.walls.get(quadrant).get(selection).getTexture(), tVector.x, tVector.y);
+                break;
+            default:
+                break;
+        }}
+        catch(Exception e){return;}
+        b.setColor(1f,1f,1f,1f);
+       
+    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -105,7 +135,7 @@ public class AssetPlacer implements InputProcessor {
                 catch(Exception e){return false;}
             case "Wall":
                 try{
-                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(file).get(selection));
+                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(quadrant).get(selection));
                     return true;
                 }
                 catch(Exception e){return false;}
@@ -140,13 +170,13 @@ public class AssetPlacer implements InputProcessor {
     public boolean mouseMoved(int screenX, int screenY) {
         if(mode != ass.mode) {mode = ass.mode ; selection=0;};
         if(file != ass.activeFile) {file = ass.activeFile; selection=0;}
-
+        
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         screenPos = new Vector2(wpos.x, wpos.y);
         tilePos = IsoUtil.isometricToWorld(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
         quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
-        ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y), quadrant);
+        ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y), quadrant, layer);
         
         // TODO Auto-generated method stub
         return false;

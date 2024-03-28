@@ -72,22 +72,23 @@ public class AssetController extends Stage {
         
 
         Table mouseInfo = new Table(skin);
-        Label mouseInfoLabel = new Label("--Mouse info--",skin);
         Label screenPos = new Label("Screen: ()", skin);
         Label tilePos = new Label("Tile: ()", skin);
         Label quadrantInfo = new Label("Quad: ", skin);
         Label hoverTile = new Label("Hovered Tile:", skin);
+        Label hoverLayer = new Label("Layer: ", skin);
         
         screenPos.setName("screenPos");
         tilePos.setName("tilePos");
         quadrantInfo.setName("quadrantInfo");
         hoverTile.setName("hoverTile");
+        hoverLayer.setName("hoverLayer");
 
-        mouseInfo.add(mouseInfoLabel).center().row();
-        mouseInfo.add(screenPos).left().row();
-        mouseInfo.add(tilePos).left().row();
-        mouseInfo.add(quadrantInfo).left().row();
-        mouseInfo.add(hoverTile).left().row();
+        mouseInfo.add(screenPos).left().expandX().row();
+        mouseInfo.add(tilePos).left().expandX().row();
+        mouseInfo.add(quadrantInfo).left().expandX().row();
+        mouseInfo.add(hoverLayer).left().expandX().row();
+        mouseInfo.add(hoverTile).left().expandX().row();
 
         
         left.row().grow();
@@ -186,7 +187,7 @@ public class AssetController extends Stage {
         
     }
    
-    public void updateTileInfo(Vector2 screenPos, Vector2 tilePos, String tileInfo, String quadrant){
+    public void updateTileInfo(Vector2 screenPos, Vector2 tilePos, String tileInfo, String quadrant, int Layer){
         screenPos.set((int)screenPos.x, (int)screenPos.y);
         Label l = root.findActor("screenPos");
         l.setText("Screen: " + screenPos.toString());
@@ -196,6 +197,8 @@ public class AssetController extends Stage {
         l.setText(tileInfo);
         l = root.findActor("quadrantInfo");
         l.setText("Quad: " + quadrant);
+        l = root.findActor("hoverLayer");
+        l.setText("Layer: " + Layer);
     }
  
 

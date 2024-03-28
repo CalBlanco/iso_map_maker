@@ -87,11 +87,11 @@ public class Tile {
 
     public String toString(){
         String out ="Floor: ";
-        out += floor == null ? "Null\nWalls:\n\tLeft: " : floor.getName()+"\nWalls:\n\tLeft: ";
-        out += walls.get("top") == null ? "Null\n\tRight: " : walls.get("top").getName() +"\n\tRight: "; 
-        out += walls.get("right") == null ? "Null\n\tTop: " : walls.get("right").getName() +"\n\tTop: "; 
-        out += walls.get("left") == null ? "Null\n\tBottom: " : walls.get("left").getName() +"\n\tBottom: "; 
-        out += walls.get("bottom") == null ? "Null\n\t" : walls.get("bottom").getName() +"\nObjects:\n\t"; 
+        out += floor == null ? "...\nWalls:\n\tLeft: " : floor.getName()+"\nWalls:\n\tLeft: ";
+        out += walls.get("top") == null ? "...\n\tRight: " : walls.get("top").getName() +"\n\tRight: "; 
+        out += walls.get("right") == null ? "...\n\tTop: " : walls.get("right").getName() +"\n\tTop: "; 
+        out += walls.get("left") == null ? "...\n\tBottom: " : walls.get("left").getName() +"\n\tBottom: "; 
+        out += walls.get("bottom") == null ? "...\n\t" : walls.get("bottom").getName() +"\nObjects:\n\t"; 
         for(int i=0;i<objects.size();i++){
             out += i +": "+ objects.get(i).getName() +"\n\t";
             if(i==objects.size()-1) out+="\n";

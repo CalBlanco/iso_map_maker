@@ -18,6 +18,12 @@
         <type>f</type>
         <name>Highlights</name>
     </tile_data>
+    <tile_data id="9">
+        <file>tiles/floors/wall_quadrant_highlight.png</file>
+        <flags>isTraversable=true</flags>
+        <type>f</type>
+        <name>QuadrantHighlights</name>
+    </tile_data>
     <tile_data id="3">
         <file>tiles/floors/metal.png</file>
         <flags>isTraversable=true</flags>
@@ -36,18 +42,32 @@
         <type>f</type>
         <name>Water</name>
     </tile_data>
-    <tile_data id="6">
-        <file>tiles/walls/base_wallsNS.png</file>
-        <flags>isSolid=true,isNorthSouth=true</flags>
+    <tile_data>
+        <file>tiles/walls/top.png</file>
+        <flags>isSolid=true</flags>
         <type>w</type>
-        <name>NS Walls</name>
+        <name>top</name>
         <size>128x128</size>
     </tile_data>
-    <tile_data id="7">
-        <file>tiles/walls/base_wallsEW.png</file>
-        <flags>isSolid=true,isNorthSouth=false</flags>
+    <tile_data>
+        <file>tiles/walls/bottom.png</file>
+        <flags>isSolid=true</flags>
         <type>w</type>
-        <name>EW Walls</name>
+        <name>bottom</name>
+        <size>128x128</size>
+    </tile_data>
+    <tile_data>
+        <file>tiles/walls/left.png</file>
+        <flags>isSolid=true</flags>
+        <type>w</type>
+        <name>left</name>
+        <size>128x128</size>
+    </tile_data>
+    <tile_data>
+        <file>tiles/walls/right.png</file>
+        <flags>isSolid=true</flags>
+        <type>w</type>
+        <name>right</name>
         <size>128x128</size>
     </tile_data>
 </tiles>
