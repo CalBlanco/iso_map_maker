@@ -19,7 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
@@ -91,7 +93,7 @@ public class AssetController extends Stage {
         //Middle Panel
         Table middle = new Table();
 
-        Label middlePanel = new Label("Middle_Panel", skin);
+        Label middlePanel = new Label("", skin);
         middlePanel.setName("middleHeader");
         middle.add(middlePanel).top();
 
@@ -122,7 +124,23 @@ public class AssetController extends Stage {
         assetBrowser.row();
         assetBrowser.add(pane).expand();
         
-       
+        Table newAssetBrowser = new Table(skin);
+        Tree assetTree = new Tree(skin);
+        
+        TextNode node = new TextNode("Floors");
+        String[] keys = tl.getFloors();
+        for(int i=0; i<keys.length; i++){
+            TextNode t = new TextNode(keys[i]);
+            Vector<TextureRegion> regions = tl.getTextureRegions(keys[i], "Floor");
+            for(int reg=0; reg<regions.size(); reg++){
+                TextNode subT = new TextNode("Floor:"+keys[i]+":"+reg);
+                //subT.setIcon(new TextureRegionDrawable(regions.get(reg)));
+                t.add(subT);
+            }
+            node.add(t);
+        }
+
+        middle.add(assetTree).grow().row();
 
         middle.row();
         
@@ -141,7 +159,14 @@ public class AssetController extends Stage {
         root.row();
 
         root.add().colspan(2);
-        root.add(assetBrowser).colspan(8).row();
+
+        
+
+
+        
+
+
+        root.add(new Label("activeFile", skin)).colspan(8).row();
         root.add().colspan(2);
         //root.debugAll();
         
@@ -247,6 +272,12 @@ public class AssetController extends Stage {
         if(mode == "Object"){
             Object t = tl.objects.get(activeFile).get(fullySmart);
             o = t;
+        }
+    }
+
+    public class TextNode extends Tree.Node<TextNode, String, Label> {
+        public TextNode(String text){
+            super(new Label(text, skin));
         }
     }
  

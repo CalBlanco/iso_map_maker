@@ -8,7 +8,7 @@ public class IsoUtil {
     public static Vector2 worldToIsometric(Vector2 worldPos, Vector2 size) {
         float x = (worldPos.x - worldPos.y) * (size.x / 2f);
         float y = (worldPos.x + worldPos.y) * (size.y / 2f);
-        return new Vector2(x, y);
+        return new Vector2((int)Math.floor(x), (int)Math.floor(y));
     }
 
     // Function to convert isometric coordinates to world space coordinates

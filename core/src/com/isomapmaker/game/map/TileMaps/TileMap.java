@@ -36,11 +36,17 @@ public class TileMap {
 
     // eventually need a way to load in a map here
     // so lets make a class at some point to deal with reading/writing this information later
-    public TileMap(int size, Vector2 tileOffset){
+    public TileMap(int size, Vector2 tileOffset, Floor defaultFloor){
         this.size = size;
         this.tileOffset = tileOffset;
         this.highlight = new TextureRegion(new Texture(Gdx.files.internal("highlight.png")));
         this.map = new Tile[size][size];
+        for(int i=0; i< size; i++){
+            for(int j=0; j<size; j++){
+                map[i][j] = new Tile();
+                map[i][j].setFloor(defaultFloor);
+            }
+        }
     }
 
     public void init_maps(){

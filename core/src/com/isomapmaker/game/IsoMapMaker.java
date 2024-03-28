@@ -20,6 +20,7 @@ import com.isomapmaker.game.map.LayerManager;
 import com.isomapmaker.game.map.TileLayer;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
+import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
@@ -47,14 +48,18 @@ public class IsoMapMaker extends Game {
 
 	CamController ccont;
 	TileMap tm;
+	TileMapManager tileMapManager;
 
 	@Override
 	public void create () {
 		
 		tl = new TileLoader("assets.xml");
 		aCont = new AssetController(tl);
+
+
+		tileMapManager = new TileMapManager(tl);
+
 		
-		tm = new TileMap(400, new Vector2(0,0));
 		batch = new SpriteBatch();
 		
 		//mh = new MapHud(assets);
@@ -81,7 +86,7 @@ public class IsoMapMaker extends Game {
 		for(int i=0; i< keys.length; i++){
 			Vector<Floor> fr = tl.floors.get(keys[i]);
 			for(int j=0; j<fr.size(); j++){
-				tm.setFloor(i, j, fr.get(j));
+				tileMapManager.getLayer(0).setFloor(i, j, fr.get(j));
 			}
 		}
 
@@ -107,7 +112,7 @@ public class IsoMapMaker extends Game {
 
 		
 		batch.begin(); // map batch
-		tm.render(batch);
+		tileMapManager.render(batch);
 		ccont.render(batch);
 		
 		batch.end();
