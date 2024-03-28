@@ -31,12 +31,12 @@ public class CamController implements InputProcessor {
 
 
     private Vector2 loadVector;
-    private AssetLoader assets;
+  
 
 
     
-    public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult, AssetLoader assets){
-        this.assets = assets;
+    public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult){
+        
         this.zoomSpeed = zoomSpeed;
         this.zoomScrollMult = 0.5f;
         this.panSpeed = panSpeed;

@@ -206,11 +206,10 @@ public class AssetController extends Stage {
         System.out.println(regions.size());
         for(int i=0; i<regions.size(); i++){
             imgs[i] = new Image(regions.get(i));
-            
+            imgs[i].setScaling(Scaling.fit);
             imgs[i].setScale(0.25f);
             textureViewer.add(imgs[i]);
-            if(i % 6 == 0) textureViewer.row();
-            System.out.println(regions.get(i).toString());
+            if(i % 10 == 0) textureViewer.row();
         }
         
 

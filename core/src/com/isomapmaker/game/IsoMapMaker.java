@@ -1,11 +1,14 @@
 package com.isomapmaker.game;
 
+import java.util.Vector;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.isomapmaker.game.controls.AssetController;
@@ -16,6 +19,7 @@ import com.isomapmaker.game.map.LayerManager;
 import com.isomapmaker.game.map.TileLayer;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
+import com.isomapmaker.game.map.Tiles.Floor;
 
 
 
@@ -36,7 +40,7 @@ public class IsoMapMaker extends Game {
 
 	TileLoader tl;
 	AssetController aCont;
-
+	CamController ccont;
 	TileMap tm;
 
 	@Override
@@ -44,27 +48,36 @@ public class IsoMapMaker extends Game {
 		
 		tl = new TileLoader("assets.xml");
 		aCont = new AssetController(tl);
-
+		
 		tm = new TileMap(30, new Vector2(0,0));
 		batch = new SpriteBatch();
 		
 		//mh = new MapHud(assets);
 		hudBatch = new SpriteBatch();
 
+
 		
 
 	
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
+		ccont = new CamController(cam, 5f, 5f, 2f);
 
 		ip = new InputMultiplexer();
 		ip.addProcessor(aCont);
+		ip.addProcessor(ccont);
+		
 		Gdx.input.setInputProcessor(ip);
 
-		tm.setFloor(0, 0, tl.getFloor("Dirt", 0));
-		tm.setWall(0,0,0, tl.getWall("EW Walls", 0));
-		tm.setWall(0,0,1, tl.getWall("NS Walls", 0));
+		
+		Vector<Floor> fr = tl.floors.get("Dirt");
+		for(int i=0; i< 30; i++){
+			for(int j=0; j<30; j++){
+				if( (i*30)+j > fr.size()-1) break;
+				tm.setFloor(i, j, fr.get((i*30)+j));
+			}
+		}
+		
 		
 
 	
@@ -80,6 +93,7 @@ public class IsoMapMaker extends Game {
 		
 		batch.begin(); // map batch
 		tm.render(batch);
+		ccont.render(batch);
 		
 		batch.end();
 

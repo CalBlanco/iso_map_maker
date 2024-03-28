@@ -21,10 +21,10 @@ import java.util.Collections;
  */
 public class TileLoader {
 
-    Dictionary<String, Vector<Floor>> floors;
-    Dictionary<String, Vector<Wall>> walls;
-    Dictionary<String, Vector<Object>> objects;
-    Dictionary<String, String[]> objectData;
+    public Dictionary<String, Vector<Floor>> floors;
+    public Dictionary<String, Vector<Wall>> walls;
+    public Dictionary<String, Vector<Object>> objects;
+    public Dictionary<String, String[]> objectData;
 
     public TileLoader(String assetPath){
         
@@ -124,6 +124,12 @@ public class TileLoader {
     }
 
 
+    private int[] convertTo2DPoint(int index, int width) {
+        int[] point = new int[2];
+        point[0] = index % width; // x-coordinate
+        point[1] = index / width; // y-coordinate
+        return point;
+    }
     /**
      * Given a file we want textures from, and the size of textures within the file. Create texture regions for each item in the image
      * @param file : File path relative to the assets/ folder
@@ -137,10 +143,10 @@ public class TileLoader {
 
         int[] size = getSize(size_str); // get our dimensions
         int numRegions = (texture.getWidth()*texture.getHeight()) / (size[0]*size[1]); // calculate number of regions we need to make
-
         // make the regions
         for(int i=0; i<numRegions; i++){
-            regions.add(new TextureRegion(texture, size[0]*i, size[1]*i, size[0], size[1])); // add our new texture region
+            int[] grabed = convertTo2DPoint(i, texture.getWidth()/size[0]);
+            regions.add(new TextureRegion(texture, size[0]*grabed[0], size[1]*grabed[1], size[0], size[1])); // add our new texture region
         }
 
         return regions;
