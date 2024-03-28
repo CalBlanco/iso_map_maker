@@ -42,8 +42,8 @@ public class AssetController extends Stage {
     TileLoader tl;
     Table root;
     
-    String mode;
-    String activeFile = "";
+    String mode = "Floor";
+    String activeFile = "Highlights";
 
     int fullySmart = 0;
 
@@ -106,45 +106,29 @@ public class AssetController extends Stage {
            @Override
            public void changed(ChangeEvent e, Actor a){
             mode = typeSelect.getSelected();
-            displayMode();
+            updateFileSelection();
            } 
         });
 
-        
+        SelectBox<String> fileSelect =  new SelectBox<String>(skin);
+        fileSelect.setName("fileSelect");
+       
+ 
+
+
+        assetBrowser.row();
         assetBrowser.add(typeLabel).pad(10);
-        assetBrowser.add(typeSelect);
-        
+        assetBrowser.add(typeSelect).pad(10);
+        assetBrowser.add(fileSelect).pad(10).bottom();
         
         Table typeBrowser = new Table();
         
-        typeBrowser.setName("typeBrowser");
-        ScrollPane pane = new ScrollPane(typeBrowser, skin);
-        
+    
 
-        assetBrowser.row();
-        assetBrowser.add(pane).expand();
+        middle.row().grow();
+        middle.add(new Label(" ",skin)).row();
+        middle.add(assetBrowser).bottom();
         
-        Table newAssetBrowser = new Table(skin);
-        Tree assetTree = new Tree(skin);
-        
-        TextNode node = new TextNode("Floors");
-        String[] keys = tl.getFloors();
-        for(int i=0; i<keys.length; i++){
-            TextNode t = new TextNode(keys[i]);
-            Vector<TextureRegion> regions = tl.getTextureRegions(keys[i], "Floor");
-            for(int reg=0; reg<regions.size(); reg++){
-                TextNode subT = new TextNode("Floor:"+keys[i]+":"+reg);
-                //subT.setIcon(new TextureRegionDrawable(regions.get(reg)));
-                t.add(subT);
-            }
-            node.add(t);
-        }
-
-        middle.add(assetTree).grow().row();
-
-        middle.row();
-        
-        middle.debugAll();
 
         //Right Panel
         Table right = new Table();
@@ -152,134 +136,51 @@ public class AssetController extends Stage {
 
         right.add(rightPanel).top();
 
+        //header
         root.add(new Label("Iso Map Maker", skin)).colspan(12).row();
+
+        // left panel
         root.add(left).grow().colspan(2);
+        //middle panel
         root.add(middle).grow().colspan(8);
+        // right panel
         root.add(right).grow().colspan(2);
         root.row();
 
-        root.add().colspan(2);
+        
 
         
 
 
+        // footer space
+        root.add(new Label("footer", skin)).colspan(12).row();
         
-
-
-        root.add(new Label("activeFile", skin)).colspan(8).row();
-        root.add().colspan(2);
         //root.debugAll();
-        
-
     }
 
     public void render(){
-        
-        
         super.act();
         super.draw();
-        
-        
     }
 
     public void dispose(){
         super.dispose();
     }
 
-    public void displayMode(){
-        Table t = root.findActor("typeBrowser");
-        t.clear();
-        String[] keys;
 
-        switch(mode){
-            case "Wall":
-                keys = tl.getWalls();
-                break;
-            case "Object":
-                keys = tl.getObjects();
-                break;
-            default:
-                keys = tl.getFloors();
-                break;
-        }
-
-        List<String> list = new List<String>(skin);
-        list.setItems(keys);
-        list.setTypeToSelect(true);
-        list.addListener(new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent event, Actor actor) {
-            activeFile = list.getSelected();
-            
-            drawTextures();
-            }
-        });
-        t.row();
-        t.add(list).pad(20);
-        this.setKeyboardFocus(list);
-
-        Table textureViewer = new Table();
-        textureViewer.setName("textureView");
-        t.add(textureViewer);
-        textureViewer.debugAll();
-    }
-
-    public void drawTextures(){
-        Table textureViewer = root.findActor("textureView");
-        textureViewer.clear();
-        if(activeFile == "") return;
-        
-        
-        Vector<TextureRegion> regions = tl.getTextureRegions(activeFile, mode);
-        Image[] imgs = new Image[regions.size()];
-        System.out.println(regions.size());
-        
-        SelectBox<Integer> choices = new SelectBox<Integer>(skin);
-        
-
-        Integer[] choieList = new Integer[regions.size()];
-        for(int i=0; i<regions.size(); i++){
-            choieList[i] = i;
-        }
-        
-        choices.setItems(choieList);
-        choices.addListener(new ChangeListener() {
+    public void updateFileSelection(){
+        SelectBox<String> box = root.findActor("fileSelect");
+        String[] fileKeys = tl.getFiles(mode);
+        box.setItems(fileKeys);
+        box.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // TODO Auto-generated method stub
-                fullySmart = choices.getSelected();
-                setActiveTile();
-            }
-        });
-
-        textureViewer.add(choices);
-
-        System.out.println("Drew regions");
-        textureViewer.bottom();
+            public void changed(ChangeEvent e, Actor a){
+             activeFile = box.getSelected();
+            } 
+         });
         
     }
-
-    public void setActiveTile(){
-        System.out.println("Getting: " + mode + ", " + activeFile +", " + fullySmart);
-        if(mode == "Floor"){
-            Floor t = tl.floors.get(activeFile).get(fullySmart);
-            f = t;
-        }
-        if(mode == "Wall"){
-            Wall t = tl.walls.get(activeFile).get(fullySmart);
-            w = t;
-        }
-        if(mode == "Object"){
-            Object t = tl.objects.get(activeFile).get(fullySmart);
-            o = t;
-        }
-    }
-
-    public class TextNode extends Tree.Node<TextNode, String, Label> {
-        public TextNode(String text){
-            super(new Label(text, skin));
-        }
-    }
+   
  
 
 

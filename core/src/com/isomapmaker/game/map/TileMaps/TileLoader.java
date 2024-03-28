@@ -214,6 +214,18 @@ public class TileLoader {
         return keys;
     }
 
+    public String[] getFiles(String mode){
+        switch(mode){
+            case "Floor":
+                return getFloors();
+            case "Wall":
+                return getWalls();
+            case "Object":
+                return getObjects();
+        }
+        return new String[]{"No Files found"};
+    }
+
     public String[] getFloors(){
         return getKeys(floors);
     }
@@ -231,18 +243,18 @@ public class TileLoader {
     public int getNumRegions(String name, String type){
         try{
             switch(type){
-                case "f":
+                case "Floor":
                     return floors.get(name).size();
-                case "w":
+                case "Wall":
                     return walls.get(name).size();
-                case "o":
+                case "Object":
                     return objects.get(name).size();
             }
 
-            return 0;
+            return 1;
         }
         catch(Exception e){
-            return 0;
+            return 1;
         }
     }
 

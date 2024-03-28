@@ -42,57 +42,51 @@ public class IsoMapMaker extends Game {
 	//MapHud mh;
 	
 
-	TileLoader tl;
-	AssetController aCont;
-	AssetPlacer ap;
+	TileLoader tileLoader;
+	AssetController assetControler;
+	AssetPlacer assetPlacer;
 
-	CamController ccont;
+	CamController cameraController;
 	TileMap tm;
 	TileMapManager tileMapManager;
 
 	@Override
 	public void create () {
 		
-		tl = new TileLoader("assets.xml");
-		aCont = new AssetController(tl);
+		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-
-		tileMapManager = new TileMapManager(tl);
+		tileLoader = new TileLoader("assets.xml");
+		tileMapManager = new TileMapManager(tileLoader);
 
 		
 		batch = new SpriteBatch();
-		
-		//mh = new MapHud(assets);
 		hudBatch = new SpriteBatch();
 
-		
+		cameraController = new CamController(cam, 2f, 5f, 5f);
+		assetControler = new AssetController(tileLoader);
+		assetPlacer = new AssetPlacer(cam, assetControler, tileMapManager, tileLoader);
 
 		
-
-	
-
-		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		ccont = new CamController(cam, 5f, 5f, 2f);
-		ap = new AssetPlacer(cam, aCont, tm);
+		
 		ip = new InputMultiplexer();
 
-		ip.addProcessor(aCont);
-		ip.addProcessor(ccont);
-		ip.addProcessor(ap);
+		ip.addProcessor(assetControler);
+		ip.addProcessor(cameraController);
+		ip.addProcessor(assetPlacer);
 		Gdx.input.setInputProcessor(ip);
 
 		
-		String[] keys = tl.getFloors();
+		String[] keys = tileLoader.getFloors();
 		for(int i=0; i< keys.length; i++){
-			Vector<Floor> fr = tl.floors.get(keys[i]);
+			Vector<Floor> fr = tileLoader.floors.get(keys[i]);
 			for(int j=0; j<fr.size(); j++){
 				tileMapManager.getLayer(0).setFloor(i, j, fr.get(j));
 			}
 		}
 
-		/* String[] wallKeys = tl.getWalls();
+		/* String[] wallKeys = tileLoader.getWalls();
 		for(int i=0; i< wallKeys.length; i++){
-			Vector<Wall> fr = tl.walls.get(wallKeys[i]);
+			Vector<Wall> fr = tileLoader.walls.get(wallKeys[i]);
 			for(int j=0; j<fr.size(); j++){
 				tm.setWall(j, i, i+2,fr.get(j));
 			}
@@ -113,16 +107,16 @@ public class IsoMapMaker extends Game {
 		
 		batch.begin(); // map batch
 		tileMapManager.render(batch);
-		ccont.render(batch);
+		cameraController.render(batch);
 		
 		batch.end();
 
 		hudBatch.begin();
-		//mh.render(hudBatch, ccont, ml);
-		
+		//mh.render(hudBatch, cameraController, ml);
+		assetPlacer.renderSelectionTiles(hudBatch);
 		hudBatch.end();
 
-		aCont.render();
+		assetControler.render();
 		
 	}
 	

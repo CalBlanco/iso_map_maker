@@ -66,14 +66,17 @@ public class Tile {
     //      iv)  bottom
     // c) Objects
     public void render(SpriteBatch b, Vector2 pos){
-        if(this.floor != null) b.draw(this.floor.getTexture(), pos.x, pos.y);
-        if(this.walls.get("top") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);
-        if(this.walls.get("right") != null) b.draw(this.walls.get("right").getTexture(), pos.x, pos.y);
-        if(this.walls.get("left") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);
-        if(this.walls.get("bottom") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);
+        try{if(this.floor != null) b.draw(this.floor.getTexture(), pos.x, pos.y);}catch(Exception e){return;}
+        try{if(this.walls.get("top") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
+        try{if(this.walls.get("right") != null) b.draw(this.walls.get("right").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
+        try{if(this.walls.get("left") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
+        try{if(this.walls.get("bottom") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
 
-        for(int i=0; i<this.objects.size(); i++){
-            if(objects.get(i) != null) b.draw(objects.get(i).getTexture(), pos.x, pos.y);
-        }
+        try{
+            for(int i=0; i<this.objects.size(); i++){
+                if(objects.get(i) != null) b.draw(objects.get(i).getTexture(), pos.x, pos.y);
+            }
+        }   
+        catch(Exception e){return ;}
     }
 }
