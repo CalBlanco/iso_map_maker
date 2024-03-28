@@ -34,15 +34,15 @@ public class IsoUtil {
 
         if (mousePos.x > isoPos.x + tileX * FLOOR_SIZE.x + halfWidth) {
             if (mousePos.y < isoPos.y + tileY * FLOOR_SIZE.y + halfHeight) {
-                return "right";
-            } else {
                 return "bottom";
+            } else {
+                return "right";
             }
         } else {
             if (mousePos.y < isoPos.y + tileY * FLOOR_SIZE.y + halfHeight) {
-                return "top";
-            } else {
                 return "left";
+            } else {
+                return "top";
             }
         }
     }

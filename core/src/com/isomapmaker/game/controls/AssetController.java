@@ -54,7 +54,7 @@ public class AssetController extends Stage {
     
 
     public AssetController(TileLoader tl){
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skins/uiskin/uiskin.json"));
         this.tl = tl;
         mode = "Floor";
         // initialize our root table and add it to the scene 
@@ -75,15 +75,18 @@ public class AssetController extends Stage {
         Label mouseInfoLabel = new Label("--Mouse info--",skin);
         Label screenPos = new Label("Screen: ()", skin);
         Label tilePos = new Label("Tile: ()", skin);
+        Label quadrantInfo = new Label("Quad: ", skin);
         Label hoverTile = new Label("Hovered Tile:", skin);
         
         screenPos.setName("screenPos");
         tilePos.setName("tilePos");
+        quadrantInfo.setName("quadrantInfo");
         hoverTile.setName("hoverTile");
 
         mouseInfo.add(mouseInfoLabel).center().row();
         mouseInfo.add(screenPos).left().row();
         mouseInfo.add(tilePos).left().row();
+        mouseInfo.add(quadrantInfo).left().row();
         mouseInfo.add(hoverTile).left().row();
 
         
@@ -183,7 +186,7 @@ public class AssetController extends Stage {
         
     }
    
-    public void updateTileInfo(Vector2 screenPos, Vector2 tilePos, String tileInfo){
+    public void updateTileInfo(Vector2 screenPos, Vector2 tilePos, String tileInfo, String quadrant){
         screenPos.set((int)screenPos.x, (int)screenPos.y);
         Label l = root.findActor("screenPos");
         l.setText("Screen: " + screenPos.toString());
@@ -191,6 +194,8 @@ public class AssetController extends Stage {
         l.setText("Tile: " + tilePos.toString());
         l = root.findActor("hoverTile");
         l.setText(tileInfo);
+        l = root.findActor("quadrantInfo");
+        l.setText("Quad: " + quadrant);
     }
  
 

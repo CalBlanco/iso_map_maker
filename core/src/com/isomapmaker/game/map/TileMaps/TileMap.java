@@ -31,19 +31,22 @@ public class TileMap {
     private Vector2[] WALLOFFSET = new Vector2[]{new Vector2(-32,16), new Vector2(32,16), new Vector2(-32,-16), new Vector2(32,-16)};
 
     TextureRegion highlight;
-    
+    TextureRegion defaultTexture;
+
     public Vector2 tileOffset = new Vector2(0,0);
+    
 
     // eventually need a way to load in a map here
     // so lets make a class at some point to deal with reading/writing this information later
     public TileMap(int size, Vector2 tileOffset, Floor defaultFloor){
         this.size = size;
         this.tileOffset = tileOffset;
+        this.defaultTexture = defaultFloor.getTexture();
         this.highlight = new TextureRegion(new Texture(Gdx.files.internal("highlight.png")));
         this.map = new Tile[size][size];
         for(int i=0; i< size; i++){
             for(int j=0; j<size; j++){
-                map[i][j] = new Tile();
+                map[i][j] = new Tile(this.defaultTexture);
                 map[i][j].setFloor(defaultFloor);
             }
         }
@@ -76,7 +79,7 @@ public class TileMap {
 */
     public void setFloor(int x, int y, Floor f){
         if (!inBounds(x, y)) return;
-        if (map[x][y] == null) map[x][y]= new Tile();
+        if (map[x][y] == null) map[x][y]= new Tile(this.defaultTexture);
         map[x][y].setFloor(f);
 
     }
@@ -95,7 +98,7 @@ public class TileMap {
 */
     public void setWall(int x, int y, String slot, Wall w){
         if(!inBounds(x, y)) return;
-        if (map[x][y] == null) map[x][y]= new Tile();
+        if (map[x][y] == null) map[x][y]= new Tile(this.defaultTexture);
         map[x][y].setWall(w, slot);
     }
 

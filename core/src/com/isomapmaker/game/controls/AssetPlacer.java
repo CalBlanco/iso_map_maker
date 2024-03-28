@@ -31,6 +31,9 @@ public class AssetPlacer implements InputProcessor {
 
     Vector2 tilePos;
     Vector2 screenPos;
+    String quadrant = "top";
+    String mode = "Floor";
+    String file = "Dry";
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
         this.cam = cam; 
         this.ass= ass; 
@@ -51,6 +54,28 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.E:
                 incrementSelection(1);
                 return true;
+            case Input.Keys.C:
+                switch (ass.mode) {
+                    case "Floor":
+                        map.setFloor((int)tilePos.x, (int)tilePos.y, null);
+                        return true;
+                    case "Wall":
+                        map.setWall((int)tilePos.x, (int)tilePos.y, quadrant, null);
+                        return true;
+                    case "Object":
+                        return true;
+                    default:
+                        break;
+                }
+            case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
+                if(layer+1 > manager.maxLayer()) manager.addNewLayer(); // make a new layer if there is not one
+                map = manager.getLayer(layer+1); // get next layer
+                layer +=1;
+            case Input.Keys.PAGE_DOWN:
+                if(layer-1 < 0) layer = 0;
+                map = manager.getLayer(layer);
+            case Input.Keys.DEL:
+                if(manager.maxLayer() != 0) manager.popLayer();
         }
         return false;
       }
@@ -71,16 +96,16 @@ public class AssetPlacer implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         
         System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
-        switch(ass.mode){
+        switch(mode){
             case "Floor":
                 try{
-                    map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(ass.activeFile).get(selection));
+                    map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(file).get(selection));
                     return true;
                 }
                 catch(Exception e){return false;}
             case "Wall":
                 try{
-                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(ass.activeFile).get(selection));
+                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(file).get(selection));
                     return true;
                 }
                 catch(Exception e){return false;}
@@ -113,10 +138,15 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        if(mode != ass.mode) {mode = ass.mode ; selection=0;};
+        if(file != ass.activeFile) {file = ass.activeFile; selection=0;}
+
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         screenPos = new Vector2(wpos.x, wpos.y);
-        tilePos = IsoUtil.isometricToWorld(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/4), IsoUtil.FLOOR_SIZE);
-        ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y));
+        tilePos = IsoUtil.isometricToWorld(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
+        quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
+        
+        ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y), quadrant);
         
         // TODO Auto-generated method stub
         return false;
@@ -130,15 +160,15 @@ public class AssetPlacer implements InputProcessor {
        }
     
     public void incrementSelection(int i){
-        if (selection + i < 0) {selection = loader.getNumRegions(ass.activeFile, ass.mode) -1; return;}
-        if (selection + i >  loader.getNumRegions(ass.activeFile, ass.mode) -1){ selection = 0; return;}
+        if (selection + i < 0) {selection = loader.getNumRegions(file, mode) -1; return;}
+        if (selection + i >  loader.getNumRegions(file, mode) -1){ selection = 0; return;}
         selection = selection + i;
     }
 
     public void renderSelectionTiles(SpriteBatch hudBatch){
-        Vector<TextureRegion> regions = loader.getTextureRegions(ass.activeFile, ass.mode);
-        int lower = (selection - 1 > 0) ? selection-1 : loader.getNumRegions(ass.activeFile, ass.mode) -1 ;
-        int upper = (selection + 1 < loader.getNumRegions(ass.activeFile, ass.mode) -1 ) ? selection + 1 : 0;
+        Vector<TextureRegion> regions = loader.getTextureRegions(file, mode);
+        int lower = (selection - 1 > 0) ? selection-1 : loader.getNumRegions(file, mode) -1 ;
+        int upper = (selection + 1 < loader.getNumRegions(file, mode) -1 ) ? selection + 1 : 0;
         if(regions == null || regions.size() < 2){return;}
         TextureRegion[] active = new TextureRegion[]{regions.get(lower), regions.get(selection), regions.get(upper)};
 

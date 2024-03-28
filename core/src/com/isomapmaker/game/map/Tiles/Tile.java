@@ -5,14 +5,17 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Tile {
     Floor floor;
     HashMap<String, Wall> walls;
     Vector<Object> objects;
+    TextureRegion defaultRegion;
 
-    public Tile(){
+    public Tile(TextureRegion defaultRegion){
+        this.defaultRegion = defaultRegion;
         floor = null;
 
         walls = new HashMap<String, Wall>();
@@ -66,12 +69,14 @@ public class Tile {
     //      iv)  bottom
     // c) Objects
     public void render(SpriteBatch b, Vector2 pos){
-        try{if(this.floor != null) b.draw(this.floor.getTexture(), pos.x, pos.y);}catch(Exception e){return;}
+        //Floor
+        try{if(this.floor != null){ b.draw(this.floor.getTexture(), pos.x, pos.y);}else{b.draw(this.defaultRegion, pos.x, pos.y);}}catch(Exception e){return;}
+        //Walls
         try{if(this.walls.get("top") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
         try{if(this.walls.get("right") != null) b.draw(this.walls.get("right").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
-        try{if(this.walls.get("left") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
-        try{if(this.walls.get("bottom") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
-
+        try{if(this.walls.get("left") != null) b.draw(this.walls.get("left").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
+        try{if(this.walls.get("bottom") != null) b.draw(this.walls.get("bottom").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
+        //Objects
         try{
             for(int i=0; i<this.objects.size(); i++){
                 if(objects.get(i) != null) b.draw(objects.get(i).getTexture(), pos.x, pos.y);
@@ -82,10 +87,10 @@ public class Tile {
 
     public String toString(){
         String out ="Floor: ";
-        out += floor == null ? "Null" : floor.getName()+"\nWalls:\n\tLeft: ";
-        out += walls.get("left") == null ? "Null\n\t" : walls.get("left").getName() +"\n\tRight: "; 
-        out += walls.get("right") == null ? "Null\n\t" : walls.get("right").getName() +"\n\tTop: "; 
-        out += walls.get("top") == null ? "Null\n\t" : walls.get("top").getName() +"\n\tottom: "; 
+        out += floor == null ? "Null\nWalls:\n\tLeft: " : floor.getName()+"\nWalls:\n\tLeft: ";
+        out += walls.get("top") == null ? "Null\n\tRight: " : walls.get("top").getName() +"\n\tRight: "; 
+        out += walls.get("right") == null ? "Null\n\tTop: " : walls.get("right").getName() +"\n\tTop: "; 
+        out += walls.get("left") == null ? "Null\n\tBottom: " : walls.get("left").getName() +"\n\tBottom: "; 
         out += walls.get("bottom") == null ? "Null\n\t" : walls.get("bottom").getName() +"\nObjects:\n\t"; 
         for(int i=0;i<objects.size();i++){
             out += i +": "+ objects.get(i).getName() +"\n\t";
