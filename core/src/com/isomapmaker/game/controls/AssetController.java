@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -19,12 +20,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.SimpleTile;
+import com.isomapmaker.game.map.Tiles.Wall;
+import com.isomapmaker.game.map.Tiles.Object;
+import com.isomapmaker.game.util.IsoUtil;
 
 // Controll the TileLoader class 
 // Allow user to navigate between floors, walls and objects
@@ -39,6 +45,12 @@ public class AssetController extends Stage {
     
     String mode;
     String activeFile = "";
+
+    int fullySmart = 0;
+
+    public Floor f;
+    public Wall w;
+    public Object o;
 
     public AssetController(TileLoader tl){
         skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -208,7 +220,27 @@ public class AssetController extends Stage {
             imgs[i] = new Image(regions.get(i));
             imgs[i].setScaling(Scaling.fit);
             imgs[i].setScale(0.25f);
-            textureViewer.add(imgs[i]);
+            fullySmart = i;
+            ImageButton im = new ImageButton(new TextureRegionDrawable(regions.get(i)));
+            im.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    System.out.println("Clicked asset control texture");
+                    if(mode == "Floor"){
+                        Floor t = tl.floors.get(activeFile).get(fullySmart);
+                        f = t;
+                    }
+                    if(mode == "Wall"){
+                        Wall t = tl.walls.get(activeFile).get(fullySmart);
+                        w = t;
+                    }
+                    if(mode == "Object"){
+                        Object t = tl.objects.get(activeFile).get(fullySmart);
+                        o = t;
+                    }
+                }
+            });
+            textureViewer.add(im);
             if(i % 10 == 0) textureViewer.row();
         }
         

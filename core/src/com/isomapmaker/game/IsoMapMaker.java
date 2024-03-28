@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.isomapmaker.game.controls.AssetController;
+import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.controls.MenuController;
 import com.isomapmaker.game.map.AssetLoader;
@@ -20,6 +21,8 @@ import com.isomapmaker.game.map.TileLayer;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.Tiles.Floor;
+import com.isomapmaker.game.map.Tiles.Wall;
+import com.isomapmaker.game.util.IsoUtil;
 
 
 
@@ -40,6 +43,8 @@ public class IsoMapMaker extends Game {
 
 	TileLoader tl;
 	AssetController aCont;
+	AssetPlacer ap;
+
 	CamController ccont;
 	TileMap tm;
 
@@ -49,12 +54,13 @@ public class IsoMapMaker extends Game {
 		tl = new TileLoader("assets.xml");
 		aCont = new AssetController(tl);
 		
-		tm = new TileMap(30, new Vector2(0,0));
+		tm = new TileMap(400, new Vector2(0,0));
 		batch = new SpriteBatch();
 		
 		//mh = new MapHud(assets);
 		hudBatch = new SpriteBatch();
 
+		
 
 		
 
@@ -62,19 +68,28 @@ public class IsoMapMaker extends Game {
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		ccont = new CamController(cam, 5f, 5f, 2f);
-
+		ap = new AssetPlacer(cam, aCont, tm);
 		ip = new InputMultiplexer();
+
 		ip.addProcessor(aCont);
 		ip.addProcessor(ccont);
-		
+		ip.addProcessor(ap);
 		Gdx.input.setInputProcessor(ip);
 
 		
-		Vector<Floor> fr = tl.floors.get("Dirt");
-		for(int i=0; i< 30; i++){
-			for(int j=0; j<30; j++){
-				if( (i*30)+j > fr.size()-1) break;
-				tm.setFloor(i, j, fr.get((i*30)+j));
+		String[] keys = tl.getFloors();
+		for(int i=0; i< keys.length; i++){
+			Vector<Floor> fr = tl.floors.get(keys[i]);
+			for(int j=0; j<fr.size(); j++){
+				tm.setFloor(i, j, fr.get(j));
+			}
+		}
+
+		String[] wallKeys = tl.getWalls();
+		for(int i=0; i< wallKeys.length; i++){
+			Vector<Wall> fr = tl.walls.get(wallKeys[i]);
+			for(int j=0; j<fr.size(); j++){
+				tm.setWall(j, i, i+2,fr.get(j));
 			}
 		}
 		

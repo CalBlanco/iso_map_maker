@@ -17,4 +17,33 @@ public class IsoUtil {
         float y = (isoPos.y / (size.y / 2f) - isoPos.x / (size.x / 2f)) / 2f;
         return new Vector2((int)Math.floor(x), (int)Math.floor(y));
     }
+
+    public static int[] convertTo2DPoint(int index, int width) {
+        int[] point = new int[2];
+        point[0] = index % width; // x-coordinate
+        point[1] = index / width; // y-coordinate
+        return point;
+    }
+
+    public static int getTileQuadrant(Vector2 worldPos, Vector2 size, Vector2 mousePos) {
+        Vector2 isoPos = worldToIsometric(worldPos, size);
+        int tileX = (int) ((mousePos.x - isoPos.x) / size.x);
+        int tileY = (int) ((mousePos.y - isoPos.y) / size.y);
+        float halfWidth = size.x / 2;
+        float halfHeight = size.y / 2;
+
+        if (mousePos.x > isoPos.x + tileX * size.x + halfWidth) {
+            if (mousePos.y < isoPos.y + tileY * size.y + halfHeight) {
+                return 1;
+            } else {
+                return 4;
+            }
+        } else {
+            if (mousePos.y < isoPos.y + tileY * size.y + halfHeight) {
+                return 2;
+            } else {
+                return 3;
+            }
+        }
+    }
 }

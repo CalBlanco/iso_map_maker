@@ -30,12 +30,6 @@
         <type>f</type>
         <name>Water</name>
     </tile_data>
-    <tile_data id="100">
-        <file>tiles/floors/Elements_1.png</file>
-        <flags>isTraversable=false</flags>
-        <type>f</type>
-        <name>elements</name>
-    </tile_data>
     <tile_data id="6">
         <file>tiles/walls/base_wallsNS.png</file>
         <flags>isSolid=true,isNorthSouth=true</flags>
