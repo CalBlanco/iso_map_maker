@@ -85,13 +85,13 @@ public class IsoMapMaker extends Game {
 			}
 		}
 
-		String[] wallKeys = tl.getWalls();
+		/* String[] wallKeys = tl.getWalls();
 		for(int i=0; i< wallKeys.length; i++){
 			Vector<Wall> fr = tl.walls.get(wallKeys[i]);
 			for(int j=0; j<fr.size(); j++){
 				tm.setWall(j, i, i+2,fr.get(j));
 			}
-		}
+		} */
 		
 		
 
