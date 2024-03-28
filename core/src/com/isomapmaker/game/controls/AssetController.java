@@ -14,17 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.SimpleTile;
@@ -111,32 +108,25 @@ public class AssetController extends Stage {
            } 
         });
 
+        
         assetBrowser.add(typeLabel).pad(10);
         assetBrowser.add(typeSelect);
         
-        Table typeBrowser = new Table();
-        typeBrowser.setName("typeBrowser");
-
-        Table typeBrowserContainer = new Table();
-        typeBrowserContainer.row().grow();
-        typeBrowserContainer.add(typeBrowser).expand();
-        typeBrowser.row().grow();
-
         
-
-        typeBrowser.setWidth(getWidth()/12);
-        typeBrowser.setHeight(getHeight()/12);
+        Table typeBrowser = new Table();
+        
+        typeBrowser.setName("typeBrowser");
+        ScrollPane pane = new ScrollPane(typeBrowser, skin);
+        
 
         assetBrowser.row();
-        assetBrowser.add(typeBrowserContainer).expandX();
+        assetBrowser.add(pane).expand();
         
-        assetBrowser.bottom();
+       
 
-
-
-        middle.row().grow();
-        middle.add(assetBrowser);
-
+        middle.row();
+        
+        middle.debugAll();
 
         //Right Panel
         Table right = new Table();
@@ -149,8 +139,10 @@ public class AssetController extends Stage {
         root.add(middle).grow().colspan(8);
         root.add(right).grow().colspan(2);
         root.row();
-        root.add(new Label("footer", skin)).colspan(12).row();
-        
+
+        root.add().colspan(2);
+        root.add(assetBrowser).colspan(8).row();
+        root.add().colspan(2);
         //root.debugAll();
         
 
@@ -186,7 +178,7 @@ public class AssetController extends Stage {
                 break;
         }
 
-        List<String> list = new List(skin);
+        List<String> list = new List<String>(skin);
         list.setItems(keys);
         list.setTypeToSelect(true);
         list.addListener(new ChangeListener() {
@@ -211,38 +203,49 @@ public class AssetController extends Stage {
         Table textureViewer = root.findActor("textureView");
         textureViewer.clear();
         if(activeFile == "") return;
-        System.out.println("Trying to draw regions");
+        
         
         Vector<TextureRegion> regions = tl.getTextureRegions(activeFile, mode);
         Image[] imgs = new Image[regions.size()];
         System.out.println(regions.size());
-        List<Image> list = new List<Image>(skin);
+        
+        SelectBox<Integer> choices = new SelectBox<Integer>(skin);
+        
 
+        Integer[] choieList = new Integer[regions.size()];
         for(int i=0; i<regions.size(); i++){
-            imgs[i] = new Image(regions.get(i));
-            imgs[i].setScaling(Scaling.fit);
-            imgs[i].setScale(1f);
+            choieList[i] = i;
         }
         
-        list.setItems(imgs);
+        choices.setItems(choieList);
+        choices.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // TODO Auto-generated method stub
+                fullySmart = choices.getSelected();
+                setActiveTile();
+            }
+        });
 
+        textureViewer.add(choices);
 
         System.out.println("Drew regions");
         textureViewer.bottom();
         
     }
 
-    public void setActiveTile(int i){
+    public void setActiveTile(){
+        System.out.println("Getting: " + mode + ", " + activeFile +", " + fullySmart);
         if(mode == "Floor"){
-            Floor t = tl.floors.get(activeFile).get(i);
+            Floor t = tl.floors.get(activeFile).get(fullySmart);
             f = t;
         }
         if(mode == "Wall"){
-            Wall t = tl.walls.get(activeFile).get(i);
+            Wall t = tl.walls.get(activeFile).get(fullySmart);
             w = t;
         }
         if(mode == "Object"){
-            Object t = tl.objects.get(activeFile).get(i);
+            Object t = tl.objects.get(activeFile).get(fullySmart);
             o = t;
         }
     }

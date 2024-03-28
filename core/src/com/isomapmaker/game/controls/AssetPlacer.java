@@ -49,7 +49,6 @@ public class AssetPlacer implements InputProcessor {
                 return true;
             case "Object":
                 if (ass.o == null) return false;
-                map.setObject((int)tilePos.x, (int)tilePos.y, 0,ass.o);
                 return true;
         }
         // TODO Auto-generated method stub

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.Object;
+import com.isomapmaker.game.map.Tiles.Tile;
 import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
 
@@ -24,9 +25,8 @@ public class TileMap {
 
     private int size;
     private int objectLimit = 3;
-    Wall[][][] walls; // wall positions (each tile can have 4 walls for now)
-    Floor[][] floors; // floor positions
-    Object[][][] objects; // object positions 
+    
+    private Tile[][] map;
 
     private Vector2[] WALLOFFSET = new Vector2[]{new Vector2(-32,16), new Vector2(32,16), new Vector2(-32,-16), new Vector2(32,-16)};
 
@@ -40,13 +40,10 @@ public class TileMap {
         this.size = size;
         this.tileOffset = tileOffset;
         this.highlight = new TextureRegion(new Texture(Gdx.files.internal("highlight.png")));
-        init_maps();
+        this.map = new Tile[size][size];
     }
 
     public void init_maps(){
-        this.walls = new Wall[size][size][4];
-        this.floors = new Floor[size][size];
-        this.objects = new Object[size][size][objectLimit];
         
     }
 
@@ -57,27 +54,9 @@ public class TileMap {
                 // get world cordinates incorperating layer offset
                 Vector2 wpos = IsoUtil.worldToIsometric(new Vector2(i,j).add(tileOffset.x, tileOffset.y), IsoUtil.FLOOR_SIZE);
                 // render floor
-                if (floors[i][j] != null) b.draw(floors[i][j].getTexture(), wpos.x, wpos.y);
-                if (floors[i][j] == null) b.draw(this.highlight, wpos.x, wpos.y);
-                // objects 
-                renderObjects(b, wpos, objects[i][j]);
-                //walls 
-                renderWalls(b, wpos, walls[i][j]);
+                if(map[i][j] != null) map[i][j].render(b, wpos);
+                
             }
-        }
-    }
-
-    public void renderWalls(SpriteBatch b, Vector2 pos, Wall[] walls){
-        for(int i=0; i<4; i++){
-            if (walls[i] == null) continue;
-            b.draw(walls[i].getTexture(),pos.x + WALLOFFSET[i].x,pos.y+ WALLOFFSET[i].y);
-        }
-    }
-
-    public void renderObjects(SpriteBatch b, Vector2 pos, Object[] objs){
-        for(int i=0; i< objectLimit; i++){
-            if(objs[i] == null) continue;
-            b.draw(objs[i].getTexture(), pos.x, pos.y);
         }
     }
 
@@ -91,12 +70,14 @@ public class TileMap {
 */
     public void setFloor(int x, int y, Floor f){
         if (!inBounds(x, y)) return;
-        floors[x][y] = f;
+        if (map[x][y] == null) map[x][y]= new Tile();
+        map[x][y].setFloor(f);
+
     }
 
     public Floor getFloor(int x, int y){
-        if (!inBounds(x, y)) return null;
-        return floors[x][y];
+        if (!hasTile(x, y)) return null;
+        return map[x][y].getFloor();
     }
 /*
 ██╗    ██╗ █████╗ ██╗     ██╗     ███████╗
@@ -106,16 +87,15 @@ public class TileMap {
 ╚███╔███╔╝██║  ██║███████╗███████╗███████║
  ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
 */
-    public void setWall(int x, int y, int slot, Wall w){
-        if (slot < 0 ||  slot > 4) return;
+    public void setWall(int x, int y, String slot, Wall w){
         if(!inBounds(x, y)) return;
-        walls[x][y][slot] = w;
+        if (map[x][y] == null) map[x][y]= new Tile();
+        map[x][y].setWall(w, slot);
     }
 
-    public Wall getWall(int x, int y, int slot){
-        if (slot < 0 ||  slot > 4) return null;
-        if (!inBounds(x, y)) return null;
-        return walls[x][y][slot];
+    public Wall getWall(int x, int y, String slot){
+        if (!hasTile(x, y)) return null;
+        return map[x][y].getWall(slot);
     }
 /*
  ██████╗ ██████╗      ██╗
@@ -126,17 +106,6 @@ public class TileMap {
  ╚═════╝ ╚═════╝  ╚════╝     
 */
 
-    public void setObject(int x, int y, int space, Object o){
-        if(space < 0 || space > objectLimit) return;
-        if(!inBounds(x, y)) return;
-        objects[x][y][space] = o;
-    }
-
-    public Object getObject(int x, int y, int space){
-        if (space < 0 || space > objectLimit) return null;
-        if(!inBounds(x, y)) return null;
-        return objects[x][y][space];
-    }
 
 /*
 ██╗   ██╗████████╗██╗██╗     
@@ -148,6 +117,12 @@ public class TileMap {
  */
     public boolean inBounds(int x, int y){
         if(x < 0 || x > size-1 || y < 0 || y > size-1) return false;
+        return true;
+    }
+
+    public boolean hasTile(int x, int y){
+        if(!inBounds(x, y)) return false;
+        if(map[x][y] == null) return false;
         return true;
     }
 

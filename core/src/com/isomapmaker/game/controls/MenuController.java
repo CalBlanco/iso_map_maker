@@ -62,7 +62,7 @@ public class MenuController implements InputProcessor {
         b.draw(nullTexture,loadVector.x,loadVector.y);
         b.setColor(1f, 1f, 1f, 0.80f);
         loadVector = IsoUtil.worldToIsometric(loadVector2.set(hoverTile.x+map.getOffset()[0],hoverTile.y+map.getOffset()[1]), IsoUtil.FLOOR_SIZE);
-        b.draw(assets.getActiveTextureRegion(),loadVector.x,loadVector.y);
+        if(assets.getActiveTextureRegion() != null) b.draw(assets.getActiveTextureRegion(),loadVector.x,loadVector.y);
         b.setColor(1f, 1f, 1f, 1f);
 
         tileSelection.setText(assets.getActiveTextureName() + "\n" + (assets.getActiveSelection()+1)+"/"+assets.getAvailableSelection());

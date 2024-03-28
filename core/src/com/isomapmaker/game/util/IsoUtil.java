@@ -25,7 +25,7 @@ public class IsoUtil {
         return point;
     }
 
-    public static int getTileQuadrant(Vector2 worldPos, Vector2 size, Vector2 mousePos) {
+    public static String getTileQuadrant(Vector2 worldPos, Vector2 size, Vector2 mousePos) {
         Vector2 isoPos = worldToIsometric(worldPos, size);
         int tileX = (int) ((mousePos.x - isoPos.x) / size.x);
         int tileY = (int) ((mousePos.y - isoPos.y) / size.y);
@@ -34,15 +34,15 @@ public class IsoUtil {
 
         if (mousePos.x > isoPos.x + tileX * size.x + halfWidth) {
             if (mousePos.y < isoPos.y + tileY * size.y + halfHeight) {
-                return 1;
+                return "right";
             } else {
-                return 4;
+                return "bottom";
             }
         } else {
             if (mousePos.y < isoPos.y + tileY * size.y + halfHeight) {
-                return 2;
+                return "top";
             } else {
-                return 3;
+                return "left";
             }
         }
     }
