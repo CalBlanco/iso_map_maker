@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.isomapmaker.game.map.AssetLoader;
-import com.isomapmaker.game.ui.OnScreenText;
 import com.isomapmaker.game.util.IsoUtil;
 
 
@@ -31,12 +29,12 @@ public class CamController implements InputProcessor {
 
 
     private Vector2 loadVector;
-    private AssetLoader assets;
+  
 
 
     
-    public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult, AssetLoader assets){
-        this.assets = assets;
+    public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult){
+        
         this.zoomSpeed = zoomSpeed;
         this.zoomScrollMult = 0.5f;
         this.panSpeed = panSpeed;
@@ -71,12 +69,12 @@ public class CamController implements InputProcessor {
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
             camera.position.y -= this.finalPanSpeed;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.Q)){
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
             
             camera.zoom += this.zoomSpeed;
             camera.zoom = camera.zoom > MAX_ZOOM ? MAX_ZOOM : camera.zoom;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.E)){
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             camera.zoom -= this.zoomSpeed;
             camera.zoom = camera.zoom < MIN_ZOOM ? MIN_ZOOM : camera.zoom;
         }

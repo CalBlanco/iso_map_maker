@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tiles>
+    <tile_data id="1">
+        <file>tiles/floors/grass.png</file>
+        <flags>isTraversable=true</flags>
+        <type>f</type>
+        <name>Grass</name>
+    </tile_data>
+    <tile_data id="2">
+        <file>tiles/floors/dirt.png</file>
+        <flags>isTraversable=true</flags>
+        <type>f</type>
+        <name>Dirt</name>
+    </tile_data>
+    <tile_data id="8">
+        <file>tiles/floors/highlights.png</file>
+        <flags>isTraversable=true</flags>
+        <type>f</type>
+        <name>Highlights</name>
+    </tile_data>
+    <tile_data id="3">
+        <file>tiles/floors/metal.png</file>
+        <flags>isTraversable=true</flags>
+        <type>f</type>
+        <name>Metal</name>
+    </tile_data>
+    <tile_data id="4">
+        <file>tiles/floors/tile.png</file>
+        <flags>isTraversable=true</flags>
+        <type>f</type>
+        <name>Tile</name>
+    </tile_data>
+    <tile_data id="5">
+        <file>tiles/floors/water.png</file>
+        <flags>isTraversable=false</flags>
+        <type>f</type>
+        <name>Water</name>
+    </tile_data>
+    <tile_data id="6">
+        <file>tiles/walls/base_wallsNS.png</file>
+        <flags>isSolid=true,isNorthSouth=true</flags>
+        <type>w</type>
+        <name>NS Walls</name>
+        <size>128x128</size>
+    </tile_data>
+    <tile_data id="7">
+        <file>tiles/walls/base_wallsEW.png</file>
+        <flags>isSolid=true,isNorthSouth=false</flags>
+        <type>w</type>
+        <name>EW Walls</name>
+        <size>128x128</size>
+    </tile_data>
+</tiles>
