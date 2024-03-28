@@ -24,12 +24,15 @@ public class TileLoader {
     Dictionary<String, Vector<Floor>> floors;
     Dictionary<String, Vector<Wall>> walls;
     Dictionary<String, Vector<Object>> objects;
+    Dictionary<String, String[]> objectData;
 
     public TileLoader(String assetPath){
         
         floors = new Hashtable<String,Vector<Floor>>(); // {dirt: [Floor Class...].., grass: {}}
         walls = new Hashtable<String,Vector<Wall>>(); // NS-Wall: [Wall Class...]..,
         objects = new Hashtable<String,Vector<Object>>();
+
+        objectData = new Hashtable<String, String[]>();
 
         loadXmlData(XmlParse.readXML(assetPath));
     }
@@ -56,6 +59,8 @@ public class TileLoader {
         String size = rawTileData[4];
 
         System.out.println("Attempting to load asset:\n\tName: " + name + "\n\tFile: " +file + "\n\tType: " +type + "\n\tFlags: " + flags + "\n\tSize: " +size + "\n");
+
+        objectData.put(name, new String[]{type,flags,size});
 
         switch (type) {
             case "f":
@@ -239,5 +244,43 @@ public class TileLoader {
         }
     }
 
+    public String[] fileData(String name){
+        System.out.println("Getting data for " + name);
+        try{
+            return objectData.get(name);
+        }
+        catch(Exception e){
+            System.out.println("Couldnt get data");
+            return new String[]{"","",""};
+        }
+    }
+
+    public Vector<TextureRegion> getTextureRegions(String name, String mode){
+        try{
+            Vector<TextureRegion> tr = new Vector<TextureRegion>();
+            switch(mode){
+                case "Floor":
+                    for(int i=0; i< floors.get(name).size(); i++){
+                        tr.add(floors.get(name).get(i).getTexture());
+                    }
+                    break;
+                case "Wall":
+                    for(int i=0; i< walls.get(name).size(); i++){
+                        tr.add(walls.get(name).get(i).getTexture());
+                    }
+                    break;
+                case "Object":
+                    for(int i=0; i< objects.get(name).size(); i++){
+                        tr.add(objects.get(name).get(i).getTexture());
+                    }
+                    break;
+            }
+
+            return tr;
+        }
+        catch(Exception e){
+            return null;
+        }
+    }
     
 }

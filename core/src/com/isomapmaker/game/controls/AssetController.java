@@ -1,16 +1,30 @@
 package com.isomapmaker.game.controls;
 
+import java.util.Vector;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.map.Tiles.SimpleTile;
 
 // Controll the TileLoader class 
 // Allow user to navigate between floors, walls and objects
@@ -23,11 +37,13 @@ public class AssetController extends Stage {
     TileLoader tl;
     Table root;
     
+    String mode;
+    String activeFile = "";
 
     public AssetController(TileLoader tl){
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.tl = tl;
-        
+        mode = "Floor";
         // initialize our root table and add it to the scene 
         root = new Table();
         root.setFillParent(true);
@@ -61,14 +77,53 @@ public class AssetController extends Stage {
         left.row().grow();
         mouseInfo.left().bottom();
         left.add(mouseInfo);
+
+
         //Middle Panel
         Table middle = new Table();
 
         Label middlePanel = new Label("Middle_Panel", skin);
+        middlePanel.setName("middleHeader");
         middle.add(middlePanel).top();
+
+        // asset browsing 
+        Table assetBrowser = new Table();
+        Label typeLabel = new Label("Available Tiles ", skin);
+        SelectBox<String> typeSelect = new SelectBox<String>(skin);
+        typeSelect.setItems(new String[]{"Floor","Wall", "Object"});
+        typeSelect.addListener(new ChangeListener() {
+           @Override
+           public void changed(ChangeEvent e, Actor a){
+            mode = typeSelect.getSelected();
+            displayMode();
+           } 
+        });
+
+        assetBrowser.add(typeLabel).pad(10);
+        assetBrowser.add(typeSelect);
+        
+        Table typeBrowser = new Table();
+        typeBrowser.setName("typeBrowser");
+
+        Table typeBrowserContainer = new Table();
+        typeBrowserContainer.row().grow();
+        typeBrowserContainer.add(typeBrowser).expand();
+        typeBrowser.row().grow();
 
         
 
+        typeBrowser.setWidth(getWidth()/12);
+        typeBrowser.setHeight(getHeight()/12);
+
+        assetBrowser.row();
+        assetBrowser.add(typeBrowserContainer).expandX();
+        
+        assetBrowser.bottom();
+
+
+
+        middle.row().grow();
+        middle.add(assetBrowser);
 
 
         //Right Panel
@@ -83,7 +138,8 @@ public class AssetController extends Stage {
         root.add(right).grow().colspan(2);
         root.row();
         root.add(new Label("footer", skin)).colspan(12).row();
-        root.debugAll();
+        
+        //root.debugAll();
         
 
     }
@@ -93,7 +149,7 @@ public class AssetController extends Stage {
         
         super.act();
         super.draw();
-       
+        
         
     }
 
@@ -101,6 +157,67 @@ public class AssetController extends Stage {
         super.dispose();
     }
 
+    public void displayMode(){
+        Table t = root.findActor("typeBrowser");
+        t.clear();
+        String[] keys;
+
+        switch(mode){
+            case "Wall":
+                keys = tl.getWalls();
+                break;
+            case "Object":
+                keys = tl.getObjects();
+                break;
+            default:
+                keys = tl.getFloors();
+                break;
+        }
+
+        List<String> list = new List(skin);
+        list.setItems(keys);
+        list.setTypeToSelect(true);
+        list.addListener(new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent event, Actor actor) {
+            activeFile = list.getSelected();
+            
+            drawTextures();
+            }
+        });
+        t.row();
+        t.add(list).pad(20);
+        this.setKeyboardFocus(list);
+
+        Table textureViewer = new Table();
+        textureViewer.setName("textureView");
+        t.add(textureViewer);
+        textureViewer.debugAll();
+    }
+
+    public void drawTextures(){
+        Table textureViewer = root.findActor("textureView");
+        textureViewer.clear();
+        if(activeFile == "") return;
+        System.out.println("Trying to draw regions");
+        
+        Vector<TextureRegion> regions = tl.getTextureRegions(activeFile, mode);
+        Image[] imgs = new Image[regions.size()];
+        System.out.println(regions.size());
+        for(int i=0; i<regions.size(); i++){
+            imgs[i] = new Image(regions.get(i));
+            
+            imgs[i].setScale(0.25f);
+            textureViewer.add(imgs[i]);
+            if(i % 6 == 0) textureViewer.row();
+            System.out.println(regions.get(i).toString());
+        }
+        
+
+        System.out.println("Drew regions");
+        textureViewer.bottom();
+        
+    }
  
 
 
