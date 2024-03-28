@@ -94,7 +94,7 @@ public class TileLoader {
         
         for( int i=0; i< regions.size(); i++){
             
-            Floor t = new Floor(regions.get(i));
+            Floor t = new Floor(regions.get(i), name+"_"+i);
             addFlags(t, flags);
             floors.get(name).add(t);
         }
@@ -107,7 +107,7 @@ public class TileLoader {
         
         
         for( int i=0; i< regions.size(); i++){
-            Wall t = new Wall(regions.get(i));
+            Wall t = new Wall(regions.get(i),name+"_"+i);
             addFlags(t, flags);
             walls.get(name).add(t);
         }
@@ -118,7 +118,7 @@ public class TileLoader {
         
         Vector<TextureRegion> regions = getRegionsFromFile(file, size_str); // floor tiles are all(at least they should) this constant size
         for( int i=0; i< regions.size(); i++){
-            Object t = new Object(regions.get(i), new Vector2(getSize(size_str)[0], getSize(size_str)[1]));
+            Object t = new Object(regions.get(i), new Vector2(getSize(size_str)[0], getSize(size_str)[1]), name+"_"+i);
             addFlags(t, flags);
             objects.get(name).add(t);
         }

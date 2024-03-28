@@ -11,9 +11,12 @@ public class Floor implements SimpleTile {
 
     Dictionary<String, Boolean> flags;
 
-    public Floor(TextureRegion texture){
+    private String name;
+
+    public Floor(TextureRegion texture, String name){
         this.texture = texture;
         this.flags = new Hashtable<String, Boolean>();
+        this.name = name;
     }
 
 
@@ -36,4 +39,11 @@ public class Floor implements SimpleTile {
             return false;
         }
     }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    
 }

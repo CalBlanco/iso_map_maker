@@ -11,12 +11,15 @@ public class Object implements SimpleTile {
     Dictionary<String, Boolean> flags;
     
     public Vector2 size;
+
+    private String name;
     
 
-    public Object(TextureRegion texture, Vector2 size){
+    public Object(TextureRegion texture, Vector2 size, String name){
         this.texture = texture;
         this.size = size;
         this.flags = new Hashtable<String, Boolean>();
+        this.name = name;
     }
 
 
@@ -40,5 +43,12 @@ public class Object implements SimpleTile {
             return false;
         }
     }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+   
     
 }

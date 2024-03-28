@@ -79,4 +79,18 @@ public class Tile {
         }   
         catch(Exception e){return ;}
     }
+
+    public String toString(){
+        String out ="Floor: ";
+        out += floor == null ? "Null" : floor.getName()+"\nWalls:\n\tLeft: ";
+        out += walls.get("left") == null ? "Null\n\t" : walls.get("left").getName() +"\n\tRight: "; 
+        out += walls.get("right") == null ? "Null\n\t" : walls.get("right").getName() +"\n\tTop: "; 
+        out += walls.get("top") == null ? "Null\n\t" : walls.get("top").getName() +"\n\tottom: "; 
+        out += walls.get("bottom") == null ? "Null\n\t" : walls.get("bottom").getName() +"\nObjects:\n\t"; 
+        for(int i=0;i<objects.size();i++){
+            out += i +": "+ objects.get(i).getName() +"\n\t";
+            if(i==objects.size()-1) out+="\n";
+        }
+        return out;
+    }
 }

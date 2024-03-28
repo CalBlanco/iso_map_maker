@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -50,6 +51,7 @@ public class AssetController extends Stage {
     public Floor f;
     public Wall w;
     public Object o;
+    
 
     public AssetController(TileLoader tl){
         skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -132,12 +134,12 @@ public class AssetController extends Stage {
 
         //Right Panel
         Table right = new Table();
-        Label rightPanel = new Label("Right_Panel", skin);
+        Label rightPanel = new Label(" ", skin);
 
         right.add(rightPanel).top();
 
         //header
-        root.add(new Label("Iso Map Maker", skin)).colspan(12).row();
+        root.add(new Label("Iso Map Maker", skin, "title-font", Color.WHITE)).colspan(12).row();
 
         // left panel
         root.add(left).grow().colspan(2);
@@ -153,7 +155,7 @@ public class AssetController extends Stage {
 
 
         // footer space
-        root.add(new Label("footer", skin)).colspan(12).row();
+        root.add(new Label(" ", skin)).colspan(12).row();
         
         //root.debugAll();
     }
@@ -181,6 +183,15 @@ public class AssetController extends Stage {
         
     }
    
+    public void updateTileInfo(Vector2 screenPos, Vector2 tilePos, String tileInfo){
+        screenPos.set((int)screenPos.x, (int)screenPos.y);
+        Label l = root.findActor("screenPos");
+        l.setText("Screen: " + screenPos.toString());
+        l = root.findActor("tilePos");
+        l.setText("Tile: " + tilePos.toString());
+        l = root.findActor("hoverTile");
+        l.setText(tileInfo);
+    }
  
 
 

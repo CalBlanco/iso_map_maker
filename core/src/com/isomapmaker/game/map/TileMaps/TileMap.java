@@ -132,4 +132,9 @@ public class TileMap {
         return true;
     }
 
+
+    public String getTileString(int x, int y){
+        if(!inBounds(x, y)) return "";
+        return map[x][y].toString();
+    }
 }

@@ -10,9 +10,12 @@ public class Wall implements SimpleTile {
 
     Dictionary<String, Boolean> flags;
 
-    public Wall(TextureRegion texture){
+    private String name;
+
+    public Wall(TextureRegion texture, String name){
         this.texture = texture;
         this.flags = new Hashtable<String, Boolean>();
+        this.name = name;
     }
 
     @Override
@@ -33,6 +36,11 @@ public class Wall implements SimpleTile {
         catch(Exception e){
             return false;
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     
