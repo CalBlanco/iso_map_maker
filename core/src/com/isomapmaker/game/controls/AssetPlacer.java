@@ -196,19 +196,21 @@ public class AssetPlacer implements InputProcessor {
     }
 
     public void renderSelectionTiles(SpriteBatch hudBatch){
-        Vector<TextureRegion> regions = loader.getTextureRegions(file, mode);
+        Vector<TextureRegion> regions = mode != "Wall" ? loader.getTextureRegions(file, mode) : loader.getTextureRegions(quadrant, mode) ;
         int lower = (selection - 1 > 0) ? selection-1 : loader.getNumRegions(file, mode) -1 ;
         int upper = (selection + 1 < loader.getNumRegions(file, mode) -1 ) ? selection + 1 : 0;
         if(regions == null || regions.size() < 2){return;}
         TextureRegion[] active = new TextureRegion[]{regions.get(lower), regions.get(selection), regions.get(upper)};
 
-        for(int i=0; i<3; i++){
+        /* for(int i=0; i<3; i++){
             hudBatch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
             if(active[i] == null) continue;
             if(i==1){
                 hudBatch.setColor(1f, 1f, 1, 0.9f);
             }
             hudBatch.draw(active[i], Gdx.graphics.getWidth()/2 - 128/2 + activeOffsets[i].x, Gdx.graphics.getHeight()/4 - 64/2 + activeOffsets[i].y);
-        }
+        } */
+
+        ass.updateTileBrowser(active);
     }
 }

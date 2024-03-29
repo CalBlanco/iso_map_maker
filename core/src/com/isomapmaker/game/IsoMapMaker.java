@@ -117,6 +117,11 @@ public class IsoMapMaker extends Game {
 	}
 	
 	@Override
+    public void resize(int width, int height) {
+        assetControler.getViewport().update(width, height, true);
+    }
+
+	@Override
 	public void dispose () {
 		batch.dispose();
 		hudBatch.dispose();
