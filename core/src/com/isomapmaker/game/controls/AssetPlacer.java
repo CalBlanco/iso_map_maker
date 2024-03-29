@@ -36,6 +36,11 @@ public class AssetPlacer implements InputProcessor {
     String mode = "Floor";
     String file = "Dry";
 
+
+    Vector2 lowHighlightBound = new Vector2(0,0);
+    Vector2 highHighlightBound = new Vector2(0,0);
+
+    Vector2 clickPos = new Vector2(0,0);
     HashMap<String, TextureRegion> quadrantToHighlight = new HashMap<String,TextureRegion>();
 
     Vector2 tVector = new Vector2(0,0);
@@ -71,6 +76,8 @@ public class AssetPlacer implements InputProcessor {
         }}
         catch(Exception e){return;}
         b.setColor(1f,1f,1f,1f);
+
+        renderHighlightArea(b);
        
     }
 
@@ -124,32 +131,22 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        
-        System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
-        switch(mode){
-            case "Floor":
-                try{
-                    map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(file).get(selection));
-                    return true;
-                }
-                catch(Exception e){return false;}
-            case "Wall":
-                try{
-                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(quadrant).get(selection));
-                    return true;
-                }
-                catch(Exception e){return false;}
-            case "Object":
-                return false;
-        }
-        // TODO Auto-generated method stub
+        clickPos = tilePos;
+        resetHighlight();
+        System.out.println("Initial click: " + clickPos.toString());
         return false;
         }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        // if click pos != tile pos we have moved the cursor while selecting
+        // handle area selection
+        Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
+        Vector2 endclick = IsoUtil.isometricToWorld(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
+        System.out.println("Release" + endclick.toString());
+        if(clickPos.dst(endclick) <= 1) return placeTile();
+        else return highlightTiles(endclick);
         // TODO Auto-generated method stub
-        return false;
       }
 
     @Override
@@ -213,5 +210,58 @@ public class AssetPlacer implements InputProcessor {
         } */
 
         ass.updateTileBrowser(active);
+    }
+
+
+    private boolean placeTile(){
+        System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
+        switch(mode){
+            case "Floor":
+                try{
+                    map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(file).get(selection));
+                    return true;
+                }
+                catch(Exception e){return false;}
+            case "Wall":
+                try{
+                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(quadrant).get(selection));
+                    return true;
+                }
+                catch(Exception e){return false;}
+            case "Object":
+                return false;
+        }
+        return false;
+    }
+
+    private boolean highlightTiles(Vector2 landingPos){
+        float lowX = clickPos.x < landingPos.x ? clickPos.x : landingPos.x;
+        float lowY = clickPos.y < landingPos.y ? clickPos.y : landingPos.y;
+
+        float dX = Math.abs(clickPos.x-landingPos.x)+1;
+        float dY = Math.abs(clickPos.y-landingPos.y)+1;
+
+        lowHighlightBound.set(lowX, lowY);
+        highHighlightBound.set(lowX+dX, lowY+dY);
+
+        return true;
+    }
+
+    private void renderHighlightArea(SpriteBatch b){
+        if(lowHighlightBound.dst(highHighlightBound) <=0) return;
+        int[] low = new int[]{(int)lowHighlightBound.x,(int)lowHighlightBound.y};
+        int[] high = new int[]{(int)highHighlightBound.x,(int)highHighlightBound.y};
+
+        for(int x=low[0]; x<high[0]; x++){
+            for(int y=low[1]; y<high[1]; y++){
+                Vector2 pos = IsoUtil.worldToIsometric(new Vector2(x,y), IsoUtil.FLOOR_SIZE);
+                b.draw(loader.floors.get("Highlights").get(3).getTexture(), pos.x,pos.y);
+            }
+        }
+    }
+
+    private void resetHighlight(){
+        lowHighlightBound.set(0,0);
+        highHighlightBound.set(0,0);
     }
 }
