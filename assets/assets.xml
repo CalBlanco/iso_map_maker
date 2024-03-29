@@ -12,6 +12,12 @@
         <type>f</type>
         <name>Dirt</name>
     </tile_data>
+    <tile_data>
+        <file>tiles/floors/cobra.png</file>
+        <flags>isTraversable=true</flags>
+        <type>f</type>
+        <name>Cobra</name>
+    </tile_data>
     <tile_data id="8">
         <file>tiles/floors/highlights.png</file>
         <flags>isTraversable=true</flags>
