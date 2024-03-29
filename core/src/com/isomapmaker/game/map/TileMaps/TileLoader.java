@@ -27,6 +27,10 @@ public class TileLoader {
     public Dictionary<String, Vector<Object>> objects;
     public Dictionary<String, String[]> objectData;
 
+    /**
+     * Manages tile texture information so that game tiles can get correct graphical data
+     * @param assetPath The asset file we want to use as configuration for our assets 
+     */
     public TileLoader(String assetPath){
         
         floors = new Hashtable<String,Vector<Floor>>(); // {dirt: [Floor Class...].., grass: {}}
@@ -100,6 +104,13 @@ public class TileLoader {
         }
     }
 
+    /**
+     * Parse walls from input string
+     * @param name
+     * @param file
+     * @param flags
+     * @param size_str
+     */
     public void parseWalls(String name, String file, String flags, String size_str){
         walls.put(name, new Vector<Wall>()); //store a new vector here
         
@@ -113,6 +124,14 @@ public class TileLoader {
         }
     }
 
+
+    /**
+     * Parse out our read objects into actual texture info for objects
+     * @param name
+     * @param file
+     * @param flags
+     * @param size_str
+     */
     public void parseObjects(String name, String file, String flags, String size_str){
         objects.put(name, new Vector<Object>()); //store a new vector here
         
@@ -177,6 +196,12 @@ public class TileLoader {
         }        
     }
 
+    /**
+     * Get the floor specified
+     * @param textureName
+     * @param choice
+     * @return
+     */
     public Floor getFloor(String textureName, int choice){
         try{
             return floors.get(textureName).get(choice);
@@ -186,6 +211,12 @@ public class TileLoader {
         }
     }
 
+    /**
+     * Get the wall Specified
+     * @param textureName
+     * @param choice
+     * @return
+     */
     public Wall getWall(String textureName, int choice){
         try{
             return walls.get(textureName).get(choice);
@@ -195,6 +226,13 @@ public class TileLoader {
         }
     }
 
+
+    /**
+     * Get the object specified 
+     * @param textureName
+     * @param choice
+     * @return
+     */
     public Object getObject(String textureName, int choice){
         try{
             return objects.get(textureName).get(choice);
@@ -204,6 +242,12 @@ public class TileLoader {
         }
     }
 
+
+    /**
+     * Internal function to retrieve the enumeration of keys for the desired dictionary as a String[]
+     * @param d Dictionary<String, ?>
+     * @return An array of all possible keys for the given dictionary
+     */
     private String[] getKeys(Dictionary<String, ?> d){
         String[] keys = new String[d.size()];
         int i =0;
@@ -214,6 +258,11 @@ public class TileLoader {
         return keys;
     }
 
+    /**
+     * Get a list of available files for a particular type 
+     * @param mode "Floor", "Wall", or "Object"
+     * @return
+     */
     public String[] getFiles(String mode){
         switch(mode){
             case "Floor":
@@ -226,20 +275,38 @@ public class TileLoader {
         return new String[]{"No Files found"};
     }
 
+    /**
+     * Return all possible keys for floors
+     * @return
+     */
     public String[] getFloors(){
         return getKeys(floors);
     }
 
+    /**
+     * Return all possible keys for walls
+     * @return
+     */
     public String[] getWalls(){
         return getKeys(walls);
     }
 
+    /**
+     * Return all possible keys availble for objects
+     * @return
+     */
     public String[] getObjects(){
         return getKeys(objects);
     }
 
 
-    // Get the total available regions associated with the texture name, providing a particular type 
+    // Get the total available regions associated with the texture name, providing a particular type
+    /**
+     * Get the total number of regions available for this type of file 
+     * @param name
+     * @param type
+     * @return
+     */ 
     public int getNumRegions(String name, String type){
         try{
             switch(type){
@@ -258,6 +325,11 @@ public class TileLoader {
         }
     }
 
+    /**
+     * File meta information for a particular file
+     * @param name The name of the file we want meta info from
+     * @return [type, flags, size]
+     */
     public String[] fileData(String name){
         System.out.println("Getting data for " + name);
         try{
@@ -269,6 +341,13 @@ public class TileLoader {
         }
     }
 
+
+    /**
+     * Get a Vector of all the texture regions of an associated name and mode 
+     * @param name Name of file 
+     * @param mode Floor gets data from the floor textures, Wall does walls, and Object does objects
+     * @return A Vector containing texture data for a given file
+     */
     public Vector<TextureRegion> getTextureRegions(String name, String mode){
         try{
             Vector<TextureRegion> tr = new Vector<TextureRegion>();
