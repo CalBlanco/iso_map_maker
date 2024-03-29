@@ -36,26 +36,26 @@ public class TileMap {
     public Vector2 tileOffset = new Vector2(0,0);
     
 
-    // eventually need a way to load in a map here
-    // so lets make a class at some point to deal with reading/writing this information later
+    /**
+     * Create a new TileMap to be rendered and editable 
+     * @param size The desired size (is passed from TileMapManager)
+     * @param tileOffset The offset this map needs to be placed at (higher z's require larger offsets)
+     * @param defaultFloor The default floor we want to be rendered
+     */
     public TileMap(int size, Vector2 tileOffset, Floor defaultFloor){
         this.size = size;
         this.tileOffset = tileOffset;
         this.defaultTexture = defaultFloor.getTexture();
         this.highlight = new TextureRegion(new Texture(Gdx.files.internal("highlight.png")));
         this.map = new Tile[size][size];
-        for(int i=0; i< size; i++){
-            for(int j=0; j<size; j++){
-                map[i][j] = new Tile(this.defaultTexture);
-                
-            }
-        }
+        reloadMap();
     }
 
-    public void init_maps(){
-        
-    }
 
+    /**
+     * Render this map based on its offset
+     * @param b
+     */
     public void render(SpriteBatch b){
         // iterate back to front
         for(int i=size-1; i>=0; i--){
@@ -77,6 +77,12 @@ public class TileMap {
 ██║     ███████╗╚██████╔╝╚██████╔╝██║  ██║███████║
 ╚═╝     ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝
 */
+    /**
+     * Set the floor of the tile
+     * @param x
+     * @param y
+     * @param f
+     */
     public void setFloor(int x, int y, Floor f){
         if (!inBounds(x, y)) return;
         if (map[x][y] == null) map[x][y]= new Tile(this.defaultTexture);
@@ -84,6 +90,12 @@ public class TileMap {
 
     }
 
+    /**
+     * Get the floor for the tile
+     * @param x
+     * @param y
+     * @return
+     */
     public Floor getFloor(int x, int y){
         if (!hasTile(x, y)) return null;
         return map[x][y].getFloor();
@@ -96,12 +108,26 @@ public class TileMap {
 ╚███╔███╔╝██║  ██║███████╗███████╗███████║
  ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
 */
+    /**
+     * Set the wall at a specified slot 
+     * @param x
+     * @param y
+     * @param slot
+     * @param w
+     */
     public void setWall(int x, int y, String slot, Wall w){
         if(!inBounds(x, y)) return;
         if (map[x][y] == null) map[x][y]= new Tile(this.defaultTexture);
         map[x][y].setWall(w, slot);
     }
 
+    /**
+     * Get a wall at a given position 
+     * @param x X cordinate 
+     * @param y Y cordinate 
+     * @param slot Quadrant to place wall in 
+     * @return
+     */
     public Wall getWall(int x, int y, String slot){
         if (!hasTile(x, y)) return null;
         return map[x][y].getWall(slot);
@@ -124,11 +150,23 @@ public class TileMap {
 ╚██████╔╝   ██║   ██║███████╗
  ╚═════╝    ╚═╝   ╚═╝╚══════╝
  */
+    /**
+     * Check if the given tile is within the bounds of our map
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean inBounds(int x, int y){
         if(x < 0 || x > size-1 || y < 0 || y > size-1) return false;
         return true;
     }
 
+    /**
+     * Check if a given tile has a tile to place information on (No longer needed because all maps now start initilaized)
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean hasTile(int x, int y){
         if(!inBounds(x, y)) return false;
         if(map[x][y] == null) return false;
@@ -136,8 +174,65 @@ public class TileMap {
     }
 
 
+    /**
+     * Return pretty tile data
+     * @param x X-cordinate of tile
+     * @param y Y-coridnate of tile
+     * @return Pretty string
+     */
     public String getTileString(int x, int y){
         if(!inBounds(x, y)) return "";
         return map[x][y].toString();
     }
+
+
+
+    /**
+     * Iterating over all tiles create appropriate strings for saving
+     * @return a string containing tile information for map loading
+     */
+    public String saveMap(){
+        String out = "";
+        for(int i=0; i< size; i++){
+            for(int j=0; j<size; j++){
+                if(map[i][j] != null) out+= map[i][j].saveString() +",";
+            }
+            out += "\n";
+        }
+
+        return out;
+    }
+    
+
+    /**
+     * Load in a map providing the tile loader for the tile to get information from 
+     * Provide an array of lines from the map file 
+     * @param inMap
+     * @param loader
+     */
+    public void loadMap(String[] inMap , TileLoader loader){
+        reloadMap(); // wipe everything and load from this
+
+        for(int line=0; line < inMap.length && line < size; line++){ // ensure our provided map is not bigger than allowed map 
+            // load a tile one by one here
+            String[] tiles = inMap[line].split(",", size);
+            for(int tile=0; tile<tiles.length && tile < size; tile++){ // ensure we only place tiles that would fit in size
+                map[line][tile].parseString(tiles[tile], loader );
+            }
+        }
+    }
+
+    /**
+     * Re-Assign each tile to be a fresh tile
+     */
+    public void reloadMap(){
+        for(int i=0; i< size; i++){
+            for(int j=0; j<size; j++){
+                map[i][j] = new Tile(this.defaultTexture);
+                
+            }
+        }
+    }
+
+
 }

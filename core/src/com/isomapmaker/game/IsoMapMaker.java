@@ -25,8 +25,9 @@ import com.isomapmaker.game.util.IsoUtil;
 
 
 public class IsoMapMaker extends Game {
-	final static String[][][] StartMap = {{ {"Pattern_1:1"},{"Grass_1:1"},{"Grass_1:1"},{"Grass_1:1"},{"Grass_1:8"}, {"Dry_1:1"}},{{"Grass_0:1"}, {"Grass_1:3"},{"Grass_0:1"},{"Grass_1:1"},{"Grass_1:1"}}};
-	final static String[][][] emptyMap = {{{}}};
+	
+	final static String[] startMap = new String[]{"Grass_1-top_0:right_1:left_2:bottom_3:-,Grass_1-e::e:e-e", "Grass_1-e-e"};
+
 	SpriteBatch batch;
 	SpriteBatch hudBatch;
 
@@ -43,8 +44,10 @@ public class IsoMapMaker extends Game {
 	AssetPlacer assetPlacer;
 
 	CamController cameraController;
-	TileMap tm;
+	TileMap map;
 	TileMapManager tileMapManager;
+
+
 
 	@Override
 	public void create () {
@@ -80,11 +83,14 @@ public class IsoMapMaker extends Game {
 			}
 		}
 
+
+		//tileMapManager.setLayerMap(0, startMap);
+
 		/* String[] wallKeys = tileLoader.getWalls();
 		for(int i=0; i< wallKeys.length; i++){
 			Vector<Wall> fr = tileLoader.walls.get(wallKeys[i]);
 			for(int j=0; j<fr.size(); j++){
-				tm.setWall(j, i, i+2,fr.get(j));
+				map.setWall(j, i, i+2,fr.get(j));
 			}
 		} */
 		
