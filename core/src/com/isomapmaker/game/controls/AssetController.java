@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -57,6 +58,7 @@ public class AssetController extends Stage {
         skin = new Skin(Gdx.files.internal("skins/uiskin/uiskin.json"));
         this.tl = tl;
         mode = "Floor";
+        activeFile = "Highlights";
         // initialize our root table and add it to the scene 
         root = new Table();
         root.setFillParent(true);
@@ -69,6 +71,7 @@ public class AssetController extends Stage {
 
         Label leftPanel = new Label("Left_Panel", skin);
         
+        int[] selections = new int[]{4,0,1};
         
 
         Table mouseInfo = new Table(skin);
@@ -97,14 +100,14 @@ public class AssetController extends Stage {
 
 
         //Middle Panel
-        Table middle = new Table();
+        Table middle = new Table(skin);
 
         Label middlePanel = new Label("", skin);
         middlePanel.setName("middleHeader");
         middle.add(middlePanel).top();
 
         // asset browsing 
-        Table assetBrowser = new Table();
+        Table assetBrowser = new Table(skin);
         Label typeLabel = new Label("Available Tiles ", skin);
         SelectBox<String> typeSelect = new SelectBox<String>(skin);
         typeSelect.setItems(new String[]{"Floor","Wall", "Object"});
@@ -133,7 +136,16 @@ public class AssetController extends Stage {
 
         middle.row().grow();
         middle.add(new Label(" ",skin)).row();
-        middle.add(assetBrowser).bottom();
+
+        //tile browser?
+        Table tileBrowser = new Table(skin);
+        tileBrowser.background("default-pane-noborder");
+        tileBrowser.setName("tileBrowserPanel");
+        
+        middle.add(new Label(" ", skin)).grow().row();
+        middle.add(tileBrowser).row();
+        middle.add(assetBrowser.background("default-window")).fill().bottom();
+        
         
 
         //Right Panel
@@ -143,7 +155,10 @@ public class AssetController extends Stage {
         right.add(rightPanel).top();
 
         //header
-        root.add(new Label("Iso Map Maker", skin, "title-font", Color.WHITE)).colspan(12).row();
+        Table topT = new Table(skin);
+        topT.background("default-pane");
+        topT.add(new Label("Iso Map Maker", skin, "title-font", Color.WHITE)).expand().center();
+        root.add(topT).growX().colspan(12).row();
 
         // left panel
         root.add(left).grow().colspan(2);
@@ -177,6 +192,7 @@ public class AssetController extends Stage {
     public void updateFileSelection(){
         SelectBox<String> box = root.findActor("fileSelect");
         String[] fileKeys = tl.getFiles(mode);
+        if(mode == "Wall") {activeFile = "left"; return;}
         box.setItems(fileKeys);
         box.addListener(new ChangeListener() {
             @Override
@@ -200,7 +216,45 @@ public class AssetController extends Stage {
         l = root.findActor("hoverLayer");
         l.setText("Layer: " + Layer);
     }
+
+
+    public void updateTileBrowser(TextureRegion[] regions){
+        if(regions == null || regions.length < 2){return;}
+        Table t = root.findActor("tileBrowserPanel");
+        t.clear();
+
+        //left selection
+        Table temp = new Table(skin);
+        
+        Image i = new Image(regions[0]);
+        i.setScaling(Scaling.fit);
+        temp.add(new Label(" ", skin)).grow().row();
+        temp.add(i);
+        t.add(temp).left();
+
+        // active selection
+        temp = new Table(skin);
+        temp.background("default-round");
+        i = new Image(regions[1]);
+        i.setAlign(Align.center);
+        i.setScaling(Scaling.fit);
+        temp.add(i).grow();
+        t.add(temp).grow();
+
+        // right selection
+        temp = new Table(skin);
+        i = new Image(regions[2]);
+        i.setScaling(Scaling.fit);
+        
+        temp.add(new Label(" ", skin)).grow().row();
+        temp.add(i);
+        t.add(temp).right();
+
+    }
  
+
+    
+
 
 
 }

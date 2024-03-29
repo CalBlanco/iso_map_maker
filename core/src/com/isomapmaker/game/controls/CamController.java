@@ -22,8 +22,7 @@ public class CamController implements InputProcessor {
     private float zoomSpeed, zoomScrollMult, panSpeed, panMult;
     private float finalPanSpeed;
     
-    Texture nullTexture;
-
+    
     public Vector2 hoverWorldPos;
     public Vector2 hoverTile;
 
@@ -42,7 +41,6 @@ public class CamController implements InputProcessor {
         this.panMult = panMult;
         this.camera = camera;
         this.loadVector = new Vector2();
-        this.nullTexture = new Texture(Gdx.files.internal("my_iso_assets/floor_highlight_128x64.png"));
         this.hoverWorldPos = new Vector2();
         this.hoverTile = new Vector2();
 
