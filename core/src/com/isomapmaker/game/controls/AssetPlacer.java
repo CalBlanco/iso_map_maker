@@ -169,7 +169,8 @@ public class AssetPlacer implements InputProcessor {
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         if(mode != ass.mode) {mode = ass.mode ; selection=0;};
-        if(file != ass.activeFile) {file = ass.activeFile; selection=0;}
+        if(file != ass.activeFile && mode != "Wall") {file = ass.activeFile; selection=0;}
+        if(mode == "Wall"){file = quadrant;}
         
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         screenPos = new Vector2(wpos.x, wpos.y);
@@ -197,8 +198,8 @@ public class AssetPlacer implements InputProcessor {
 
     public void renderSelectionTiles(SpriteBatch hudBatch){
         Vector<TextureRegion> regions = mode != "Wall" ? loader.getTextureRegions(file, mode) : loader.getTextureRegions(quadrant, mode) ;
-        int lower = (selection - 1 > 0) ? selection-1 : loader.getNumRegions(file, mode) -1 ;
-        int upper = (selection + 1 < loader.getNumRegions(file, mode) -1 ) ? selection + 1 : 0;
+        int lower = (selection - 1 >= 0) ? selection-1 : loader.getNumRegions(file, mode) -1 ;
+        int upper = (selection + 1 <= loader.getNumRegions(file, mode) -1 ) ? selection + 1 : 0;
         if(regions == null || regions.size() < 2){return;}
         TextureRegion[] active = new TextureRegion[]{regions.get(lower), regions.get(selection), regions.get(upper)};
 
