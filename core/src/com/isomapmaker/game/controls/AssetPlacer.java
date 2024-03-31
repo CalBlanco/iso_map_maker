@@ -133,7 +133,6 @@ public class AssetPlacer implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         clickPos = tilePos;
         resetHighlight();
-        System.out.println("Initial click: " + clickPos.toString());
         return false;
         }
 
@@ -143,8 +142,7 @@ public class AssetPlacer implements InputProcessor {
         // handle area selection
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         Vector2 endclick = IsoUtil.isometricToWorld(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
-        System.out.println("Release" + endclick.toString());
-        if(clickPos.dst(endclick) <= 1) return placeTile();
+        if(clickPos.dst(endclick) <= 2) return placeTile();
         else return highlightTiles(endclick);
         // TODO Auto-generated method stub
       }
@@ -238,7 +236,7 @@ public class AssetPlacer implements InputProcessor {
         float lowX = clickPos.x < landingPos.x ? clickPos.x : landingPos.x;
         float lowY = clickPos.y < landingPos.y ? clickPos.y : landingPos.y;
 
-        float dX = Math.abs(clickPos.x-landingPos.x)+1;
+        float dX = Math.abs(clickPos.x-landingPos.x);
         float dY = Math.abs(clickPos.y-landingPos.y)+1;
 
         lowHighlightBound.set(lowX, lowY);
