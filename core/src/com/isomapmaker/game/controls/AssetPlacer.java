@@ -19,7 +19,7 @@ import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
 
 public class AssetPlacer implements InputProcessor {
-
+    private enum State {Line, Box, Circle, Pencil};
     final Vector2[] activeOffsets = new Vector2[]{new Vector2(-256,-64), new Vector2(0,0), new Vector2(256,-64)};
 
     OrthographicCamera cam;
@@ -44,7 +44,13 @@ public class AssetPlacer implements InputProcessor {
     HashMap<String, TextureRegion> quadrantToHighlight = new HashMap<String,TextureRegion>();
 
     Vector2 tVector = new Vector2(0,0);
+
+    State paintState;
+
+    Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
+        
+        this.paintState = State.Pencil; 
         this.cam = cam; 
         this.ass= ass; 
         this.manager = manager;
@@ -59,27 +65,11 @@ public class AssetPlacer implements InputProcessor {
     }
 
 
-    public void activeTileRender(SpriteBatch b){
-        tVector = IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
-        b.setColor(1f, 1f, 1f, 0.7f);
-        try{
-        switch (mode) {
-            case "Floor":
-                b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
-                break;
-            case "Wall":
-                b.draw(quadrantToHighlight.get(quadrant), tVector.x, tVector.y);
-                b.draw(loader.walls.get(quadrant).get(selection).getTexture(), tVector.x, tVector.y);
-                break;
-            default:
-                break;
-        }}
-        catch(Exception e){return;}
-        b.setColor(1f,1f,1f,1f);
 
-        
-       
-    }
+    
+
+    // Only going to be useful in pencil mode for now needs to be expanded to brushes and selections
+    
 
     @Override
     public boolean keyDown(int keycode) {
@@ -92,42 +82,30 @@ public class AssetPlacer implements InputProcessor {
                 incrementSelection(1);
                 return true;
             case Input.Keys.C:
-                switch (ass.mode) {
-                    case "Floor":
-                        map.setFloor((int)tilePos.x, (int)tilePos.y, null);
-                        return true;
-                    case "Wall":
-                        map.setWall((int)tilePos.x, (int)tilePos.y, quadrant, null);
-                        return true;
-                    case "Object":
-                        return true;
-                    default:
-                        break;
-                }
+                return pencilEraser();
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
                 if(layer+1 > manager.maxLayer()) manager.addNewLayer(); // make a new layer if there is not one
                 map = manager.getLayer(layer+1); // get next layer
                 layer +=1;
+                return true;
             case Input.Keys.PAGE_DOWN:
                 if(layer-1 < 0) layer = 0;
                 map = manager.getLayer(layer);
+                return true;
             case Input.Keys.DEL:
                 if(manager.maxLayer() != 0) manager.popLayer();
+                return true;
+            case Input.Keys.L:
+                this.paintState = State.Line;
+                return true;                
+            case Input.Keys.P:
+                this.paintState = State.Pencil;
+                return true;
         }
         return false;
       }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        // TODO Auto-generated method stub
-        return false;
-       }
+   
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -143,24 +121,31 @@ public class AssetPlacer implements InputProcessor {
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         Vector2 endclick = IsoUtil.isometricToWorld(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
         System.out.println("Mouse Raised");
-        if(clickPos.dst(endclick) <= 2) return placeTile();
+
+
+        switch(this.paintState){
+            case Box:
+                break;
+            case Circle:
+                break;
+            case Line:
+                line(endclick);
+                break;
+            case Pencil:
+                return pencil();
+            default:
+                break;
+        }
+
+        
+        
+        
+        if(clickPos.dst(endclick) <= 2) return pencil();
         return false;
         // TODO Auto-generated method stub
       }
 
-    @Override
-    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
-        // TODO Auto-generated method stub
-        return false;
-        
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        // TODO Auto-generated method stub
-        return false;
-        
-    }
+    
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
@@ -177,11 +162,14 @@ public class AssetPlacer implements InputProcessor {
         return false;
     }
 
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        // TODO Auto-generated method stub
-        return false;
-       }
+    /*
+██╗   ██╗   ██╗
+██║   ██║   ██║
+██║   ██║   ██║
+██║   ██║   ██║
+╚██████╔╝██╗██║
+ ╚═════╝ ╚═╝╚═╝               
+     */
     
     
     /**
@@ -208,11 +196,85 @@ public class AssetPlacer implements InputProcessor {
         ass.updateTileBrowser(active);
     }
 
+    
+
+    /**
+     * Update the placement information for the asset highlighting mechanic
+     */
+    private void updatePlacementView(){
+        if(mode != ass.mode) {mode = ass.mode ; selection=0;};
+        if(file != ass.activeFile && mode != "Wall") {file = ass.activeFile; selection=0;}
+        if(mode == "Wall"){file = quadrant;}
+    }
+    
+    /*
+███████╗████████╗ █████╗ ████████╗███████╗    ██████╗ ███████╗███╗   ██╗██████╗ ███████╗██████╗ 
+██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██╔════╝    ██╔══██╗██╔════╝████╗  ██║██╔══██╗██╔════╝██╔══██╗
+███████╗   ██║   ███████║   ██║   █████╗      ██████╔╝█████╗  ██╔██╗ ██║██║  ██║█████╗  ██████╔╝
+╚════██║   ██║   ██╔══██║   ██║   ██╔══╝      ██╔══██╗██╔══╝  ██║╚██╗██║██║  ██║██╔══╝  ██╔══██╗
+███████║   ██║   ██║  ██║   ██║   ███████╗    ██║  ██║███████╗██║ ╚████║██████╔╝███████╗██║  ██║
+╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝
+     */
+    public void activeTileRender(SpriteBatch b){
+        switch(this.paintState){
+            case Pencil:
+                pencilTileRender(b);
+                break;
+            case Box:
+                break;
+            case Circle:
+                break;
+            case Line:
+                
+                break;
+            default:
+                break;
+
+        }
+       
+    }
+
+    /*
+     * Render the pencil tile tool availability
+     */
+    private void pencilTileRender(SpriteBatch b){
+        tVector = IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
+        b.setColor(1f, 1f, 1f, 0.7f);
+        try{
+        switch (mode) {
+            case "Floor":
+                b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
+                break;
+            case "Wall":
+                b.draw(quadrantToHighlight.get(quadrant), tVector.x, tVector.y);
+                b.draw(loader.walls.get(quadrant).get(selection).getTexture(), tVector.x, tVector.y);
+                break;
+            default:
+                break;
+        }}
+        catch(Exception e){return;}
+        b.setColor(1f,1f,1f,1f);
+    }
+
+    /*
+██████╗  █████╗ ██╗███╗   ██╗████████╗    ████████╗ ██████╗  ██████╗ ██╗     ███████╗
+██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝
+██████╔╝███████║██║██╔██╗ ██║   ██║          ██║   ██║   ██║██║   ██║██║     ███████╗
+██╔═══╝ ██╔══██║██║██║╚██╗██║   ██║          ██║   ██║   ██║██║   ██║██║     ╚════██║
+██║     ██║  ██║██║██║ ╚████║   ██║          ██║   ╚██████╔╝╚██████╔╝███████╗███████║
+╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝          ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝                                                                               
+     */
+
+     /*
+╔═╗┌─┐┌┐┌┌─┐┬┬  
+╠═╝├┤ ││││  ││  
+╩  └─┘┘└┘└─┘┴┴─┘
+      */
     /**
      * Place a tile down in the hover tile position
      * @return boolean representing successful input
      */
-    private boolean placeTile(){
+    private boolean pencil(){
         System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
         switch(mode){
             case "Floor":
@@ -233,14 +295,74 @@ public class AssetPlacer implements InputProcessor {
         return false;
     }
 
-    /**
-     * Update the placement information for the asset highlighting mechanic
-     */
-    private void updatePlacementView(){
-        if(mode != ass.mode) {mode = ass.mode ; selection=0;};
-        if(file != ass.activeFile && mode != "Wall") {file = ass.activeFile; selection=0;}
-        if(mode == "Wall"){file = quadrant;}
+    private boolean pencilEraser(){
+        switch (ass.mode) {
+            case "Floor":
+                map.setFloor((int)tilePos.x, (int)tilePos.y, null);
+                return true;
+            case "Wall":
+                map.setWall((int)tilePos.x, (int)tilePos.y, quadrant, null);
+                return true;
+            case "Object":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+/*
+╦  ┬┌┐┌┌─┐
+║  ││││├┤ 
+╩═╝┴┘└┘└─┘
+ */
+
+    private boolean line(Vector2 endPos){
+        Vector<Integer[]> l = PaintTools.line(clickPos, endPos);
+        map.setSelection(l);
+        return false;
+    }
+
+
+
+/*
+██╗███╗   ██╗████████╗███████╗
+██║████╗  ██║╚══██╔══╝██╔════╝
+██║██╔██╗ ██║   ██║   █████╗  
+██║██║╚██╗██║   ██║   ██╔══╝  
+██║██║ ╚████║   ██║   ██║     
+╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝     
+        Unimplemented interface methods                       
+ */
+    @Override
+    public boolean keyUp(int keycode) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        // TODO Auto-generated method stub
+        return false;
+        
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        // TODO Auto-generated method stub
+        return false;
+        
     }
     
-
 }

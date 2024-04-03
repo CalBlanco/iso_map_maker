@@ -64,6 +64,7 @@ public class TileMap {
         Vector2 wpos = new Vector2(0,0);
         Vector2 tilePos = new Vector2(0,0);
         for(int i=0; i<selection.size(); i++){
+            if (!inBounds(this.selection.get(i)[0], this.selection.get(i)[1])) continue;
             tilePos.set(this.selection.get(i)[0], this.selection.get(i)[1]);
             wpos = IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
             b.draw(this.highlight, wpos.x,wpos.y);
