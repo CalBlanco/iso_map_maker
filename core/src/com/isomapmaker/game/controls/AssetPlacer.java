@@ -51,7 +51,7 @@ public class AssetPlacer implements InputProcessor {
         this.loader = loader;
         this.map = manager.getLayer(layer);
         this.tilePos = new Vector2(0,0);
-
+        this.screenPos = new Vector2(0,0);
         quadrantToHighlight.put("top", loader.floors.get("QuadrantHighlights").get(0).getTexture());
         quadrantToHighlight.put("right", loader.floors.get("QuadrantHighlights").get(1).getTexture());
         quadrantToHighlight.put("left", loader.floors.get("QuadrantHighlights").get(2).getTexture());
@@ -77,7 +77,7 @@ public class AssetPlacer implements InputProcessor {
         catch(Exception e){return;}
         b.setColor(1f,1f,1f,1f);
 
-        renderHighlightArea(b);
+        
        
     }
 
@@ -132,7 +132,7 @@ public class AssetPlacer implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         clickPos = tilePos;
-        resetHighlight();
+        
         return false;
         }
 
@@ -142,8 +142,9 @@ public class AssetPlacer implements InputProcessor {
         // handle area selection
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         Vector2 endclick = IsoUtil.isometricToWorld(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
+        System.out.println("Mouse Raised");
         if(clickPos.dst(endclick) <= 2) return placeTile();
-        else return highlightTiles(endclick);
+        return false;
         // TODO Auto-generated method stub
       }
 
@@ -163,12 +164,10 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        if(mode != ass.mode) {mode = ass.mode ; selection=0;};
-        if(file != ass.activeFile && mode != "Wall") {file = ass.activeFile; selection=0;}
-        if(mode == "Wall"){file = quadrant;}
+        updatePlacementView();
         
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
-        screenPos = new Vector2(wpos.x, wpos.y);
+        screenPos.set(wpos.x,wpos.y);
         tilePos = IsoUtil.isometricToWorld(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
         quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
@@ -176,7 +175,6 @@ public class AssetPlacer implements InputProcessor {
         
         // TODO Auto-generated method stub
         return false;
-
     }
 
     @Override
@@ -185,12 +183,21 @@ public class AssetPlacer implements InputProcessor {
         return false;
        }
     
+    
+    /**
+     * Increment the selected tile by a certain amount
+     * @param i
+     */
     public void incrementSelection(int i){
         if (selection + i < 0) {selection = loader.getNumRegions(file, mode) -1; return;}
         if (selection + i >  loader.getNumRegions(file, mode) -1){ selection = 0; return;}
         selection = selection + i;
     }
 
+    /**
+     * Render the available selection info to the ui
+     * @param hudBatch
+     */
     public void renderSelectionTiles(SpriteBatch hudBatch){
         Vector<TextureRegion> regions = mode != "Wall" ? loader.getTextureRegions(file, mode) : loader.getTextureRegions(quadrant, mode) ;
         int lower = (selection - 1 >= 0) ? selection-1 : loader.getNumRegions(file, mode) -1 ;
@@ -198,19 +205,13 @@ public class AssetPlacer implements InputProcessor {
         if(regions == null || regions.size() < 2){return;}
         TextureRegion[] active = new TextureRegion[]{regions.get(lower), regions.get(selection), regions.get(upper)};
 
-        /* for(int i=0; i<3; i++){
-            hudBatch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
-            if(active[i] == null) continue;
-            if(i==1){
-                hudBatch.setColor(1f, 1f, 1, 0.9f);
-            }
-            hudBatch.draw(active[i], Gdx.graphics.getWidth()/2 - 128/2 + activeOffsets[i].x, Gdx.graphics.getHeight()/4 - 64/2 + activeOffsets[i].y);
-        } */
-
         ass.updateTileBrowser(active);
     }
 
-
+    /**
+     * Place a tile down in the hover tile position
+     * @return boolean representing successful input
+     */
     private boolean placeTile(){
         System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
         switch(mode){
@@ -232,34 +233,14 @@ public class AssetPlacer implements InputProcessor {
         return false;
     }
 
-    private boolean highlightTiles(Vector2 landingPos){
-        float lowX = clickPos.x < landingPos.x ? clickPos.x : landingPos.x;
-        float lowY = clickPos.y < landingPos.y ? clickPos.y : landingPos.y;
-
-        float dX = Math.abs(clickPos.x-landingPos.x);
-        float dY = Math.abs(clickPos.y-landingPos.y)+1;
-
-        lowHighlightBound.set(lowX, lowY);
-        highHighlightBound.set(lowX+dX, lowY+dY);
-
-        return true;
+    /**
+     * Update the placement information for the asset highlighting mechanic
+     */
+    private void updatePlacementView(){
+        if(mode != ass.mode) {mode = ass.mode ; selection=0;};
+        if(file != ass.activeFile && mode != "Wall") {file = ass.activeFile; selection=0;}
+        if(mode == "Wall"){file = quadrant;}
     }
+    
 
-    private void renderHighlightArea(SpriteBatch b){
-        if(lowHighlightBound.dst(highHighlightBound) <=0) return;
-        int[] low = new int[]{(int)lowHighlightBound.x,(int)lowHighlightBound.y};
-        int[] high = new int[]{(int)highHighlightBound.x,(int)highHighlightBound.y};
-
-        for(int x=low[0]; x<high[0]; x++){
-            for(int y=low[1]; y<high[1]; y++){
-                Vector2 pos = IsoUtil.worldToIsometric(new Vector2(x,y), IsoUtil.FLOOR_SIZE);
-                b.draw(loader.floors.get("Highlights").get(3).getTexture(), pos.x,pos.y);
-            }
-        }
-    }
-
-    private void resetHighlight(){
-        lowHighlightBound.set(0,0);
-        highHighlightBound.set(0,0);
-    }
 }

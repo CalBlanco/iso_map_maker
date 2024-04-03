@@ -59,7 +59,7 @@ public class TileMap {
 
 
     private void highlightSelection(SpriteBatch b){
-        if (this.selection == null) return;
+        if (this.selection == null) {System.out.println("No Selection");  return;}
         b.setColor(0.7f, 0.7f, 0.7f, 0.7f);
         Vector2 wpos = new Vector2(0,0);
         Vector2 tilePos = new Vector2(0,0);
