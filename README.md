@@ -53,6 +53,8 @@ The `Tile` class contains a single `Floor` called `floor`, a `Dictionary` called
 https://github.com/Jimdangle/iso_map_maker/assets/72684566/d4bf88a1-09c4-4f5b-99ab-f28288c49654
 
 
+
+**Chronological**
 One of the second or third builds of this project. Able to place tiles down in a grid, unable to place walls ontop of tiles. A lot of the earlier commits were adding core compenents like assets for ui and the game.
 
 https://github.com/Jimdangle/iso_map_maker/assets/72684566/9295dd02-5816-4b4e-abac-5021c81fb0e9
