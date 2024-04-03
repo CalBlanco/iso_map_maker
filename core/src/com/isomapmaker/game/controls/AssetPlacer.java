@@ -96,10 +96,10 @@ public class AssetPlacer implements InputProcessor {
                 if(manager.maxLayer() != 0) manager.popLayer();
                 return true;
             case Input.Keys.L:
-                this.paintState = State.Line;
+                setState(State.Line);
                 return true;                
             case Input.Keys.P:
-                this.paintState = State.Pencil;
+                setState(State.Pencil);
                 return true;
         }
         return false;
@@ -129,8 +129,7 @@ public class AssetPlacer implements InputProcessor {
             case Circle:
                 break;
             case Line:
-                line(endclick);
-                break;
+                return line(endclick);
             case Pencil:
                 return pencil();
             default:
@@ -152,7 +151,7 @@ public class AssetPlacer implements InputProcessor {
         updatePlacementView();
         
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
-        screenPos.set(wpos.x,wpos.y);
+        screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/2f, wpos.y-IsoUtil.FLOOR_SIZE.y/2f);
         tilePos = IsoUtil.isometricToWorld(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
         quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
@@ -225,7 +224,7 @@ public class AssetPlacer implements InputProcessor {
             case Circle:
                 break;
             case Line:
-                
+                pencilTileRender(b);
                 break;
             default:
                 break;
@@ -251,7 +250,9 @@ public class AssetPlacer implements InputProcessor {
                 break;
             default:
                 break;
-        }}
+        }
+        b.draw(loader.floors.get(file).get(selection).getTexture(), screenPos.x, screenPos.y);
+    }
         catch(Exception e){return;}
         b.setColor(1f,1f,1f,1f);
     }
@@ -319,8 +320,26 @@ public class AssetPlacer implements InputProcessor {
     private boolean line(Vector2 endPos){
         Vector<Integer[]> l = PaintTools.line(clickPos, endPos);
         map.setSelection(l);
-        return false;
+
+        for(int i = 0; i<l.size(); i++){
+            map.setFloor(l.get(i)[0], l.get(i)[1],loader.floors.get(file).get(selection) );
+        }
+        return true;
     }
+
+/*
+██╗   ██╗████████╗██╗██╗     
+██║   ██║╚══██╔══╝██║██║     
+██║   ██║   ██║   ██║██║     
+██║   ██║   ██║   ██║██║     
+╚██████╔╝   ██║   ██║███████╗
+ ╚═════╝    ╚═╝   ╚═╝╚══════╝
+ */
+
+ private void setState(State newState){
+    this.paintState = newState;
+    map.setSelection(null);
+ }
 
 
 
