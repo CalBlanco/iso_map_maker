@@ -7,10 +7,7 @@ import java.util.Vector;
 import com.badlogic.gdx.math.Vector2;
 
 public class PaintTools {
-    // 0001 = 1
-    // 0010 = 2
-    // 0100 = 4
-    // 1000 = 8
+    
     /**
      * Using Bresenhams line algo for all quads return a vector adapted in Technikum-Wien 2012 http://members.chello.at/~easyfilter/Bresenham.pdf 
      * @param start

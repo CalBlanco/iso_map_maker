@@ -35,7 +35,7 @@ public class AssetPlacer implements InputProcessor {
     Vector2 tilePos;
     Vector2 screenPos;
     String quadrant = "top";
-    String mode = "Floor";
+    PlacementModes mode = PlacementModes.Floor;
     String file = "Dry";
 
 
@@ -106,10 +106,10 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.O:
                 setState(State.Circle);
                 return true;
-            case Input.Keys.B:
+            case Input.Keys.K:
                 setState(State.Bucket);
                 return true;
-            case Input.Keys.K:
+            case Input.Keys.B:
                 setState(State.Box);
                 return true;
         }
@@ -189,8 +189,8 @@ public class AssetPlacer implements InputProcessor {
      * @param i
      */
     public void incrementSelection(int i){
-        if (selection + i < 0) {selection = loader.getNumRegions(file, mode) -1; return;}
-        if (selection + i >  loader.getNumRegions(file, mode) -1){ selection = 0; return;}
+        if (selection + i < 0) {selection = loader.getNumRegions(file, mode.toString()) -1; return;}
+        if (selection + i >  loader.getNumRegions(file, mode.toString()) -1){ selection = 0; return;}
         selection = selection + i;
     }
 
@@ -199,10 +199,10 @@ public class AssetPlacer implements InputProcessor {
      * @param hudBatch
      */
     public void renderSelectionTiles(SpriteBatch hudBatch){
-        Vector<TextureRegion> regions = mode != "Wall" ? loader.getTextureRegions(file, mode) : loader.getTextureRegions(quadrant, mode) ;
-        int lower = (selection - 1 >= 0) ? selection-1 : loader.getNumRegions(file, mode) -1 ;
-        int upper = (selection + 1 <= loader.getNumRegions(file, mode) -1 ) ? selection + 1 : 0;
-        if(regions == null || regions.size() < 2){return;}
+        Vector<TextureRegion> regions = mode != PlacementModes.Wall ? loader.getTextureRegions(file, mode.toString()) : loader.getTextureRegions(quadrant, mode.toString()) ;
+        int lower = (selection - 1 >= 0) ? selection-1 : loader.getNumRegions(file, mode.toString()) -1 ;
+        int upper = (selection + 1 <= loader.getNumRegions(file, mode.toString()) -1 ) ? selection + 1 : 0;
+        if(regions == null || regions.size() < 3){return ;}
         TextureRegion[] active = new TextureRegion[]{regions.get(lower), regions.get(selection), regions.get(upper)};
 
         ass.updateTileBrowser(active);
@@ -215,8 +215,8 @@ public class AssetPlacer implements InputProcessor {
      */
     private void updatePlacementView(){
         if(mode != ass.mode) {mode = ass.mode ; selection=0;};
-        if(file != ass.activeFile && mode != "Wall") {file = ass.activeFile; selection=0;}
-        if(mode == "Wall"){file = quadrant;}
+        if(file != ass.activeFile && mode != PlacementModes.Wall) {file = ass.activeFile; selection=0;}
+        if(mode == PlacementModes.Wall){file = quadrant;}
     }
     
     /*
@@ -258,10 +258,10 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1f, 1f, 1f, 0.7f);
         try{
         switch (mode) {
-            case "Floor":
+            case Floor:
                 b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
                 break;
-            case "Wall":
+            case Wall:
                 b.draw(quadrantToHighlight.get(quadrant), tVector.x, tVector.y);
                 b.draw(loader.walls.get(quadrant).get(selection).getTexture(), tVector.x, tVector.y);
                 break;
@@ -270,7 +270,7 @@ public class AssetPlacer implements InputProcessor {
         }
         b.draw(loader.floors.get(file).get(selection).getTexture(), screenPos.x, screenPos.y);
     }
-        catch(Exception e){return;}
+        catch(Exception e){b.setColor(1f,1f,1f,1f); return;}
         b.setColor(1f,1f,1f,1f);
     }
 
@@ -295,19 +295,19 @@ public class AssetPlacer implements InputProcessor {
     private boolean pencil(){
         System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
         switch(mode){
-            case "Floor":
+            case Floor:
                 try{
                     map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(file).get(selection));
                     return true;
                 }
                 catch(Exception e){return false;}
-            case "Wall":
+            case Wall:
                 try{
                     map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(quadrant).get(selection));
                     return true;
                 }
                 catch(Exception e){return false;}
-            case "Object":
+            case Object:
                 return false;
         }
         return false;
@@ -315,13 +315,13 @@ public class AssetPlacer implements InputProcessor {
 
     private boolean pencilEraser(){
         switch (ass.mode) {
-            case "Floor":
+            case Floor:
                 map.setFloor((int)tilePos.x, (int)tilePos.y, null);
                 return true;
-            case "Wall":
+            case Wall:
                 map.setWall((int)tilePos.x, (int)tilePos.y, quadrant, null);
                 return true;
-            case "Object":
+            case Object:
                 return true;
             default:
                 return false;
@@ -371,7 +371,7 @@ public class AssetPlacer implements InputProcessor {
     }
 
     private boolean bucket(){
-        if (mode != "Floor") return false;
+        if (mode != PlacementModes.Floor) return false;
         
 
         Vector<Integer[]> queue = new Vector<Integer[]>(); // queue for points

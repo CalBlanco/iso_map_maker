@@ -11,7 +11,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.isomapmaker.game.util.IsoUtil;
 
-
+/**
+ * Controls the user's camera
+ * Min/Max zoom are set as final static variables
+ * When instantiating this class provide a zoom speed, pan speed and pan multiplier as well as the camera it is intended to control 
+ * 
+ * Scroll in / out controls zoom (as well as up and down arrows)
+ * WASD control panning
+ * Shift applies the pan multiplier 
+ */
 public class CamController implements InputProcessor {
     final private static float MIN_ZOOM = .25f;
     final private static float MAX_ZOOM = 12.0f;
@@ -129,6 +137,7 @@ public class CamController implements InputProcessor {
         return false;
     }
 
+    // This is just remenants from when the camera controller was more tightly linked to the asset placement lmao
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
