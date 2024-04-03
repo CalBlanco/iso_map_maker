@@ -109,6 +109,9 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.B:
                 setState(State.Bucket);
                 return true;
+            case Input.Keys.K:
+                setState(State.Box);
+                return true;
         }
         return false;
       }
@@ -133,10 +136,9 @@ public class AssetPlacer implements InputProcessor {
 
         switch(this.paintState){
             case Box:
-                break;
+                return box(endclick);
             case Circle:
                 return circle(endclick);
-
             case Line:
                 return line(endclick);
             case Pencil:
@@ -387,6 +389,23 @@ public class AssetPlacer implements InputProcessor {
             for(int k=0; k<bucket_row.length; k++){
                 if(isBuckatable(p[0]+bucket_row[k], p[1]+bucket_col[k], oldFloor, newFloor)){
                     queue.add(new Integer[]{p[0]+bucket_row[k], p[1]+bucket_col[k]});
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean box(Vector2 endpos){
+        int lx = tilePos.x < endpos.x ? (int) tilePos.x : (int) endpos.x;
+        int ly = tilePos.y < endpos.y ? (int) tilePos.y : (int) endpos.y;
+        int dx = (int)Math.abs(tilePos.x - endpos.x);
+        int dy = (int)Math.abs(tilePos.y - endpos.y);
+
+        for(int x=lx; x<lx+dx+1; x++){
+            for(int y=ly; y<ly+dy+1; y++){
+                if(x == tilePos.x || x == endpos.x || y == tilePos.y || y == endpos.y){
+                    map.setFloor(x,y,loader.floors.get(file).get(selection));
                 }
             }
         }
