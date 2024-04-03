@@ -44,7 +44,7 @@ public class AssetController extends Stage {
     TileLoader tl;
     Table root;
     
-    String mode = "Floor";
+    PlacementModes mode = PlacementModes.Floor;
     String activeFile = "Highlights";
 
     int fullySmart = 0;
@@ -57,7 +57,7 @@ public class AssetController extends Stage {
     public AssetController(TileLoader tl){
         skin = new Skin(Gdx.files.internal("skins/uiskin/uiskin.json"));
         this.tl = tl;
-        mode = "Floor";
+        mode = PlacementModes.Floor;
         activeFile = "Highlights";
         // initialize our root table and add it to the scene 
         root = new Table();
@@ -114,7 +114,17 @@ public class AssetController extends Stage {
         typeSelect.addListener(new ChangeListener() {
            @Override
            public void changed(ChangeEvent e, Actor a){
-            mode = typeSelect.getSelected();
+            switch(typeSelect.getSelected()){
+                case "Floor":
+                    mode = PlacementModes.Floor;
+                    break;
+                case "Wall":
+                    mode = PlacementModes.Wall;
+                    break;
+                case "Object":
+                    mode = PlacementModes.Object;
+                    break;
+            }
             updateFileSelection();
            } 
         });
@@ -191,8 +201,8 @@ public class AssetController extends Stage {
 
     public void updateFileSelection(){
         SelectBox<String> box = root.findActor("fileSelect");
-        String[] fileKeys = tl.getFiles(mode);
-        if(mode == "Wall") {activeFile = "left"; return;}
+        String[] fileKeys = tl.getFiles(mode.toString());
+        if(mode == PlacementModes.Wall) {activeFile = "left"; return;}
         box.setItems(fileKeys);
         box.addListener(new ChangeListener() {
             @Override

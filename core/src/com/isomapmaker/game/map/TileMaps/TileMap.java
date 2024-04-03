@@ -78,7 +78,7 @@ public class TileMap {
      * @param b
      */
     public void render(SpriteBatch b){
-
+        b.setColor(1f,1f,1f,1f);
         // iterate back to front
         for(int i=size-1; i>=0; i--){
             for(int j=size-1; j>=0; j--){
