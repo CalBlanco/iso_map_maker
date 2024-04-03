@@ -52,21 +52,21 @@ public class IsoMapMaker extends Game {
 	@Override
 	public void create () {
 		
-		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // main camera
 
-		tileLoader = new TileLoader("assets.xml");
-		tileMapManager = new TileMapManager(tileLoader);
+		tileLoader = new TileLoader("assets.xml"); // Loader is responsible for getting assets into the game
+		tileMapManager = new TileMapManager(tileLoader); // Manages tilemaps for multiple layers 
 
-		
+		// Sprite batches to render what we need
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
 
-		cameraController = new CamController(cam, 2f, 5f, 5f);
-		assetControler = new AssetController(tileLoader);
-		assetPlacer = new AssetPlacer(cam, assetControler, tileMapManager, tileLoader);
+		cameraController = new CamController(cam, 2f, 5f, 5f); // camera controls 
+		assetControler = new AssetController(tileLoader); // UI for assets 
+		assetPlacer = new AssetPlacer(cam, assetControler, tileMapManager, tileLoader); // Asset placer that manages the map using the tile loader
 
 		
-		
+		//Controls input flow (placement determines order of input [i believe last added is first])
 		ip = new InputMultiplexer();
 
 		ip.addProcessor(assetControler);
@@ -74,7 +74,7 @@ public class IsoMapMaker extends Game {
 		ip.addProcessor(assetPlacer);
 		Gdx.input.setInputProcessor(ip);
 
-		
+		// places down all floor tiles that we have
 		String[] keys = tileLoader.getFloors();
 		for(int i=0; i< keys.length; i++){
 			Vector<Floor> fr = tileLoader.floors.get(keys[i]);
@@ -84,19 +84,6 @@ public class IsoMapMaker extends Game {
 		}
 
 
-		//tileMapManager.setLayerMap(0, startMap);
-
-		/* String[] wallKeys = tileLoader.getWalls();
-		for(int i=0; i< wallKeys.length; i++){
-			Vector<Wall> fr = tileLoader.walls.get(wallKeys[i]);
-			for(int j=0; j<fr.size(); j++){
-				map.setWall(j, i, i+2,fr.get(j));
-			}
-		} */
-		
-		
-
-	
 	}
 
 	@Override
@@ -108,17 +95,17 @@ public class IsoMapMaker extends Game {
 
 		
 		batch.begin(); // map batch
-		tileMapManager.render(batch);
-		cameraController.render(batch);
-		assetPlacer.activeTileRender(batch);
+		tileMapManager.render(batch); // render the map
+		cameraController.render(batch); // apply and camera movements
+		assetPlacer.activeTileRender(batch); // highlight editing tiles 
 		batch.end();
 
-		hudBatch.begin();
+		hudBatch.begin(); // don't think this gets used at all anymore
 		//mh.render(hudBatch, cameraController, ml);
 		assetPlacer.renderSelectionTiles(hudBatch);
-		hudBatch.end();
+		hudBatch.end(); 
 
-		assetControler.render();
+		assetControler.render(); // render our ui last so it is always on top
 		
 	}
 	

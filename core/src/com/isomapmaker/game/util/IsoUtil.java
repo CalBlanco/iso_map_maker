@@ -4,20 +4,36 @@ import com.badlogic.gdx.math.Vector2;
 
 public class IsoUtil {
     final public static Vector2 FLOOR_SIZE = new Vector2(128,64);
-    // Function to convert world cordinates to IsoMetric cordinates
-    public static Vector2 isometricToWorldPos(Vector2 worldPos, Vector2 size) {
-        float x = (worldPos.x - worldPos.y) * (size.x / 2f);
-        float y = (worldPos.x + worldPos.y) * (size.y / 2f);
+    /**
+     * Convert Isometric(tile) cordinates into screen / world cordinates
+     * @param isoPos the iso tile
+     * @param size the size of the tile (should normally 128x64)
+     * @return A Vector2 containing the world cordinates
+     */
+    public static Vector2 isometricToWorldPos(Vector2 isoPos, Vector2 size) {
+        float x = (isoPos.x - isoPos.y) * (size.x / 2f);
+        float y = (isoPos.x + isoPos.y) * (size.y / 2f);
         return new Vector2((int)x, (int)y);
     }
 
-    // Function to convert isometric coordinates to world space coordinates
-    public static Vector2 worldPosToIsometric(Vector2 isoPos, Vector2 size) {
-        float x = (isoPos.x / (size.x / 2f) + isoPos.y / (size.y / 2f)) / 2f;
-        float y = (isoPos.y / (size.y / 2f) - isoPos.x / (size.x / 2f)) / 2f;
+    /**
+     * Convert world cordinates into a tile
+     * @param worldPos The screen/world cords
+     * @param size the floor size (should normally be 128x64)
+     * @return
+     */
+    public static Vector2 worldPosToIsometric(Vector2 worldPos, Vector2 size) {
+        float x = (worldPos.x / (size.x / 2f) + worldPos.y / (size.y / 2f)) / 2f;
+        float y = (worldPos.y / (size.y / 2f) - worldPos.x / (size.x / 2f)) / 2f;
         return new Vector2((int)x, (int)y);
     }
 
+    /**
+     * Convert a 1d point into a 2d point given a width 
+     * @param index
+     * @param width
+     * @return
+     */
     public static int[] convertTo2DPoint(int index, int width) {
         int[] point = new int[2];
         point[0] = index % width; // x-coordinate
@@ -25,6 +41,12 @@ public class IsoUtil {
         return point;
     }
 
+    /**
+     * Get the quadrant the mouse is in for placing down a wall correctly
+     * @param worldPos the tile position
+     * @param mousePos the mouse position (honestly dont know why im taking both when i can just generate one but not gonna fw that rn)
+     * @return
+     */
     public static String getTileQuadrant(Vector2 worldPos, Vector2 mousePos) {
         Vector2 isoPos = isometricToWorldPos(worldPos, FLOOR_SIZE);
         int tileX = (int) ((mousePos.x - isoPos.x) / FLOOR_SIZE.x);
