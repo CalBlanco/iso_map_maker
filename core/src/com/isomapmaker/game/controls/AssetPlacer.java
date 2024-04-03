@@ -381,7 +381,7 @@ public class AssetPlacer implements InputProcessor {
         Floor newFloor = loader.floors.get(file).get(selection);
         while(queue.size() > 0){
             Integer[] p = queue.get(queue.size()-1);
-            System.out.println(p[0]+","+p[1]);  
+           
             queue.remove(queue.size()-1);
 
             map.setFloor(p[0],p[1], newFloor);
