@@ -34,7 +34,13 @@ public class TileMap {
     TextureRegion defaultTexture;
 
     public Vector2 tileOffset = new Vector2(0,0);
+
+    Vector<Integer[]> selection = new Vector<Integer[]>();
     
+
+    public void setSelection(Vector<Integer[]> selection){this.selection = selection;}
+    public Vector<Integer[]> getSelection(){return this.selection;}
+
 
     /**
      * Create a new TileMap to be rendered and editable 
@@ -52,11 +58,26 @@ public class TileMap {
     }
 
 
+    private void highlightSelection(SpriteBatch b){
+        if (this.selection == null) return;
+        b.setColor(0.7f, 0.7f, 0.7f, 0.7f);
+        Vector2 wpos = new Vector2(0,0);
+        Vector2 tilePos = new Vector2(0,0);
+        for(int i=0; i<selection.size(); i++){
+            tilePos.set(this.selection.get(i)[0], this.selection.get(i)[1]);
+            wpos = IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
+            b.draw(this.highlight, wpos.x,wpos.y);
+        }
+        b.setColor(1, 1, 1, 1);
+    }
+
+
     /**
      * Render this map based on its offset
      * @param b
      */
     public void render(SpriteBatch b){
+
         // iterate back to front
         for(int i=size-1; i>=0; i--){
             for(int j=size-1; j>=0; j--){
@@ -67,6 +88,8 @@ public class TileMap {
                 
             }
         }
+
+        highlightSelection(b);
     }
 
 /*

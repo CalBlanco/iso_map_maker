@@ -14,12 +14,14 @@ public class Tile {
     HashMap<String, Wall> walls;
     Vector<Object> objects;
     TextureRegion defaultRegion;
+    
 
     /**
      * Constructor requires a default texture to draw for this tile if no floor is present (this should be the grid highlight texture)
      * @param defaultRegion
      */
     public Tile(TextureRegion defaultRegion){
+        
         this.defaultRegion = defaultRegion;
         floor = null;
 
@@ -32,6 +34,7 @@ public class Tile {
         objects = new Vector<Object>();
     }
 
+  
     public void setFloor(Floor f){
         this.floor = f;
     }
@@ -101,7 +104,7 @@ public class Tile {
     // c) Objects
     public void render(SpriteBatch b, Vector2 pos){
         //Floor
-        try{if(this.floor != null){ b.draw(this.floor.getTexture(), pos.x, pos.y);}else{b.draw(this.defaultRegion, pos.x, pos.y);}}catch(Exception e){return;}
+        try{if(this.floor != null){ b.draw(this.floor.getTexture(), pos.x, pos.y);}else{b.draw(this.defaultRegion, pos.x, pos.y);}}catch(Exception e){return;} 
         //Walls
         try{if(this.walls.get("top") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
         try{if(this.walls.get("right") != null) b.draw(this.walls.get("right").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
