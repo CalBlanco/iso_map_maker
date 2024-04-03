@@ -19,9 +19,11 @@ import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
 
 public class AssetPlacer implements InputProcessor {
-    private enum State {Line, Box, Circle, Pencil};
+    private enum State {Line, Box, Circle, Pencil, Bucket};
     final Vector2[] activeOffsets = new Vector2[]{new Vector2(-256,-64), new Vector2(0,0), new Vector2(256,-64)};
-
+    private static final int[] bucket_row = { -1, 0, 1, 0 };
+    private static final int[] bucket_col = { 0, 1, 0, -1};
+ 
     OrthographicCamera cam;
     AssetController ass;
     TileMapManager manager;
@@ -101,6 +103,12 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.P:
                 setState(State.Pencil);
                 return true;
+            case Input.Keys.O:
+                setState(State.Circle);
+                return true;
+            case Input.Keys.B:
+                setState(State.Bucket);
+                return true;
         }
         return false;
       }
@@ -127,11 +135,14 @@ public class AssetPlacer implements InputProcessor {
             case Box:
                 break;
             case Circle:
-                break;
+                return circle(endclick);
+
             case Line:
                 return line(endclick);
             case Pencil:
                 return pencil();
+            case Bucket:
+                return bucket();
             default:
                 break;
         }
@@ -222,8 +233,12 @@ public class AssetPlacer implements InputProcessor {
             case Box:
                 break;
             case Circle:
+                pencilTileRender(b);
                 break;
             case Line:
+                pencilTileRender(b);
+                break;
+            case Bucket:
                 pencilTileRender(b);
                 break;
             default:
@@ -327,6 +342,57 @@ public class AssetPlacer implements InputProcessor {
         return true;
     }
 
+/*
+╔═╗┬┬─┐┌─┐┬  ┌─┐
+║  │├┬┘│  │  ├┤ 
+╚═╝┴┴└─└─┘┴─┘└─┘
+ */
+
+    private boolean circle(Vector2 endPos){
+        Vector<Integer[]> c = PaintTools.circle(clickPos, (int)clickPos.dst(endPos));
+
+        for(int i = 0; i<c.size(); i++){
+            map.setFloor(c.get(i)[0], c.get(i)[1],loader.floors.get(file).get(selection) );
+        }
+        return true;
+    }
+
+/*
+╔╗ ┬ ┬┌─┐┬┌─┌─┐┌┬┐
+╠╩╗│ ││  ├┴┐├┤  │ 
+╚═╝└─┘└─┘┴ ┴└─┘ ┴ 
+ */
+    private boolean isBuckatable(int x, int y, Floor oldFloor, Floor newFloor){
+        if (map.getFloor(x,y) != null && map.getFloor(x,y).getName() == newFloor.getName()) return false;
+        if (map.inBounds(x, y) && (map.getFloor(x, y) == null || (oldFloor != null && oldFloor.getName() == map.getFloor(x,y).getName())) ) return true;
+        return false;
+    }
+
+    private boolean bucket(){
+        if (mode != "Floor") return false;
+        
+
+        Vector<Integer[]> queue = new Vector<Integer[]>(); // queue for points
+        
+        queue.add(new Integer[]{(int)tilePos.x, (int)tilePos.y}); // add our first point 
+        Floor oldFloor = map.getFloor((int)tilePos.x, (int)tilePos.y); 
+        Floor newFloor = loader.floors.get(file).get(selection);
+        while(queue.size() > 0){
+            Integer[] p = queue.get(queue.size()-1);
+            System.out.println(p[0]+","+p[1]);  
+            queue.remove(queue.size()-1);
+
+            map.setFloor(p[0],p[1], newFloor);
+
+            for(int k=0; k<bucket_row.length; k++){
+                if(isBuckatable(p[0]+bucket_row[k], p[1]+bucket_col[k], oldFloor, newFloor)){
+                    queue.add(new Integer[]{p[0]+bucket_row[k], p[1]+bucket_col[k]});
+                }
+            }
+        }
+
+        return true;
+    }
 /*
 ██╗   ██╗████████╗██╗██╗     
 ██║   ██║╚══██╔══╝██║██║     

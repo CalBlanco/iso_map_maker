@@ -59,7 +59,7 @@ public class TileMap {
 
 
     private void highlightSelection(SpriteBatch b){
-        if (this.selection == null) {System.out.println("No Selection");  return;}
+        if (this.selection == null) {  return;}
         b.setColor(0.7f, 0.7f, 0.7f, 0.7f);
         Vector2 wpos = new Vector2(0,0);
         Vector2 tilePos = new Vector2(0,0);
@@ -121,7 +121,7 @@ public class TileMap {
      * @return
      */
     public Floor getFloor(int x, int y){
-        if (!hasTile(x, y)) return null;
+        if (!inBounds(x, y)) return null;
         return map[x][y].getFloor();
     }
 /*

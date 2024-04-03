@@ -1,5 +1,7 @@
 package com.isomapmaker.game.controls;
 
+// Most of this is pulled from http://members.chello.at/~easyfilter/Bresenham.pdf
+
 import java.util.Vector;
 
 import com.badlogic.gdx.math.Vector2;
@@ -60,5 +62,32 @@ public class PaintTools {
     }
     public static Vector<Integer[]> line(int x0, int y0, int x1, int y1){
         return line(new int[]{x0,y0}, new int[]{x1,y1});
+    }
+
+
+
+    public static Vector<Integer[]> circle(Vector2 start, int radius){
+        Vector<Integer[]> points = new Vector<Integer[]>();
+        int x, y, err;
+        x = -radius;
+        y = 0;
+        err = 2-2*radius;
+        int xm, ym;
+        xm = (int) start.x;
+        ym = (int) start.y;
+
+        do {
+            savePoint(xm-x, ym+y, points); // +x,+y
+            savePoint(xm-y, ym-x, points); // -x,+y
+            savePoint(xm+x, ym-y, points); // -x,-y
+            savePoint(xm+y, ym+x, points); // +x, -y
+        
+            radius = err;
+            if (radius <= y) err += ++y*2+1;
+            if (radius > x || err > y) err += ++x*2+1;
+        }
+        while (x < 0);
+
+        return points;
     }
 }
