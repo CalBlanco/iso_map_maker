@@ -66,7 +66,7 @@ public class TileMap {
         for(int i=0; i<selection.size(); i++){
             if (!inBounds(this.selection.get(i)[0], this.selection.get(i)[1])) continue;
             tilePos.set(this.selection.get(i)[0], this.selection.get(i)[1]);
-            wpos = IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
+            wpos = IsoUtil.isometricToWorldPos(tilePos, IsoUtil.FLOOR_SIZE);
             b.draw(this.highlight, wpos.x,wpos.y);
         }
         b.setColor(1, 1, 1, 1);
@@ -83,7 +83,7 @@ public class TileMap {
         for(int i=size-1; i>=0; i--){
             for(int j=size-1; j>=0; j--){
                 // get world cordinates incorperating layer offset
-                Vector2 wpos = IsoUtil.worldToIsometric(new Vector2(i,j).add(tileOffset.x, tileOffset.y), IsoUtil.FLOOR_SIZE);
+                Vector2 wpos = IsoUtil.isometricToWorldPos(new Vector2(i,j).add(tileOffset.x, tileOffset.y), IsoUtil.FLOOR_SIZE);
                 // render floor
                 if(map[i][j] != null) map[i][j].render(b, wpos);
                 

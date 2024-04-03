@@ -142,7 +142,7 @@ public class CamController implements InputProcessor {
     public boolean mouseMoved(int screenX, int screenY) {
         Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
         Vector2 world = new Vector2(v.x-FLOOR_SIZE.x/2,v.y-FLOOR_SIZE.y/2);
-        hoverTile = IsoUtil.isometricToWorld(world, FLOOR_SIZE);
+        hoverTile = IsoUtil.worldPosToIsometric(world, FLOOR_SIZE);
         hoverWorldPos.set(world.x,world.y);
         return false;
     }

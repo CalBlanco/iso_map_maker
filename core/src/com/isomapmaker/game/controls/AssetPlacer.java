@@ -130,7 +130,7 @@ public class AssetPlacer implements InputProcessor {
         // if click pos != tile pos we have moved the cursor while selecting
         // handle area selection
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
-        Vector2 endclick = IsoUtil.isometricToWorld(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
+        Vector2 endclick = IsoUtil.worldPosToIsometric(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
         System.out.println("Mouse Raised");
 
 
@@ -165,7 +165,7 @@ public class AssetPlacer implements InputProcessor {
         
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/2f, wpos.y-IsoUtil.FLOOR_SIZE.y/2f);
-        tilePos = IsoUtil.isometricToWorld(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
+        tilePos = IsoUtil.worldPosToIsometric(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
         quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
         ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y), quadrant, layer);
@@ -254,7 +254,7 @@ public class AssetPlacer implements InputProcessor {
      * Render the pencil tile tool availability
      */
     private void pencilTileRender(SpriteBatch b){
-        tVector = IsoUtil.worldToIsometric(tilePos, IsoUtil.FLOOR_SIZE);
+        tVector = IsoUtil.isometricToWorldPos(tilePos, IsoUtil.FLOOR_SIZE);
         b.setColor(1f, 1f, 1f, 0.7f);
         try{
         switch (mode) {
