@@ -17,6 +17,7 @@ import com.isomapmaker.game.controls.commands.CircleCommand;
 import com.isomapmaker.game.controls.commands.Command;
 import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
+import com.isomapmaker.game.controls.commands.PencilEraserCommand;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
@@ -99,7 +100,10 @@ public class AssetPlacer implements InputProcessor {
                 incrementSelection(1);
                 return true;
             case Input.Keys.C:
-                return pencilEraser();
+                PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, quadrant, loader, map);
+                peraser.execute();
+                commandStack.add(peraser);
+                return true;
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
                 if(layer+1 > manager.maxLayer()) manager.addNewLayer(); // make a new layer if there is not one
                 map = manager.getLayer(layer+1); // get next layer
@@ -166,36 +170,32 @@ public class AssetPlacer implements InputProcessor {
                 BoxCommand box = new BoxCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
                 box.execute();
                 commandStack.add(box);
-                break;
+                return true;
             case Circle:
                 CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), loader.getFloor(file, selection), loader, map);
                 circ.execute();
                 commandStack.add(circ);
-                break;
+                return true;
             case Line:
                 LineCommand li = new LineCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
                 li.execute();
                 commandStack.add(li);
-                break;
+                return true;
             case Pencil:
                 PencilCommand pen = new PencilCommand(mode, file, quadrant, selection, endclick, screenPos, loader, map);
                 pen.execute();
                 commandStack.add(pen);
-                break;
+                return true;
             case Bucket:
                 BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, loader.floors.get(file).get(selection), loader, map);
                 buk.execute();
                 commandStack.add(buk);
-                break;
+                return true;
             default:
-                break;
+                return false;
         }
 
-        
-        
-        
-        if(clickPos.dst(endclick) <= 2) return pencil();
-        return false;
+    
         // TODO Auto-generated method stub
       }
 
@@ -316,78 +316,7 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1f,1f,1f,1f);
     }
 
-    /*
-██████╗  █████╗ ██╗███╗   ██╗████████╗    ████████╗ ██████╗  ██████╗ ██╗     ███████╗
-██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝
-██████╔╝███████║██║██╔██╗ ██║   ██║          ██║   ██║   ██║██║   ██║██║     ███████╗
-██╔═══╝ ██╔══██║██║██║╚██╗██║   ██║          ██║   ██║   ██║██║   ██║██║     ╚════██║
-██║     ██║  ██║██║██║ ╚████║   ██║          ██║   ╚██████╔╝╚██████╔╝███████╗███████║
-╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝          ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝                                                                               
-     */
 
-     /*
-╔═╗┌─┐┌┐┌┌─┐┬┬  
-╠═╝├┤ ││││  ││  
-╩  └─┘┘└┘└─┘┴┴─┘
-      */
-    /**
-     * Place a tile down in the hover tile position
-     * @return boolean representing successful input
-     */
-    private boolean pencil(){
-        System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
-        switch(mode){
-            case Floor:
-                try{
-                    map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(file).get(selection));
-                    return true;
-                }
-                catch(Exception e){return false;}
-            case Wall:
-                try{
-                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(quadrant).get(selection));
-                    return true;
-                }
-                catch(Exception e){return false;}
-            case Object:
-                return false;
-        }
-        return false;
-    }
-
-    private boolean pencilEraser(){
-        switch (ass.mode) {
-            case Floor:
-                map.setFloor((int)tilePos.x, (int)tilePos.y, null);
-                return true;
-            case Wall:
-                map.setWall((int)tilePos.x, (int)tilePos.y, quadrant, null);
-                return true;
-            case Object:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-
-
-    private boolean box(Vector2 endpos){
-        int lx = tilePos.x < endpos.x ? (int) tilePos.x : (int) endpos.x;
-        int ly = tilePos.y < endpos.y ? (int) tilePos.y : (int) endpos.y;
-        int dx = (int)Math.abs(tilePos.x - endpos.x);
-        int dy = (int)Math.abs(tilePos.y - endpos.y);
-
-        for(int x=lx; x<lx+dx+1; x++){
-            for(int y=ly; y<ly+dy+1; y++){
-                if(x == tilePos.x || x == endpos.x || y == tilePos.y || y == endpos.y){
-                    map.setFloor(x,y,loader.floors.get(file).get(selection));
-                }
-            }
-        }
-
-        return true;
-    }
 /*
 ██╗   ██╗████████╗██╗██╗     
 ██║   ██║╚══██╔══╝██║██║     
