@@ -15,6 +15,12 @@ public class Tile {
     Vector<Object> objects;
     TextureRegion defaultRegion;
     
+    public Tile(Tile copy){
+        this.floor = copy.floor;
+        this.walls = copy.walls;
+        this.objects = copy.objects;
+        this.defaultRegion = copy.defaultRegion;
+    }
 
     /**
      * Constructor requires a default texture to draw for this tile if no floor is present (this should be the grid highlight texture)

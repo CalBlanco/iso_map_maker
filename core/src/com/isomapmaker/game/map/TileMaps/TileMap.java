@@ -1,5 +1,6 @@
 package com.isomapmaker.game.map.TileMaps;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
@@ -13,6 +14,7 @@ import com.isomapmaker.game.map.Tiles.Object;
 import com.isomapmaker.game.map.Tiles.Tile;
 import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
+import com.isomapmaker.game.util.MapCopy;
 
 // The purpose of this class is to take advantage of the SimpleTile interfaces (floors, walls, and objects)
 // Allow the parsing of a string into tile map
@@ -28,8 +30,7 @@ public class TileMap {
     
     private Tile[][] map;
 
-    private Vector2[] WALLOFFSET = new Vector2[]{new Vector2(-32,16), new Vector2(32,16), new Vector2(-32,-16), new Vector2(32,-16)};
-
+    
     TextureRegion highlight;
     TextureRegion defaultTexture;
 
@@ -72,7 +73,11 @@ public class TileMap {
         b.setColor(1, 1, 1, 1);
     }
 
-
+    public Tile[][] getMapState(){return this.map;}
+    public void setMapState(Tile[][] state){
+        this.map = MapCopy.deepCopy(state);
+    }
+    public int getSize(){return size;}
     /**
      * Render this map based on its offset
      * @param b
@@ -253,7 +258,6 @@ public class TileMap {
         for(int i=0; i< size; i++){
             for(int j=0; j<size; j++){
                 map[i][j] = new Tile(this.defaultTexture);
-                
             }
         }
     }

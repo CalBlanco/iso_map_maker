@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.isomapmaker.game.controls.commands.BucketCommand;
+import com.isomapmaker.game.controls.commands.Command;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
@@ -50,8 +52,10 @@ public class AssetPlacer implements InputProcessor {
     State paintState;
 
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
+
+    Vector<Command> commandStack;
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
-        
+        this.commandStack = new Vector<Command>();
         this.paintState = State.Pencil; 
         this.cam = cam; 
         this.ass= ass; 
@@ -67,6 +71,12 @@ public class AssetPlacer implements InputProcessor {
     }
 
 
+    private Command popCommand(){
+        if(this.commandStack.size() <= 0) return null;
+        Command last = this.commandStack.get(this.commandStack.size()-1);
+        this.commandStack.remove(this.commandStack.size()-1);
+        return last;
+    }
 
     
 
@@ -112,6 +122,11 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.B:
                 setState(State.Box);
                 return true;
+            case Input.Keys.V:
+                Command com = popCommand();
+                if(com != null) com.undo();
+                return true;
+            
         }
         return false;
       }
@@ -144,7 +159,10 @@ public class AssetPlacer implements InputProcessor {
             case Pencil:
                 return pencil();
             case Bucket:
-                return bucket();
+                BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, loader.floors.get(file).get(selection), loader, map);
+                buk.execute();
+                commandStack.add(buk);
+                break;
             default:
                 break;
         }
