@@ -62,7 +62,9 @@ public class PaintTools {
     }
 
 
-
+    public static Vector<Integer[]> circle(int x0, int y0, int r){
+        return circle(new Vector2(x0,y0), r);
+    }
     public static Vector<Integer[]> circle(Vector2 start, int radius){
         Vector<Integer[]> points = new Vector<Integer[]>();
         int x, y, err;

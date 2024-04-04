@@ -11,6 +11,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.isomapmaker.game.controls.commands.BoxCommand;
+import com.isomapmaker.game.controls.commands.BucketCommand;
+import com.isomapmaker.game.controls.commands.CircleCommand;
+import com.isomapmaker.game.controls.commands.Command;
+import com.isomapmaker.game.controls.commands.LineCommand;
+import com.isomapmaker.game.controls.commands.PencilCommand;
+import com.isomapmaker.game.controls.commands.PencilEraserCommand;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
@@ -50,8 +57,11 @@ public class AssetPlacer implements InputProcessor {
     State paintState;
 
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
+
+    Vector<Command> commandStack, redoStack;
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
-        
+        this.commandStack = new Vector<Command>();
+        this.redoStack = new Vector<Command>();
         this.paintState = State.Pencil; 
         this.cam = cam; 
         this.ass= ass; 
@@ -67,6 +77,12 @@ public class AssetPlacer implements InputProcessor {
     }
 
 
+    private Command popCommand(Vector<Command> commandStack){
+        if(commandStack.size() <= 0) return null;
+        Command last = commandStack.get(commandStack.size()-1);
+        commandStack.remove(commandStack.size()-1);
+        return last;
+    }
 
     
 
@@ -84,7 +100,10 @@ public class AssetPlacer implements InputProcessor {
                 incrementSelection(1);
                 return true;
             case Input.Keys.C:
-                return pencilEraser();
+                PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, quadrant, loader, map);
+                peraser.execute();
+                commandStack.add(peraser);
+                return true;
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
                 if(layer+1 > manager.maxLayer()) manager.addNewLayer(); // make a new layer if there is not one
                 map = manager.getLayer(layer+1); // get next layer
@@ -112,6 +131,18 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.B:
                 setState(State.Box);
                 return true;
+            case Input.Keys.Z:
+                Command com = popCommand(commandStack);
+                
+                if(com != null) {com.undo();redoStack.add(com);}
+                return true;
+            case Input.Keys.V:
+                Command redo = popCommand(redoStack);
+                if(redo == null) break;
+                redo.execute();
+                commandStack.add(redo);
+                return true;
+            
         }
         return false;
       }
@@ -136,24 +167,35 @@ public class AssetPlacer implements InputProcessor {
 
         switch(this.paintState){
             case Box:
-                return box(endclick);
+                BoxCommand box = new BoxCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
+                box.execute();
+                commandStack.add(box);
+                return true;
             case Circle:
-                return circle(endclick);
+                CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), loader.getFloor(file, selection), loader, map);
+                circ.execute();
+                commandStack.add(circ);
+                return true;
             case Line:
-                return line(endclick);
+                LineCommand li = new LineCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
+                li.execute();
+                commandStack.add(li);
+                return true;
             case Pencil:
-                return pencil();
+                PencilCommand pen = new PencilCommand(mode, file, quadrant, selection, endclick, screenPos, loader, map);
+                pen.execute();
+                commandStack.add(pen);
+                return true;
             case Bucket:
-                return bucket();
+                BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, loader.floors.get(file).get(selection), loader, map);
+                buk.execute();
+                commandStack.add(buk);
+                return true;
             default:
-                break;
+                return false;
         }
 
-        
-        
-        
-        if(clickPos.dst(endclick) <= 2) return pencil();
-        return false;
+    
         // TODO Auto-generated method stub
       }
 
@@ -274,144 +316,7 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1f,1f,1f,1f);
     }
 
-    /*
-██████╗  █████╗ ██╗███╗   ██╗████████╗    ████████╗ ██████╗  ██████╗ ██╗     ███████╗
-██╔══██╗██╔══██╗██║████╗  ██║╚══██╔══╝    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝
-██████╔╝███████║██║██╔██╗ ██║   ██║          ██║   ██║   ██║██║   ██║██║     ███████╗
-██╔═══╝ ██╔══██║██║██║╚██╗██║   ██║          ██║   ██║   ██║██║   ██║██║     ╚════██║
-██║     ██║  ██║██║██║ ╚████║   ██║          ██║   ╚██████╔╝╚██████╔╝███████╗███████║
-╚═╝     ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝          ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝                                                                               
-     */
 
-     /*
-╔═╗┌─┐┌┐┌┌─┐┬┬  
-╠═╝├┤ ││││  ││  
-╩  └─┘┘└┘└─┘┴┴─┘
-      */
-    /**
-     * Place a tile down in the hover tile position
-     * @return boolean representing successful input
-     */
-    private boolean pencil(){
-        System.out.println("Placing " + ass.mode + " at " + screenPos.toString() +", tile: " + tilePos.toString());
-        switch(mode){
-            case Floor:
-                try{
-                    map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(file).get(selection));
-                    return true;
-                }
-                catch(Exception e){return false;}
-            case Wall:
-                try{
-                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(quadrant).get(selection));
-                    return true;
-                }
-                catch(Exception e){return false;}
-            case Object:
-                return false;
-        }
-        return false;
-    }
-
-    private boolean pencilEraser(){
-        switch (ass.mode) {
-            case Floor:
-                map.setFloor((int)tilePos.x, (int)tilePos.y, null);
-                return true;
-            case Wall:
-                map.setWall((int)tilePos.x, (int)tilePos.y, quadrant, null);
-                return true;
-            case Object:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-/*
-╦  ┬┌┐┌┌─┐
-║  ││││├┤ 
-╩═╝┴┘└┘└─┘
- */
-
-    private boolean line(Vector2 endPos){
-        Vector<Integer[]> l = PaintTools.line(clickPos, endPos);
-        map.setSelection(l);
-
-        for(int i = 0; i<l.size(); i++){
-            map.setFloor(l.get(i)[0], l.get(i)[1],loader.floors.get(file).get(selection) );
-        }
-        return true;
-    }
-
-/*
-╔═╗┬┬─┐┌─┐┬  ┌─┐
-║  │├┬┘│  │  ├┤ 
-╚═╝┴┴└─└─┘┴─┘└─┘
- */
-
-    private boolean circle(Vector2 endPos){
-        Vector<Integer[]> c = PaintTools.circle(clickPos, (int)clickPos.dst(endPos));
-
-        for(int i = 0; i<c.size(); i++){
-            map.setFloor(c.get(i)[0], c.get(i)[1],loader.floors.get(file).get(selection) );
-        }
-        return true;
-    }
-
-/*
-╔╗ ┬ ┬┌─┐┬┌─┌─┐┌┬┐
-╠╩╗│ ││  ├┴┐├┤  │ 
-╚═╝└─┘└─┘┴ ┴└─┘ ┴ 
- */
-    private boolean isBuckatable(int x, int y, Floor oldFloor, Floor newFloor){
-        if (map.getFloor(x,y) != null && map.getFloor(x,y).getName() == newFloor.getName()) return false;
-        if (map.inBounds(x, y) && (map.getFloor(x, y) == null || (oldFloor != null && oldFloor.getName() == map.getFloor(x,y).getName())) ) return true;
-        return false;
-    }
-
-    private boolean bucket(){
-        if (mode != PlacementModes.Floor) return false;
-        
-
-        Vector<Integer[]> queue = new Vector<Integer[]>(); // queue for points
-        
-        queue.add(new Integer[]{(int)tilePos.x, (int)tilePos.y}); // add our first point 
-        Floor oldFloor = map.getFloor((int)tilePos.x, (int)tilePos.y); 
-        Floor newFloor = loader.floors.get(file).get(selection);
-        while(queue.size() > 0){
-            Integer[] p = queue.get(queue.size()-1);
-           
-            queue.remove(queue.size()-1);
-
-            map.setFloor(p[0],p[1], newFloor);
-
-            for(int k=0; k<bucket_row.length; k++){
-                if(isBuckatable(p[0]+bucket_row[k], p[1]+bucket_col[k], oldFloor, newFloor)){
-                    queue.add(new Integer[]{p[0]+bucket_row[k], p[1]+bucket_col[k]});
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private boolean box(Vector2 endpos){
-        int lx = tilePos.x < endpos.x ? (int) tilePos.x : (int) endpos.x;
-        int ly = tilePos.y < endpos.y ? (int) tilePos.y : (int) endpos.y;
-        int dx = (int)Math.abs(tilePos.x - endpos.x);
-        int dy = (int)Math.abs(tilePos.y - endpos.y);
-
-        for(int x=lx; x<lx+dx+1; x++){
-            for(int y=ly; y<ly+dy+1; y++){
-                if(x == tilePos.x || x == endpos.x || y == tilePos.y || y == endpos.y){
-                    map.setFloor(x,y,loader.floors.get(file).get(selection));
-                }
-            }
-        }
-
-        return true;
-    }
 /*
 ██╗   ██╗████████╗██╗██╗     
 ██║   ██║╚══██╔══╝██║██║     
