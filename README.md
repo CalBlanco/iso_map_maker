@@ -48,13 +48,18 @@ The `Tile` class contains a single `Floor` called `floor`, a `Dictionary` called
 
 ## Development Videos
 
-**Current** Common Painting tools via Bresenham and Midpoint algorithms
+**Current** 
 
-https://github.com/Jimdangle/iso_map_maker/assets/72684566/d4bf88a1-09c4-4f5b-99ab-f28288c49654
+Command Pattern and Commander (Singleton pattern controlling command stack) implemented
 
+
+
+https://github.com/Jimdangle/iso_map_maker/assets/72684566/13ee0a6e-f2e7-4677-bd50-f04d2597ae19
 
 
 **Chronological**
+
+
 One of the second or third builds of this project. Able to place tiles down in a grid, unable to place walls ontop of tiles. A lot of the earlier commits were adding core compenents like assets for ui and the game.
 
 https://github.com/Jimdangle/iso_map_maker/assets/72684566/9295dd02-5816-4b4e-abac-5021c81fb0e9
@@ -78,6 +83,11 @@ https://github.com/Jimdangle/iso_map_maker/assets/72684566/fee75d2b-c3ff-4351-9c
 Placing walls now intuitive. 
 
 https://github.com/Jimdangle/iso_map_maker/assets/72684566/1a497255-85bf-4f6f-a0a9-721ce75d4574
+
+Common Painting tools via Bresenham and Midpoint algorithms
+
+https://github.com/Jimdangle/iso_map_maker/assets/72684566/d4bf88a1-09c4-4f5b-99ab-f28288c49654
+
 
 
 ## License 
