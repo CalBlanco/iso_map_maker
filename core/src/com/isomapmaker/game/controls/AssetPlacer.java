@@ -15,6 +15,7 @@ import com.isomapmaker.game.controls.commands.BoxCommand;
 import com.isomapmaker.game.controls.commands.BucketCommand;
 import com.isomapmaker.game.controls.commands.CircleCommand;
 import com.isomapmaker.game.controls.commands.Command;
+import com.isomapmaker.game.controls.commands.Commander;
 import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
@@ -58,10 +59,8 @@ public class AssetPlacer implements InputProcessor {
 
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
 
-    Vector<Command> commandStack, redoStack;
+
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
-        this.commandStack = new Vector<Command>();
-        this.redoStack = new Vector<Command>();
         this.paintState = State.Pencil; 
         this.cam = cam; 
         this.ass= ass; 
@@ -75,16 +74,7 @@ public class AssetPlacer implements InputProcessor {
         quadrantToHighlight.put("left", loader.floors.get("QuadrantHighlights").get(2).getTexture());
         quadrantToHighlight.put("bottom", loader.floors.get("QuadrantHighlights").get(3).getTexture());
     }
-
-
-    private Command popCommand(Vector<Command> commandStack){
-        if(commandStack.size() <= 0) return null;
-        Command last = commandStack.get(commandStack.size()-1);
-        commandStack.remove(commandStack.size()-1);
-        return last;
-    }
-
-    
+   
 
     // Only going to be useful in pencil mode for now needs to be expanded to brushes and selections
     
@@ -101,8 +91,7 @@ public class AssetPlacer implements InputProcessor {
                 return true;
             case Input.Keys.C:
                 PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, quadrant, loader, map);
-                peraser.execute();
-                commandStack.add(peraser);
+                Commander.getInstance().run(peraser);
                 return true;
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
                 if(layer+1 > manager.maxLayer()) manager.addNewLayer(); // make a new layer if there is not one
@@ -132,15 +121,10 @@ public class AssetPlacer implements InputProcessor {
                 setState(State.Box);
                 return true;
             case Input.Keys.Z:
-                Command com = popCommand(commandStack);
-                
-                if(com != null) {com.undo();redoStack.add(com);}
+                Commander.getInstance().undo();
                 return true;
             case Input.Keys.V:
-                Command redo = popCommand(redoStack);
-                if(redo == null) break;
-                redo.execute();
-                commandStack.add(redo);
+                Commander.getInstance().redo();
                 return true;
             
         }
@@ -168,28 +152,23 @@ public class AssetPlacer implements InputProcessor {
         switch(this.paintState){
             case Box:
                 BoxCommand box = new BoxCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
-                box.execute();
-                commandStack.add(box);
+                Commander.getInstance().run(box);
                 return true;
             case Circle:
                 CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), loader.getFloor(file, selection), loader, map);
-                circ.execute();
-                commandStack.add(circ);
+                Commander.getInstance().run(circ);
                 return true;
             case Line:
                 LineCommand li = new LineCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
-                li.execute();
-                commandStack.add(li);
+                Commander.getInstance().run(li);
                 return true;
             case Pencil:
                 PencilCommand pen = new PencilCommand(mode, file, quadrant, selection, endclick, screenPos, loader, map);
-                pen.execute();
-                commandStack.add(pen);
+                Commander.getInstance().run(pen);
                 return true;
             case Bucket:
                 BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, loader.floors.get(file).get(selection), loader, map);
-                buk.execute();
-                commandStack.add(buk);
+                Commander.getInstance().run(buk);
                 return true;
             default:
                 return false;
@@ -328,7 +307,7 @@ public class AssetPlacer implements InputProcessor {
 
  private void setState(State newState){
     this.paintState = newState;
-    map.setSelection(null);
+    
  }
 
 

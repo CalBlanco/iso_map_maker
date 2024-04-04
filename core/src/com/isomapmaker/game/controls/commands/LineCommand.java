@@ -26,7 +26,7 @@ public class LineCommand extends Command{
 
     private boolean line(){
         Vector<Integer[]> l = PaintTools.line(clickPos, endPos);
-        map.setSelection(l);
+        
 
         for(int i = 0; i<l.size(); i++){
             map.setFloor(l.get(i)[0], l.get(i)[1], floor);
