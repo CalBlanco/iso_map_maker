@@ -7,6 +7,11 @@ import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.Tiles.Tile;
 import com.isomapmaker.game.util.MapCopy;
 
+/**
+ * Generic class for commands
+ * Handles saving the map state before command execution
+ * and reverting map state if needed
+ */
 public abstract class Command {
     TileLoader loader;
     TileMap map;
@@ -48,7 +53,6 @@ public abstract class Command {
         int diff = MapCopy.getdiff(state, map.getMapState());
         System.out.println("Different Tiles: " + diff);
         if(state != null) this.map.setMapState(state);
-        state = null;
     }
 
 
