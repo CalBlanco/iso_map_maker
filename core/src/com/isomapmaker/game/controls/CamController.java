@@ -147,6 +147,10 @@ public class CamController implements InputProcessor {
         return false;
     }
 
+
+    /**
+     * Mouse zoom control
+     */
     @Override
     public boolean scrolled(float amountX, float amountY) {
         float inc = camera.zoom + amountY*this.zoomScrollMult;
