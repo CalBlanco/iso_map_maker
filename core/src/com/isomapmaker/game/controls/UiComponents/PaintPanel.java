@@ -10,10 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.controls.PaintModes;
+import com.isomapmaker.game.controls.commands.Commander;
 import com.isomapmaker.game.util.CursorSetter;
 
 
@@ -89,6 +91,26 @@ public class PaintPanel extends Table {
         this.add(ib).expand().fill().pad(10);
         this.add(new Label("Bucket", skin)).row();
        
+        this.row();
+        
+
+        TextButton tb = new TextButton("Undo", skin);
+        tb.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Commander.getInstance().undo();
+            }
+        });
+        this.add(tb).pad(10).grow();
+
+        tb = new TextButton("Redo", skin);
+        tb.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Commander.getInstance().redo();
+            }
+        });
+        this.add(tb).pad(10).grow();
         this.row();
         
         
