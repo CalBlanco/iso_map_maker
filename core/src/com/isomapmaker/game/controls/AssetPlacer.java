@@ -152,7 +152,7 @@ public class AssetPlacer implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         clickPos = tilePos;
         
-        return false;
+        return true;
         }
 
     @Override
@@ -168,27 +168,28 @@ public class AssetPlacer implements InputProcessor {
             case Box:
                 BoxCommand box = new BoxCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
                 Commander.getInstance().run(box);
-                return true;
+                break;
             case Circle:
                 CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), loader.getFloor(file, selection), loader, map);
                 Commander.getInstance().run(circ);
-                return true;
+                break;
             case Line:
                 LineCommand li = new LineCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
                 Commander.getInstance().run(li);
-                return true;
+                break;
             case Pencil:
                 PencilCommand pen = new PencilCommand(mode, file, quadrant, selection, endclick, screenPos, loader, map);
                 Commander.getInstance().run(pen);
-                return true;
+                break;
             case Bucket:
                 BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, loader.floors.get(file).get(selection), loader, map);
                 Commander.getInstance().run(buk);
-                return true;
+                break;
             default:
                 return false;
         }
-
+        clickPos = null;
+        return true;
     
         // TODO Auto-generated method stub
       }
@@ -206,8 +207,8 @@ public class AssetPlacer implements InputProcessor {
         
         ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y), quadrant, layer);
         
-        // TODO Auto-generated method stub
-        return false;
+        
+        return true;
     }
 
     /*
@@ -269,12 +270,13 @@ public class AssetPlacer implements InputProcessor {
                 pencilTileRender(b);
                 break;
             case Box:
+                boxRender(b);
                 break;
             case Circle:
-                pencilTileRender(b);
+                circleRender(b);
                 break;
             case Line:
-                pencilTileRender(b);
+                lineRender(b);
                 break;
             case Bucket:
                 pencilTileRender(b);
@@ -310,8 +312,49 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1f,1f,1f,1f);
     }
 
-    private void circleTileRender(SpriteBatch b){
+    private void lineRender(SpriteBatch b){
+        Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
+        Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
+        b.setColor(1f,1f,1f,0.7f);
+        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        Vector<Integer[]> linePoints = PaintTools.line(v, new Vector2(1,1).scl(layer).add(ht));
+        for(int i=0; i<linePoints.size(); i++){
+            tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
+            b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
+        }
+        b.setColor(1,1,1,1);
 
+    }
+    
+    private void circleRender(SpriteBatch b){
+        Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
+        Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
+        b.setColor(1f,1f,1f,0.7f);
+        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        Vector<Integer[]> linePoints = PaintTools.circle(v,(int) new Vector2(1,1).scl(layer).add(ht).dst(v));
+        for(int i=0; i<linePoints.size(); i++){
+            tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
+            b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
+        }
+        b.setColor(1,1,1,1);
+    }
+
+    private void boxRender(SpriteBatch b){
+        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
+        Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
+        Vector<Vector2> bSel = PaintTools.box(v, ht);
+        b.setColor(1f,1f,1f,0.7f);
+        tVector = IsoUtil.isometricToWorldPos(v, IsoUtil.FLOOR_SIZE);
+        b.draw(loader.getFloor(file,selection).getTexture(), tVector.x, tVector.y);
+        for(int i=0;i<bSel.size(); i++){
+            tVector = IsoUtil.isometricToWorldPos(bSel.get(i).add(new Vector2(1,1).scl(layer)), IsoUtil.FLOOR_SIZE);
+            b.draw(loader.getFloor(file, selection).getTexture(), tVector.x, tVector.y);
+        }
+        b.setColor(1,1,1,1);
     }
 
 /*

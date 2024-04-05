@@ -25,7 +25,7 @@ public class PaintTools {
         x1 = end[0];
         y1 = end[1];
 
-        System.out.println("Line from (" + x0 +"," + y0+"), to (" + x1 +"," +y1+")\n");
+       //System.out.println("Line from (" + x0 +"," + y0+"), to (" + x1 +"," +y1+")\n");
         Vector<Integer[]> points = new Vector<Integer[]>();
         
         int dx = Math.abs(x1-x0);
@@ -88,5 +88,21 @@ public class PaintTools {
         while (x < 0);
 
         return points;
+    }
+
+
+    public static Vector<Vector2> box(Vector2 a, Vector2 b){
+        int lx = (int) (a.x < b.x ? a.x : b.x);
+        int ly = (int) (a.y < b.y ? a.y : b.y);
+        //System.out.println("Making Box: from " + a.toString() + " to " + b.toString() +", Size: " + Math.abs(a.x-b.x) +", " + Math.abs(b.y-a.y));
+        Vector<Vector2> box = new Vector<Vector2>();
+        for(int i=lx; i<lx+(int)Math.abs(a.x-b.x)+1; i++){
+            for(int j=ly; j<ly+(int)Math.abs(a.y-b.y)+1; j++){
+                if(i == a.x || i == b.x || j == a.y || j == b.y) box.add(new Vector2(i,j));
+                
+            }
+        }
+
+        return box;
     }
 }
