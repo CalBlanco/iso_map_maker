@@ -64,7 +64,7 @@ public class AssetPlacer implements InputProcessor {
     Pixmap pencil,pm;
 
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
-        this.paintState = PaintModes.Pencil; 
+        this.paintState = ModeController.getInstance().getState(); 
         this.cam = cam; 
         this.ass= ass; 
         this.manager = manager;
@@ -201,7 +201,7 @@ public class AssetPlacer implements InputProcessor {
         
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/4f, wpos.y-IsoUtil.FLOOR_SIZE.y/4f);
-        tilePos = IsoUtil.worldPosToIsometric(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
+        tilePos = IsoUtil.worldPosToIsometric(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/2f,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
         quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
         ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y), quadrant, layer);
@@ -324,8 +324,8 @@ public class AssetPlacer implements InputProcessor {
  */
 
  public void setState(PaintModes newState){
-    this.paintState = newState;
-    CursorSetter.getInstance().setCursor(newState);
+    ModeController.getInstance().setState(newState);
+    this.paintState = ModeController.getInstance().getState();
  }
 
 
