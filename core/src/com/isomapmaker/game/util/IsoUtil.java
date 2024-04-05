@@ -49,8 +49,8 @@ public class IsoUtil {
      */
     public static String getTileQuadrant(Vector2 worldPos, Vector2 mousePos) {
         Vector2 isoPos = isometricToWorldPos(worldPos, FLOOR_SIZE);
-        int tileX = (int) ((mousePos.x - isoPos.x) / FLOOR_SIZE.x);
-        int tileY = (int) ((mousePos.y - isoPos.y) / FLOOR_SIZE.y);
+        int tileX = (int) ((worldPos.x - isoPos.x) / FLOOR_SIZE.x);
+        int tileY = (int) ((worldPos.y - isoPos.y) / FLOOR_SIZE.y);
         float halfWidth = FLOOR_SIZE.x / 2;
         float halfHeight = FLOOR_SIZE.y / 2;
 
