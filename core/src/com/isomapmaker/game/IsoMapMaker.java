@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.isomapmaker.game.controls.AssetController;
 import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.controls.CamController;
+import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
@@ -91,6 +92,7 @@ public class IsoMapMaker extends Game {
 
 	@Override
 	public void render () {
+		assetPlacer.setState(ModeController.getInstance().getState());
 		ScreenUtils.clear(0, 0, 0, 1);
 		this.batch.setProjectionMatrix(cam.combined);
 		cam.update();

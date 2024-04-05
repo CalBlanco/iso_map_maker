@@ -15,7 +15,7 @@ public class IsoUtil {
         float y = (isoPos.x + isoPos.y) * (FLOOR_SIZE.y / 2f);
         return new Vector2((int)x, (int)y);
     }
-
+ 
     /**
      * Convert world cordinates into a tile
      * @param worldPos The screen/world cords
@@ -23,9 +23,9 @@ public class IsoUtil {
      * @return
      */
     public static Vector2 worldPosToIsometric(Vector2 worldPos, Vector2 size) {
-        float x = (worldPos.x / (FLOOR_SIZE.x / 2f) + worldPos.y / (FLOOR_SIZE.y / 2f)) / 2f;
-        float y = (worldPos.y / (FLOOR_SIZE.y / 2f) - worldPos.x / (FLOOR_SIZE.x / 2f)) / 2f;
-        return new Vector2((int)x, (int)y);
+        float x = (worldPos.x / (FLOOR_SIZE.x / 2f) + worldPos.y / (FLOOR_SIZE.y / 2f)) / 2f  - 0.5f;
+        float y = (worldPos.y  / (FLOOR_SIZE.y / 2f) - worldPos.x / (FLOOR_SIZE.x / 2f)) / 2f - 0.05f;
+        return new Vector2((int)Math.floor(x), (int)Math.floor(y));
     }
 
     /**
