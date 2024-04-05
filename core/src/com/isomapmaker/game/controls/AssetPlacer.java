@@ -323,7 +323,7 @@ public class AssetPlacer implements InputProcessor {
  ╚═════╝    ╚═╝   ╚═╝╚══════╝
  */
 
- private void setState(PaintModes newState){
+ public void setState(PaintModes newState){
     this.paintState = newState;
     CursorSetter.getInstance().setCursor(newState);
  }

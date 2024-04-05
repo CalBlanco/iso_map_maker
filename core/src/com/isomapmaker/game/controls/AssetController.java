@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.isomapmaker.game.controls.UiComponents.PaintPanel;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.SimpleTile;
@@ -161,9 +162,9 @@ public class AssetController extends Stage {
         //Right Panel
         Table right = new Table();
         Label rightPanel = new Label(" ", skin);
-
+        PaintPanel panel = new PaintPanel(skin);
         right.add(rightPanel).top();
-
+        right.add(panel);
         //header
         Table topT = new Table(skin);
         topT.background("default-pane");
