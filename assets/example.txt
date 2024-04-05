@@ -1,3 +1,0 @@
-hello:cal
-thisis:yourformat
-howweball:allday

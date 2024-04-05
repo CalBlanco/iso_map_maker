@@ -183,7 +183,6 @@ public class Tile {
         String objectString = mainSplit[2];
 
 
-        System.out.println(floorString +", " + wallString +", " + objectString);
 
         // load floor or default if null
         String[] floorParts = new String[2];
@@ -203,10 +202,11 @@ public class Tile {
         String leftWall = wallSplits[2];
         String bottomWall = wallSplits[3];
 
-        if(topWall != "e") walls.put("top", loader.getWall("top", Integer.parseInt(topWall.split("_")[1])));
-        if(rightWall != "e") walls.put("right", loader.getWall("right", Integer.parseInt(topWall.split("_")[1])));
-        if(leftWall != "e") walls.put("left", loader.getWall("left", Integer.parseInt(topWall.split("_")[1])));
-        if(bottomWall != "e") walls.put("bottom", loader.getWall("bottom", Integer.parseInt(topWall.split("_")[1])));
+        
+        if(!topWall.equals("e")) walls.put("top", loader.getWall("top", Integer.parseInt(topWall.split("_")[1])));
+        if(!rightWall.equals("e")) walls.put("right", loader.getWall("right", Integer.parseInt(rightWall.split("_")[1])));
+        if(!leftWall.equals("e")) walls.put("left", loader.getWall("left", Integer.parseInt(leftWall.split("_")[1])));
+        if(!bottomWall.equals("e")) walls.put("bottom", loader.getWall("bottom", Integer.parseInt(bottomWall.split("_")[1])));
 
 
         String[] objectsplit = objectString.split(":");

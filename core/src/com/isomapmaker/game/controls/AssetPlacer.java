@@ -139,6 +139,8 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.NUM_9:
                 MapSaver.getInstance().saveNewMap("MyMap", manager);
                 break;
+            case Input.Keys.NUM_0:
+                MapSaver.getInstance().readMaps("MyMap", manager, loader);
             
         }
         return false;
