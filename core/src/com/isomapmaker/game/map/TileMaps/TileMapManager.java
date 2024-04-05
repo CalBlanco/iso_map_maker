@@ -32,13 +32,21 @@ public class TileMapManager {
         this.loader = loader;
         layers = new Vector<TileMap>();
         TileMap base = new TileMap(size, new Vector2(0,0), loader.getFloor("Highlights", 4));
-        addLayer(base); // add initial layer
+        TileMap first = new TileMap(size, new Vector2(1,1), loader.getFloor("Highlights", 4));
+        TileMap second = new TileMap(size, new Vector2(2,2), loader.getFloor("Highlights", 4));
+        TileMap fourth = new TileMap(size, new Vector2(3,3), loader.getFloor("Highlights", 4));
+        
+        layers.add(base); // add initial layer
+        layers.add(first); // add initial layer
+        layers.add(second); // add initial layer
+        layers.add(fourth); // add initial layer
+
     }
 
    
     // render
     public void render(SpriteBatch b){
-        for(int i= layers.size()-1; i>=0; i--){ // render higher layers first? probably not actually lmao
+        for(int i = 0; i<layers.size(); i++){ // render higher layers first? probably not actually lmao
             layers.get(i).render(b);
         }
     }
@@ -81,8 +89,10 @@ public class TileMapManager {
      * Add a fresh layer to the next availble index
      */
     public void addNewLayer(){
-        layers.add(new TileMap(size, layers.get(maxLayer()).tileOffset, loader.getFloor("Highlights", 4)));
+        layers.add(new TileMap(size, layers.get(maxLayer()).tileOffset.add(new Vector2(1,1)), loader.getFloor("Highlights", 2)));
     }
+
+    
 
     /**
      * Load a layers map from a string

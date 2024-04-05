@@ -55,7 +55,7 @@ public class IsoMapMaker extends Game {
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // main camera
 
 		tileLoader = new TileLoader("assets.xml"); // Loader is responsible for getting assets into the game
-		tileMapManager = new TileMapManager(tileLoader); // Manages tilemaps for multiple layers 
+		tileMapManager = new TileMapManager(tileLoader, 300); // Manages tilemaps for multiple layers 
 
 		// Sprite batches to render what we need
 		batch = new SpriteBatch();

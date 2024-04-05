@@ -11,8 +11,8 @@ public class IsoUtil {
      * @return A Vector2 containing the world cordinates
      */
     public static Vector2 isometricToWorldPos(Vector2 isoPos, Vector2 size) {
-        float x = (isoPos.x - isoPos.y) * (size.x / 2f);
-        float y = (isoPos.x + isoPos.y) * (size.y / 2f);
+        float x = (isoPos.x - isoPos.y) * (FLOOR_SIZE.x / 2f);
+        float y = (isoPos.x + isoPos.y) * (FLOOR_SIZE.y / 2f);
         return new Vector2((int)x, (int)y);
     }
 
@@ -23,8 +23,8 @@ public class IsoUtil {
      * @return
      */
     public static Vector2 worldPosToIsometric(Vector2 worldPos, Vector2 size) {
-        float x = (worldPos.x / (size.x / 2f) + worldPos.y / (size.y / 2f)) / 2f;
-        float y = (worldPos.y / (size.y / 2f) - worldPos.x / (size.x / 2f)) / 2f;
+        float x = (worldPos.x / (FLOOR_SIZE.x / 2f) + worldPos.y / (FLOOR_SIZE.y / 2f)) / 2f;
+        float y = (worldPos.y / (FLOOR_SIZE.y / 2f) - worldPos.x / (FLOOR_SIZE.x / 2f)) / 2f;
         return new Vector2((int)x, (int)y);
     }
 
