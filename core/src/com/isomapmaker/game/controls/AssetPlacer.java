@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -24,6 +25,7 @@ import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.Wall;
+import com.isomapmaker.game.util.MapSaver;
 import com.isomapmaker.game.util.IsoUtil;
 
 public class AssetPlacer implements InputProcessor {
@@ -58,7 +60,7 @@ public class AssetPlacer implements InputProcessor {
     State paintState;
 
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
-
+    Pixmap pencil,pm;
 
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
         this.paintState = State.Pencil; 
@@ -73,6 +75,11 @@ public class AssetPlacer implements InputProcessor {
         quadrantToHighlight.put("right", loader.floors.get("QuadrantHighlights").get(1).getTexture());
         quadrantToHighlight.put("left", loader.floors.get("QuadrantHighlights").get(2).getTexture());
         quadrantToHighlight.put("bottom", loader.floors.get("QuadrantHighlights").get(3).getTexture());
+
+        pm = new Pixmap(Gdx.files.internal("cursor.png"));
+        pencil = new Pixmap(Gdx.files.internal("pencil.png"));
+		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 15, 15));
+		
     }
    
 
@@ -112,6 +119,7 @@ public class AssetPlacer implements InputProcessor {
                 return true;                
             case Input.Keys.P:
                 setState(State.Pencil);
+                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pencil, 15, 15));
                 return true;
             case Input.Keys.O:
                 setState(State.Circle);
@@ -128,6 +136,9 @@ public class AssetPlacer implements InputProcessor {
             case Input.Keys.V:
                 Commander.getInstance().redo();
                 return true;
+            case Input.Keys.NUM_9:
+                MapSaver.getInstance().saveNewMap("MyMap", manager);
+                break;
             
         }
         return false;
@@ -291,7 +302,7 @@ public class AssetPlacer implements InputProcessor {
             default:
                 break;
         }
-        b.draw(loader.floors.get(file).get(selection).getTexture(), screenPos.x, screenPos.y);
+        
     }
         catch(Exception e){b.setColor(1f,1f,1f,1f); return;}
         b.setColor(1f,1f,1f,1f);
@@ -312,7 +323,7 @@ public class AssetPlacer implements InputProcessor {
 
  private void setState(State newState){
     this.paintState = newState;
-    
+    Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 15, 15));
  }
 
 

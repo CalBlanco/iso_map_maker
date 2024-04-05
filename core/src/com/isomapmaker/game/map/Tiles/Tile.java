@@ -155,11 +155,11 @@ public class Tile {
      */
     public String saveString(){
         String out = "";
-        out += floor == null ? floor.getName() +"-" : "e-";
-        out += walls.get("top") == null ? walls.get("top").getName() +":" : "e:";
-        out += walls.get("right") == null ? walls.get("right").getName() +":" : "e:";
-        out += walls.get("left") == null ? walls.get("left").getName() +":" : "e:";
-        out += walls.get("bottom") == null ? walls.get("bottom").getName() +"-" : "e-";
+        out += floor != null ? floor.getName() +"-" : "e-";
+        out += walls.get("top") != null ? walls.get("top").getName() +":" : "e:";
+        out += walls.get("right") != null ? walls.get("right").getName() +":" : "e:";
+        out += walls.get("left") != null ? walls.get("left").getName() +":" : "e:";
+        out += walls.get("bottom") != null ? walls.get("bottom").getName() +"-" : "e-";
 
         for(int i=0; i<objects.size(); i++){
             out += objects.get(i) != null ? objects.get(i).getName() +":" : "";
