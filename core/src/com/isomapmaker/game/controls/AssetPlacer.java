@@ -94,12 +94,14 @@ public class AssetPlacer implements InputProcessor {
                 Commander.getInstance().run(peraser);
                 return true;
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
-                if(layer+1 > manager.maxLayer()) manager.addNewLayer(); // make a new layer if there is not one
-                map = manager.getLayer(layer+1); // get next layer
+                System.out.println("Layers: " + manager.maxLayer());
+                if(layer+1 > manager.maxLayer()) return false; // make a new layer if there is not one
                 layer +=1;
+                map = manager.getLayer(layer); // get next layer
                 return true;
             case Input.Keys.PAGE_DOWN:
-                if(layer-1 < 0) layer = 0;
+                if(layer-1 < 0) return false;
+                layer -= 1;
                 map = manager.getLayer(layer);
                 return true;
             case Input.Keys.DEL:
@@ -185,7 +187,7 @@ public class AssetPlacer implements InputProcessor {
         updatePlacementView();
         
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
-        screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/2f, wpos.y-IsoUtil.FLOOR_SIZE.y/2f);
+        screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/4f, wpos.y-IsoUtil.FLOOR_SIZE.y/4f);
         tilePos = IsoUtil.worldPosToIsometric(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/4,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
         quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
@@ -275,7 +277,7 @@ public class AssetPlacer implements InputProcessor {
      * Render the pencil tile tool availability
      */
     private void pencilTileRender(SpriteBatch b){
-        tVector = IsoUtil.isometricToWorldPos(tilePos, IsoUtil.FLOOR_SIZE);
+        tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(tilePos), IsoUtil.FLOOR_SIZE);
         b.setColor(1f, 1f, 1f, 0.7f);
         try{
         switch (mode) {
@@ -295,6 +297,9 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1f,1f,1f,1f);
     }
 
+    private void circleTileRender(SpriteBatch b){
+
+    }
 
 /*
 ██╗   ██╗████████╗██╗██╗     

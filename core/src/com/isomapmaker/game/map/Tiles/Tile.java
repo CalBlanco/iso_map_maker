@@ -110,7 +110,11 @@ public class Tile {
     // c) Objects
     public void render(SpriteBatch b, Vector2 pos){
         //Floor
-        try{if(this.floor != null){ b.draw(this.floor.getTexture(), pos.x, pos.y);}else{b.draw(this.defaultRegion, pos.x, pos.y);}}catch(Exception e){return;} 
+        try{if(this.floor != null){ b.draw(this.floor.getTexture(), pos.x, pos.y);}else{
+            b.setColor(1, 1, 1, 0.05f);
+            b.draw(this.defaultRegion, pos.x, pos.y);
+            b.setColor(1,1,1,1);
+        }}catch(Exception e){return;} 
         //Walls
         try{if(this.walls.get("top") != null) b.draw(this.walls.get("top").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
         try{if(this.walls.get("right") != null) b.draw(this.walls.get("right").getTexture(), pos.x, pos.y);}catch(Exception e){return;}
