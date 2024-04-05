@@ -12,6 +12,7 @@ import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 public class MapSaver {
     private static MapSaver instance;
+    private static float completionP;
 
     public static MapSaver getInstance()
     {
@@ -23,7 +24,7 @@ public class MapSaver {
     }
 
     private MapSaver(){
-        
+        completionP = 0f;
         try{
             File f = new File("maps");
             boolean bool = f.mkdir();
@@ -33,6 +34,10 @@ public class MapSaver {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void updateCompletion(int at, int max){
+        completionP = at/max;
     }
 
 
@@ -47,6 +52,7 @@ public class MapSaver {
         try{
             boolean made = new File("maps/"+mapName).mkdir();
             for(int i=0; i<manager.maxLayer()+1; i++){
+                updateCompletion(i, manager.maxLayer()+1);
                 BufferedWriter writer = new BufferedWriter(new FileWriter("maps/"+mapName+"/"+i+".txt"));
                 writer.write(manager.getLayer(i).saveMap());
                 writer.close();
@@ -68,6 +74,7 @@ public class MapSaver {
     public void readSavedMap(String mapName, TileMapManager manager, TileLoader loader){
         File dir = new File("maps/"+mapName);
         try{
+        
             File[] matches = dir.listFiles(new FilenameFilter(){
                 @Override
                 public boolean accept(File di, String name){
@@ -78,6 +85,7 @@ public class MapSaver {
             BufferedReader read = null;
             for(int i=0; i< matches.length; i++){
                 if( i > manager.maxLayer()) break;
+                updateCompletion(i, matches.length);
                 read = new BufferedReader(new FileReader(matches[i]));
                 manager.getLayer(i).loadMap(read.lines().toArray(String[]::new), loader);
             }
@@ -85,5 +93,10 @@ public class MapSaver {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    public float getCompletion(){
+        return completionP;
     }
 }

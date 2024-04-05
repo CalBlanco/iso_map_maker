@@ -26,6 +26,7 @@ import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.MapSaver;
+import com.isomapmaker.game.util.CursorSetter;
 import com.isomapmaker.game.util.IsoUtil;
 
 public class AssetPlacer implements InputProcessor {
@@ -57,13 +58,13 @@ public class AssetPlacer implements InputProcessor {
 
     Vector2 tVector = new Vector2(0,0);
 
-    State paintState;
+    PaintModes paintState;
 
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
     Pixmap pencil,pm;
 
     public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
-        this.paintState = State.Pencil; 
+        this.paintState = PaintModes.Pencil; 
         this.cam = cam; 
         this.ass= ass; 
         this.manager = manager;
@@ -115,20 +116,19 @@ public class AssetPlacer implements InputProcessor {
                 if(manager.maxLayer() != 0) manager.popLayer();
                 return true;
             case Input.Keys.L:
-                setState(State.Line);
+                setState(PaintModes.Line);
                 return true;                
             case Input.Keys.P:
-                setState(State.Pencil);
-                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pencil, 15, 15));
+                setState(PaintModes.Pencil);
                 return true;
             case Input.Keys.O:
-                setState(State.Circle);
+                setState(PaintModes.Circle);
                 return true;
             case Input.Keys.K:
-                setState(State.Bucket);
+                setState(PaintModes.Bucket);
                 return true;
             case Input.Keys.B:
-                setState(State.Box);
+                setState(PaintModes.Box);
                 return true;
             case Input.Keys.Z:
                 Commander.getInstance().undo();
@@ -323,9 +323,9 @@ public class AssetPlacer implements InputProcessor {
  ╚═════╝    ╚═╝   ╚═╝╚══════╝
  */
 
- private void setState(State newState){
+ private void setState(PaintModes newState){
     this.paintState = newState;
-    Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 15, 15));
+    CursorSetter.getInstance().setCursor(newState);
  }
 
 

@@ -21,6 +21,7 @@ import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
+import com.isomapmaker.game.util.MapSaver;
 
 
 
@@ -94,6 +95,9 @@ public class IsoMapMaker extends Game {
 		this.batch.setProjectionMatrix(cam.combined);
 		cam.update();
 		
+		if(MapSaver.getInstance().getCompletion() > 0f){
+			System.out.println((MapSaver.getInstance().getCompletion()*100) + "%");
+		}
 
 		
 		batch.begin(); // map batch
