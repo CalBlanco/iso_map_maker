@@ -50,11 +50,12 @@ The `Tile` class contains a single `Floor` called `floor`, a `Dictionary` called
 
 **Current** 
 
-Command Pattern and Commander (Singleton pattern controlling command stack) implemented
+Updated Paint Ui with Accurate Selection Highlighting
 
 
 
-https://github.com/Jimdangle/iso_map_maker/assets/72684566/13ee0a6e-f2e7-4677-bd50-f04d2597ae19
+https://github.com/Jimdangle/iso_map_maker/assets/72684566/9a072044-7c81-49d2-a097-f80432a98bf1
+
 
 
 **Chronological**
@@ -87,6 +88,11 @@ https://github.com/Jimdangle/iso_map_maker/assets/72684566/1a497255-85bf-4f6f-a0
 Common Painting tools via Bresenham and Midpoint algorithms
 
 https://github.com/Jimdangle/iso_map_maker/assets/72684566/d4bf88a1-09c4-4f5b-99ab-f28288c49654
+
+Command Pattern and Commander (Singleton pattern controlling command stack) implemented
+
+https://github.com/Jimdangle/iso_map_maker/assets/72684566/13ee0a6e-f2e7-4677-bd50-f04d2597ae19
+
 
 
 
