@@ -22,7 +22,7 @@ import com.isomapmaker.game.util.IsoUtil;
  */
 public class CamController implements InputProcessor {
     final private static float MIN_ZOOM = .25f;
-    final private static float MAX_ZOOM = 12.0f;
+    final private static float MAX_ZOOM = 32.0f;
     final private static Vector2 HOVER_OFFSET = new Vector2(-32f,-16f);
     final private static Vector2 FLOOR_SIZE = new Vector2(128,64);
     private OrthographicCamera camera;
