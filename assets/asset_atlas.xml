@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container>
+    <Floor></Floor>
+    <Wall></Wall>
+    <Object>
+        <asset>
+            <name>Containers(Dumpster)</name>
+            <path>atlas/Objects/containers.atlas</path>
+        </asset>
+    </Object>
+</Container>

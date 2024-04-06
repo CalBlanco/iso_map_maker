@@ -16,6 +16,8 @@ import com.isomapmaker.game.controls.AssetController;
 import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.controls.ModeController;
+import com.isomapmaker.game.map.Atlas.TileAtlas;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
@@ -23,6 +25,7 @@ import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
 import com.isomapmaker.game.util.MapSaver;
+import com.isomapmaker.game.util.XmlParse;
 
 
 
@@ -38,6 +41,8 @@ public class IsoMapMaker extends Game {
 	
 
 	InputMultiplexer ip;
+
+
 
 	//MapHud mh;
 	
@@ -56,6 +61,8 @@ public class IsoMapMaker extends Game {
 	public void create () {
 		
 		
+		
+
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // main camera
 
 		tileLoader = new TileLoader("assets.xml"); // Loader is responsible for getting assets into the game
@@ -102,8 +109,11 @@ public class IsoMapMaker extends Game {
 		}
 
 		
+
+
 		batch.begin(); // map batch
 		tileMapManager.render(batch); // render the map
+		batch.draw(TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegion("Containers(Dumpster)", "dmpster0000"), 0,0);
 		cameraController.render(batch); // apply and camera movements
 		assetPlacer.activeTileRender(batch); // highlight editing tiles 
 		batch.end();

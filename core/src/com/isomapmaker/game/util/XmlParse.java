@@ -1,10 +1,17 @@
 package com.isomapmaker.game.util;
 
 import java.io.File;
+import java.util.HashMap;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.isomapmaker.game.map.Atlas.AtlasContainer;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
@@ -51,4 +58,70 @@ public class XmlParse {
 
         return new String[][]{};
     }
+
+
+    public static HashMap<TileType, AtlasContainer> getAssets(String assetFile){
+        try{
+            HashMap<TileType, AtlasContainer> assets = new HashMap<TileType, AtlasContainer>();
+            assets.put(TileType.Floor, new AtlasContainer());
+            assets.put(TileType.Wall, new AtlasContainer());
+            assets.put(TileType.Object, new AtlasContainer());
+
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(assetFile);
+            doc.getDocumentElement().normalize();
+            System.out.println("Root element: " + doc.getDocumentElement().getNodeName());
+
+            Node floors = doc.getElementsByTagName("Floor").item(0);
+            Node walls = doc.getElementsByTagName("Wall").item(0);
+            Node objects = doc.getElementsByTagName("Object").item(0);
+
+            Element f = (Element) floors;
+            NodeList nl = f.getElementsByTagName("asset");
+            for(int i=0; i<nl.getLength(); i++){
+                assets.get(TileType.Floor).addAtlas(parseAssetName((Element)nl.item(i)),parseAssetToAtlas((Element)nl.item(i)));
+            }
+
+            Element w = (Element) walls;
+            nl = w.getElementsByTagName("asset");
+            for(int i=0; i<nl.getLength(); i++){
+                assets.get(TileType.Wall).addAtlas(parseAssetName((Element)nl.item(i)),parseAssetToAtlas((Element)nl.item(i)));
+            }
+
+            Element o = (Element) objects;
+            nl = o.getElementsByTagName("asset");
+            for(int i=0; i<nl.getLength(); i++){
+                assets.get(TileType.Object).addAtlas(parseAssetName((Element)nl.item(i)),parseAssetToAtlas((Element)nl.item(i)));
+            }
+
+            return assets;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static TextureAtlas parseAssetToAtlas(Element assetElement){
+        
+        String path = assetElement.getElementsByTagName("path").item(0).getTextContent();
+
+        return new TextureAtlas(path);
+    }
+
+    private static String parseAssetName(Element assetElement){
+        return assetElement.getElementsByTagName("name").item(0).getTextContent();
+    }
+
+ 
+
+    // TileType {Floor, Wall, Object}
+    // WallQuadrants {Left, Right, Top, Bottom}
+    // return this Hashmap<TileType, AtlasContainer> to what ever is responsible for controlling our assets
+    // AtlasContainer {
+    //  Hashmap<String, TextureAtlas> (has names, and the corresponding atlas for them)    
+    //}
+    // 
+
 }
