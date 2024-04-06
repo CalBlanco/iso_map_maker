@@ -31,6 +31,7 @@ public class CursorSetter {
         modeFileMap.put(PaintModes.Line, Gdx.files.internal("line.png"));
         modeFileMap.put(PaintModes.Box, Gdx.files.internal("box.png"));
         modeFileMap.put(PaintModes.Bucket, Gdx.files.internal("bucket.png"));
+        
         cursors = new Cursor[6];
 
         cursors[PaintModes.Pencil.ordinal()] = Gdx.graphics.newCursor(new Pixmap(modeFileMap.get(PaintModes.Pencil)),15,15);
@@ -38,7 +39,7 @@ public class CursorSetter {
         cursors[PaintModes.Line.ordinal()] = Gdx.graphics.newCursor(new Pixmap(modeFileMap.get(PaintModes.Line)),15,15);
         cursors[PaintModes.Box.ordinal()] = Gdx.graphics.newCursor(new Pixmap(modeFileMap.get(PaintModes.Box)),15,15);
         cursors[PaintModes.Bucket.ordinal()] = Gdx.graphics.newCursor(new Pixmap(modeFileMap.get(PaintModes.Bucket)),15,15);
-
+        
     }
 
     public void setCursor(PaintModes mode){

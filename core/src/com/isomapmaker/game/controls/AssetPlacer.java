@@ -313,11 +313,12 @@ public class AssetPlacer implements InputProcessor {
     }
 
     private void lineRender(SpriteBatch b){
+        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
         Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
         Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
         b.setColor(1f,1f,1f,0.7f);
-        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        
         Vector<Integer[]> linePoints = PaintTools.line(v, new Vector2(1,1).scl(layer).add(ht));
         for(int i=0; i<linePoints.size(); i++){
             tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
@@ -328,16 +329,20 @@ public class AssetPlacer implements InputProcessor {
     }
     
     private void circleRender(SpriteBatch b){
+        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
         Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
         Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
         b.setColor(1f,1f,1f,0.7f);
-        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        
         Vector<Integer[]> linePoints = PaintTools.circle(v,(int) new Vector2(1,1).scl(layer).add(ht).dst(v));
+        try{
         for(int i=0; i<linePoints.size(); i++){
             tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
             b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
         }
+        }
+        catch(Exception e){e.printStackTrace();}
         b.setColor(1,1,1,1);
     }
 

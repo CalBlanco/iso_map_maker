@@ -164,7 +164,7 @@ public class AssetController extends Stage {
         Label rightPanel = new Label(" ", skin);
         PaintPanel panel = new PaintPanel(skin);
         right.add(rightPanel).top();
-        right.add(panel);
+        right.add(panel).grow().colspan(1);
         //header
         Table topT = new Table(skin);
         topT.background("default-pane");
