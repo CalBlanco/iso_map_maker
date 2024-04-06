@@ -27,7 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.isomapmaker.game.controls.UiComponents.PaintPanel;
+import com.isomapmaker.game.controls.UiComponents.SavePanel;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.map.Tiles.Floor;
 import com.isomapmaker.game.map.Tiles.SimpleTile;
 import com.isomapmaker.game.map.Tiles.Wall;
@@ -55,7 +57,7 @@ public class AssetController extends Stage {
     public Object o;
     
 
-    public AssetController(TileLoader tl){
+    public AssetController(TileLoader tl, TileMapManager manager){
         skin = new Skin(Gdx.files.internal("skins/uiskin/uiskin.json"));
         this.tl = tl;
         mode = PlacementModes.Floor;
@@ -167,8 +169,10 @@ public class AssetController extends Stage {
         right.add(panel).grow().colspan(1);
         //header
         Table topT = new Table(skin);
+        
         topT.background("default-pane");
         topT.add(new Label("Iso Map Maker", skin, "title-font", Color.WHITE)).expand().center();
+        topT.add(new SavePanel(skin, manager, tl));
         root.add(topT).growX().colspan(12).row();
 
         // left panel

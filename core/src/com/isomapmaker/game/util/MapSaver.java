@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 public class MapSaver {
     private static MapSaver instance;
@@ -42,21 +43,24 @@ public class MapSaver {
 
 
     public void saveNewMap(String mapName, TileMapManager manager){
-        ExecutorService exec = Executors.newFixedThreadPool(1);
-        exec.submit(() -> saveMap(mapName, manager));
+        ExecutorService exec = Executors.newFixedThreadPool(4);
+        exec.submit(() -> saveMap(mapName, 0,  manager.getLayer(0)));
+        exec.submit(() -> saveMap(mapName, 1,  manager.getLayer(1)));
+        exec.submit(() -> saveMap(mapName, 2,  manager.getLayer(2)));
+        exec.submit(() -> saveMap(mapName, 3,  manager.getLayer(3)));
 
         exec.shutdown();
     }
 
-    private void saveMap(String mapName, TileMapManager manager){
+    private void saveMap(String mapName, int layer,TileMap map){
         try{
             boolean made = new File("maps/"+mapName).mkdir();
-            for(int i=0; i<manager.maxLayer()+1; i++){
-                updateCompletion(i, manager.maxLayer()+1);
-                BufferedWriter writer = new BufferedWriter(new FileWriter("maps/"+mapName+"/"+i+".txt"));
-                writer.write(manager.getLayer(i).saveMap());
+            
+                
+                BufferedWriter writer = new BufferedWriter(new FileWriter("maps/"+mapName+"/"+layer+".txt"));
+                writer.write(map.saveMap());
                 writer.close();
-            }
+            
             
         }
         catch(Exception e){
