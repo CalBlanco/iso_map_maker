@@ -16,6 +16,7 @@ import com.isomapmaker.game.controls.AssetController;
 import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.controls.ModeController;
+import com.isomapmaker.game.controls.AtlasBrowser.AtlasBrowser;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
@@ -55,6 +56,9 @@ public class IsoMapMaker extends Game {
 	TileMap map;
 	TileMapManager tileMapManager;
 
+	// Atlas Refactor
+	AtlasBrowser atlasBrowser;
+
 
 
 	@Override
@@ -76,13 +80,19 @@ public class IsoMapMaker extends Game {
 		assetControler = new AssetController(tileLoader,tileMapManager); // UI for assets 
 		assetPlacer = new AssetPlacer(cam, assetControler, tileMapManager, tileLoader); // Asset placer that manages the map using the tile loader
 
-		
+		while(TileAtlas.getInstance() == null){
+
+		}
+		atlasBrowser = new AtlasBrowser();
+
 		//Controls input flow (placement determines order of input [i believe last added is first])
 		ip = new InputMultiplexer();
 
+		ip.addProcessor(atlasBrowser);
 		ip.addProcessor(assetControler);
 		ip.addProcessor(cameraController);
 		ip.addProcessor(assetPlacer);
+		
 		Gdx.input.setInputProcessor(ip);
 
 		// places down all floor tiles that we have
@@ -113,7 +123,8 @@ public class IsoMapMaker extends Game {
 
 		batch.begin(); // map batch
 		tileMapManager.render(batch); // render the map
-		batch.draw(TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegion("Containers(Dumpster)", "dmpster0000"), 0,0);
+		//batch.draw(TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegion("Containers(Dumpster)", "dmpsterpink_open-bottom"), 0,0);
+		
 		cameraController.render(batch); // apply and camera movements
 		assetPlacer.activeTileRender(batch); // highlight editing tiles 
 		batch.end();
@@ -123,8 +134,8 @@ public class IsoMapMaker extends Game {
 		assetPlacer.renderSelectionTiles(hudBatch);
 		hudBatch.end(); 
 
-		assetControler.render(); // render our ui last so it is always on top
-		
+		//assetControler.render(); // render our ui last so it is always on top
+		atlasBrowser.render();
 	}
 	
 	@Override

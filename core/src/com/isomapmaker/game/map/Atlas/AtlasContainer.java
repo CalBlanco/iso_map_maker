@@ -16,7 +16,9 @@ public class AtlasContainer {
     public void addAtlas(String name, TextureAtlas atlas){
         atMap.put(name, atlas);
     }
+
     public TextureRegion getRegion(String name, String region){
+        System.out.println("File: " + name + ", " + region);
         try{
             return atMap.get(name).findRegion(region);
         }
@@ -27,9 +29,12 @@ public class AtlasContainer {
     }
 
     public Vector<String> getRegionNames(String name){
+       
         try{
-            Array<TextureAtlas.AtlasRegion> regions = atMap.get(name).getRegions();
+            
+            Array<TextureAtlas.AtlasRegion> regions = atMap.get(name) != null ? atMap.get(name).getRegions() : null;
             Vector<String> regionNames = new Vector<String>();
+            if(regions == null) return null;
             for(int i=0; i<regions.size; i++){
                 regionNames.add(regions.get(i).name);
             }
@@ -40,6 +45,10 @@ public class AtlasContainer {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Vector<String> getAssetNames(){
+        return new Vector<String>(atMap.keySet());
     }
 
 
