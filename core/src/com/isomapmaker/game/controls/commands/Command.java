@@ -40,8 +40,6 @@ public abstract class Command {
      * Execute wrapper to save state before execution
      */
     public void execute(){
-        System.out.println("Executing Command (Changing map state)");
-
         executeCommand(); // execute command
     }
 
@@ -49,9 +47,6 @@ public abstract class Command {
      * Undo this operation by reverting the map state to the one stored before exectution
      */
     public void undo(){
-        System.out.println("Undoing Command");
-        int diff = MapCopy.getdiff(state, map.getMapState());
-        System.out.println("Different Tiles: " + diff);
         if(state != null) this.map.setMapState(state);
     }
 

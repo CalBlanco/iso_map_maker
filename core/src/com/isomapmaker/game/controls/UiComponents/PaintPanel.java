@@ -45,51 +45,51 @@ public class PaintPanel extends Table {
         this.row();
         
         // idk
-        ImageButton ib = new ImageButton(new TextureRegionDrawable(new Texture(files.get(0))));
+        ImageButton ib = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("line.png"))));
         ib.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ModeController.getInstance().setState(modes.get(0));
+                ModeController.getInstance().setState(PaintModes.Line);
             }
         });
         this.add(ib).expand().fill().pad(5);
         this.add(new Label("Line", skin)).padRight(40).row();
 
-        ib = new ImageButton(new TextureRegionDrawable(new Texture(files.get(1))));
+        ib = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("circle.png"))));
         ib.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ModeController.getInstance().setState(modes.get(1));
+                ModeController.getInstance().setState(PaintModes.Circle);
             }
         });
         this.add(ib).expand().fill().pad(5);
         this.add(new Label("Circle", skin)).padRight(40).row();
 
-        ib = new ImageButton(new TextureRegionDrawable(new Texture(files.get(2))));
+        ib = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("box.png"))));
         ib.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ModeController.getInstance().setState(modes.get(2));
+                ModeController.getInstance().setState(PaintModes.Box);
             }
         });
         this.add(ib).expand().fill().pad(5);
         this.add(new Label("Box", skin)).padRight(40).row();
 
-        ib = new ImageButton(new TextureRegionDrawable(new Texture(files.get(3))));
+        ib = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("pencil.png"))));
         ib.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ModeController.getInstance().setState(modes.get(3));
+                ModeController.getInstance().setState(PaintModes.Pencil);
             }
         });
         this.add(ib).expand().fill().pad(5);
         this.add(new Label("Pencil", skin)).padRight(40).row();
 
-        ib = new ImageButton(new TextureRegionDrawable(new Texture(files.get(4))));
+        ib = new ImageButton(new TextureRegionDrawable(new Texture(Gdx.files.internal("bucket.png"))));
         ib.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ModeController.getInstance().setState(modes.get(4));
+                ModeController.getInstance().setState(PaintModes.Bucket);
             }
         });
         this.add(ib).expand().fill().pad(10);
@@ -115,7 +115,7 @@ public class PaintPanel extends Table {
             }
         });
         this.add(tb).pad(5).fillY();
-        this.add(new Label("Undo", skin));
+        this.add(new Label("Redo", skin)).padRight(10);
         this.row();
         this.setBackground("default-window");
         
