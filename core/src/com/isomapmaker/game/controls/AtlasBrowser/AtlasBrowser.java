@@ -18,7 +18,7 @@ public class AtlasBrowser extends Stage{
         this.addActor(root);
         this.root.add(new Label("Carl wuz here",skin)).row();
         
-        this.root.add(new AtlasView(skin));
+        this.root.add(new AtlasView(skin, this));
         this.root.debugAll();
 
         
