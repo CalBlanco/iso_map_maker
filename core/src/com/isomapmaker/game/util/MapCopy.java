@@ -1,6 +1,6 @@
 package com.isomapmaker.game.util;
 
-import com.isomapmaker.game.map.Tiles.Tile;
+import com.isomapmaker.game.map.Assets.Tile;
 
 public class MapCopy {
     public static int getdiff(Tile[][] m1, Tile[][] m2){

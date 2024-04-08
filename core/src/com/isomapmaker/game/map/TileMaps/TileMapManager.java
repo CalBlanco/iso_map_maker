@@ -19,7 +19,7 @@ public class TileMapManager {
     public TileMapManager(TileLoader loader){
         this.loader = loader;
         layers = new Vector<TileMap>();
-        TileMap base = new TileMap(size, new Vector2(0,0), loader.getFloor("Highlights", 4));
+        TileMap base = new TileMap(size, new Vector2(0,0), null);
         addLayer(base); // add initial layer
     }
 
@@ -31,10 +31,10 @@ public class TileMapManager {
     public TileMapManager(TileLoader loader, int size){
         this.loader = loader;
         layers = new Vector<TileMap>();
-        TileMap base = new TileMap(size, new Vector2(0,0), loader.getFloor("Highlights", 4));
-        TileMap first = new TileMap(size, new Vector2(1,1), loader.getFloor("Highlights", 4));
-        TileMap second = new TileMap(size, new Vector2(2,2), loader.getFloor("Highlights", 4));
-        TileMap fourth = new TileMap(size, new Vector2(3,3), loader.getFloor("Highlights", 4));
+        TileMap base = new TileMap(size, new Vector2(0,0),null);
+        TileMap first = new TileMap(size, new Vector2(1,1),null);
+        TileMap second = new TileMap(size, new Vector2(2,2),null);
+        TileMap fourth = new TileMap(size, new Vector2(3,3),null);
         
         layers.add(base); // add initial layer
         layers.add(first); // add initial layer
@@ -89,7 +89,7 @@ public class TileMapManager {
      * Add a fresh layer to the next availble index
      */
     public void addNewLayer(){
-        layers.add(new TileMap(size, layers.get(maxLayer()).tileOffset.add(new Vector2(1,1)), loader.getFloor("Highlights", 2)));
+        layers.add(new TileMap(size, layers.get(maxLayer()).tileOffset.add(new Vector2(1,1)), null));
     }
 
     

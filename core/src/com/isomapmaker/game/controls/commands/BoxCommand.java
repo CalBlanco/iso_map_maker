@@ -1,9 +1,10 @@
 package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.map.Assets.Floor;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
-import com.isomapmaker.game.map.Tiles.Floor;
+
 
 public class BoxCommand extends Command {
     Floor floor;

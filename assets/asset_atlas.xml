@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Container>
     <Floor></Floor>
-    <Wall></Wall>
+    <Wall>
+        <asset>
+	    <name>Simpleton Walls</name>
+	    <path>atlas/Walls/SimpletonWalls.atlas</path>
+	</asset>
+    </Wall>
     <Object>
         <asset>
             <name>Containers(Dumpster)</name>

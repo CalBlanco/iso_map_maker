@@ -19,6 +19,7 @@ import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.controls.AtlasBrowser.AtlasBrowser;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
@@ -95,12 +96,28 @@ public class IsoMapMaker extends Game {
 		
 		Gdx.input.setInputProcessor(ip);
 
-		// places down all floor tiles that we have
-		String[] keys = tileLoader.getFloors();
-		for(int i=0; i< keys.length; i++){
-			Vector<Floor> fr = tileLoader.floors.get(keys[i]);
-			for(int j=0; j<fr.size(); j++){
-				tileMapManager.getLayer(0).setFloor(i, j, fr.get(j));
+
+		Vector<String> names = TileAtlas.getInstance().getAssetsByType(TileType.Floor).keys();
+		for(int i=0; i<names.size(); i++){
+			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Floor).getRegionNames(names.get(i));
+			for(int j=0; i<assets.size(); j++){
+				try{
+					tileMapManager.getLayer(0).setFloor(i, j, TileAtlas.getInstance().getAssetsByType(TileType.Floor).getAssetFromAtlas(names.get(i), assets.get(j)));
+				}
+				catch(Exception e){}
+			}
+		}
+		
+
+		names = TileAtlas.getInstance().getAssetsByType(TileType.Wall).keys();
+		for(int i=0; i<names.size(); i++){
+			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Wall).getRegionNames(names.get(i));
+			for(int j=0; j<assets.size(); j++){
+				WallQuadrant quad = WallQuadrant.valueOf(assets.get(j).split("-")[1]);
+				try{
+				tileMapManager.getLayer(0).setWall(i, j, quad, TileAtlas.getInstance().getAssetsByType(TileType.Floor).getAssetFromAtlas(names.get(i), assets.get(j)));
+				}
+				catch(Exception e){}
 			}
 		}
 

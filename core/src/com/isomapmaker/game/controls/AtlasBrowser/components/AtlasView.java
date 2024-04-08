@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Atlas.AtlasContainer;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
@@ -41,10 +43,10 @@ public class AtlasView extends Table {
      */
     
     private class TypeView extends Table {
-        TileType type;
+        
         public TypeView(TileType type, Skin skin){
             super(skin);
-            this.type = type;
+            
 
             Vector<String> fileNames = TileAtlas.getInstance().getAssetsByType(type).keys();
             this.add(new Label(type.name(),skin)).row();
@@ -57,9 +59,7 @@ public class AtlasView extends Table {
 
 
     private class FileView extends Table {
-        TileType type;
-        String name;
-        Skin skin;
+        
         /**
          * Create a type view that will show 
          * @param type The Tile Type this view shows
@@ -68,9 +68,7 @@ public class AtlasView extends Table {
          */
         public FileView(TileType type, String name, Skin skin){
             super(skin);
-            this.skin = skin;
-            this.type = type;
-            this.name = name;
+            
 
             Label l = new Label(name,skin);
             this.add(l).row();
@@ -80,7 +78,7 @@ public class AtlasView extends Table {
             Asset r = null;
             
             for(int i=0; i<names.size(); i++){
-                if(i % 7 == 0) this.row();
+                if(i % 3 == 0) this.row();
                 r = TileAtlas.getInstance().getAssetsByType(type).getAssetFromAtlas(name, names.get(i));
                 if(r == null) continue;
                 im = new Image(r.getRegion());
@@ -111,50 +109,41 @@ public class AtlasView extends Table {
         
     }
 
+
+    Skin skin;
     public AtlasView(Skin skin, Stage stage){
         
 
 
         super(skin);
+        this.skin = skin;
+        SelectBox<TileType> selectbox = new SelectBox<TileType>(skin);
+        selectbox.setItems(TileType.values());
+        selectbox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ModeController.getInstance().setAssetState(selectbox.getSelected());
+                renderView();
+            }
+        });
 
-        Dialog dWin = new Dialog("Floors", skin);
-        dWin.add(new TypeView(TileType.Floor, skin));
-        dWin.setName("FloorDialog");
-        dWin.hide();
-        this.add(dWin);
-
-        dWin = new Dialog("Walls", skin);
-        dWin.add(new TypeView(TileType.Wall, skin));
-        dWin.setName("WallDialog");
-        dWin.hide();
-        this.add(dWin);
-
-        dWin = new Dialog("Object", skin);
-        dWin.add(new TypeView(TileType.Object, skin));
-        dWin.setName("ObjectDialog");
-        dWin.hide();
-        this.add(dWin);
-
-
-        TextButton btn = new TextButton("Floor Dialog", skin);
-        btn.addListener(new DWindowOpener(stage, this, "FloorDialog"));
-
-        this.add(btn);
-
-        btn = new TextButton("Wall Dialog", skin);
-        btn.addListener(new DWindowOpener(stage, this, "WallDailog"));
-        this.add(btn);
-
-        btn = new TextButton("Object Dialog", skin);
-        btn.addListener(new DWindowOpener(stage, this, "ObjectDialog"));
-        this.add(btn);
-
-
+        this.add(selectbox).row();
+    
+        Table t = new Table(skin);
+        t.setName("TileTypeContainer");
+        t.add(new TypeView(ModeController.getInstance().getAssetState(), skin));
+        this.add(t);
 
 
         
         
         
 
+    }
+
+    public void renderView(){
+        Table t = this.findActor("TileTypeContainer");
+        t.clear();
+        t.add(new TypeView(ModeController.getInstance().getAssetState(), skin));
     }
 }

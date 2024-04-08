@@ -9,10 +9,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.isomapmaker.game.map.Tiles.Floor;
-import com.isomapmaker.game.map.Tiles.Object;
-import com.isomapmaker.game.map.Tiles.Tile;
-import com.isomapmaker.game.map.Tiles.Wall;
+import com.isomapmaker.game.map.Assets.Asset;
+import com.isomapmaker.game.map.Assets.Floor;
+import com.isomapmaker.game.map.Assets.Tile;
+import com.isomapmaker.game.map.Assets.Wall;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.util.IsoUtil;
 import com.isomapmaker.game.util.MapCopy;
 
@@ -26,7 +27,6 @@ import com.isomapmaker.game.util.MapCopy;
 public class TileMap {
 
     private int size;
-    private int objectLimit = 3;
     
     private Tile[][] map;
 
@@ -49,7 +49,7 @@ public class TileMap {
     public TileMap(int size, Vector2 tileOffset, Floor defaultFloor){
         this.size = size;
         this.tileOffset = tileOffset;
-        this.defaultTexture = defaultFloor.getTexture();
+        this.defaultTexture = null;
         this.highlight = new TextureRegion(new Texture(Gdx.files.internal("highlight.png")));
         this.map = new Tile[size][size];
         reloadMap();
@@ -96,9 +96,9 @@ public class TileMap {
      * @param y
      * @param f
      */
-    public void setFloor(int x, int y, Floor f){
+    public void setFloor(int x, int y, Asset f){
         if (!inBounds(x, y)) return;
-        if (map[x][y] == null) map[x][y]= new Tile(this.defaultTexture);
+        if (map[x][y] == null) map[x][y]= new Tile();
         map[x][y].setFloor(f);
 
     }
@@ -128,10 +128,10 @@ public class TileMap {
      * @param slot
      * @param w
      */
-    public void setWall(int x, int y, String slot, Wall w){
+    public void setWall(int x, int y, WallQuadrant quad, Asset w){
         if(!inBounds(x, y)) return;
-        if (map[x][y] == null) map[x][y]= new Tile(this.defaultTexture);
-        map[x][y].setWall(w, slot);
+        if (map[x][y] == null) map[x][y]= new Tile();
+        map[x][y].setWall(w, quad);
     }
 
     /**
@@ -141,7 +141,7 @@ public class TileMap {
      * @param slot Quadrant to place wall in 
      * @return
      */
-    public Wall getWall(int x, int y, String slot){
+    public Wall getWall(int x, int y, WallQuadrant slot){
         if (!hasTile(x, y)) return null;
         return map[x][y].getWall(slot);
     }
@@ -226,13 +226,13 @@ public class TileMap {
     public void loadMap(String[] inMap , TileLoader loader){
         reloadMap(); // wipe everything and load from this
 
-        for(int line=0; line < inMap.length && line < size; line++){ // ensure our provided map is not bigger than allowed map 
+        /* for(int line=0; line < inMap.length && line < size; line++){ // ensure our provided map is not bigger than allowed map 
             // load a tile one by one here
             String[] tiles = inMap[line].split(",", size);
             for(int tile=0; tile<tiles.length && tile < size; tile++){ // ensure we only place tiles that would fit in size
                 map[line][tile].parseString(tiles[tile], loader );
             }
-        }
+        } */
     }
 
     
@@ -243,7 +243,7 @@ public class TileMap {
     public void reloadMap(){
         for(int i=0; i< size; i++){
             for(int j=0; j<size; j++){
-                map[i][j] = new Tile(this.defaultTexture);
+                map[i][j] = new Tile();
             }
         }
     }

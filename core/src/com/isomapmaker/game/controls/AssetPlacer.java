@@ -20,6 +20,7 @@ import com.isomapmaker.game.controls.commands.Commander;
 import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
@@ -98,7 +99,7 @@ public class AssetPlacer implements InputProcessor {
                 incrementSelection(1);
                 return true;
             case Input.Keys.C:
-                PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, quadrant, loader, map);
+                PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, WallQuadrant.bottom, loader, map);
                 Commander.getInstance().run(peraser);
                 return true;
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
@@ -166,23 +167,23 @@ public class AssetPlacer implements InputProcessor {
 
         switch(this.paintState){
             case Box:
-                BoxCommand box = new BoxCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
+                BoxCommand box = new BoxCommand(clickPos, endclick, null, loader, map);
                 Commander.getInstance().run(box);
                 break;
             case Circle:
-                CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), loader.getFloor(file, selection), loader, map);
+                CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), null, loader, map);
                 Commander.getInstance().run(circ);
                 break;
             case Line:
-                LineCommand li = new LineCommand(clickPos, endclick, loader.getFloor(file, selection), loader, map);
+                LineCommand li = new LineCommand(clickPos, endclick, null, loader, map);
                 Commander.getInstance().run(li);
                 break;
             case Pencil:
-                PencilCommand pen = new PencilCommand(mode, file, quadrant, selection, endclick, screenPos, loader, map);
+                PencilCommand pen = new PencilCommand(mode, file, WallQuadrant.bottom, selection, endclick, screenPos, loader, map);
                 Commander.getInstance().run(pen);
                 break;
             case Bucket:
-                BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, loader.floors.get(file).get(selection), loader, map);
+                BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, null, loader, map);
                 Commander.getInstance().run(buk);
                 break;
             default:

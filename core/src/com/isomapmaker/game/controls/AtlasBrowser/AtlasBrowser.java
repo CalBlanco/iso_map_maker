@@ -3,6 +3,7 @@ package com.isomapmaker.game.controls.AtlasBrowser;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.isomapmaker.game.controls.AtlasBrowser.components.AtlasView;
@@ -18,7 +19,10 @@ public class AtlasBrowser extends Stage{
         this.addActor(root);
         this.root.add(new Label("Carl wuz here",skin)).row();
         
-        this.root.add(new AtlasView(skin, this));
+        ScrollPane scp = new ScrollPane(new AtlasView(skin, this));
+
+        this.root.add(new Label(" ",skin)).colspan(3).padBottom(Gdx.graphics.getHeight()*0.60f).row();
+        this.root.add(scp);
         this.root.debugAll();
 
         
