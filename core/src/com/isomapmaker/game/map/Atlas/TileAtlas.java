@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.AssetFactory;
 import com.isomapmaker.game.map.Assets.Floor;
 import com.isomapmaker.game.map.Assets.Obj;
@@ -79,6 +80,10 @@ public class TileAtlas {
     }
 
     public AssetContainer getAssetsByType(TileType type){return this.assets.get(type);}
+
+    public Asset get(TileType type, String name, String assetName){
+        return assets.get(type).getAssetFromAtlas(name, assetName);
+    }
 
     /**
      * TileMap: {

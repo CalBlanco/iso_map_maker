@@ -92,24 +92,7 @@ public class AtlasView extends Table {
 
     }
 
-    class DWindowOpener extends ChangeListener {
-        Stage s;
-        Table t;
-        Dialog a;
-        public DWindowOpener(Stage s, Table t, String name){
-            this.s=s;
-            this.t = t;
-            a = (Dialog) t.findActor(name);
-            
-        }
-        @Override
-        public void changed(ChangeEvent event, Actor actor) {
-            a.show(s);
-        }
-        
-    }
-
-
+   
     Skin skin;
     public AtlasView(Skin skin, Stage stage){
         
@@ -144,6 +127,6 @@ public class AtlasView extends Table {
     public void renderView(){
         Table t = this.findActor("TileTypeContainer");
         t.clear();
-        t.add(new TypeView(ModeController.getInstance().getAssetState(), skin));
+        t.add(new TypeView(ModeController.getInstance().getAssetState(), skin)).grow();
     }
 }

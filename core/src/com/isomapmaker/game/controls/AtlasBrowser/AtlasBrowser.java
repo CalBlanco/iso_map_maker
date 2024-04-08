@@ -22,9 +22,8 @@ public class AtlasBrowser extends Stage{
         ScrollPane scp = new ScrollPane(new AtlasView(skin, this));
 
         this.root.add(new Label(" ",skin)).colspan(3).padBottom(Gdx.graphics.getHeight()*0.60f).row();
-        this.root.add(scp);
-        this.root.debugAll();
-
+        this.root.add(scp).grow();
+        
         
     }
 

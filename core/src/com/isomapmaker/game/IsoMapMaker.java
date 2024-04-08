@@ -96,17 +96,19 @@ public class IsoMapMaker extends Game {
 		
 		Gdx.input.setInputProcessor(ip);
 
-
+		int lastSize = 0;
 		Vector<String> names = TileAtlas.getInstance().getAssetsByType(TileType.Floor).keys();
 		for(int i=0; i<names.size(); i++){
 			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Floor).getRegionNames(names.get(i));
 			for(int j=0; i<assets.size(); j++){
 				try{
-					tileMapManager.getLayer(0).setFloor(i, j, TileAtlas.getInstance().getAssetsByType(TileType.Floor).getAssetFromAtlas(names.get(i), assets.get(j)));
+					tileMapManager.getLayer(0).setFloor(i, j, TileAtlas.getInstance().get(TileType.Floor, names.get(i), assets.get(j)));
 				}
 				catch(Exception e){}
 			}
 		}
+
+		lastSize = names.size();
 		
 
 		names = TileAtlas.getInstance().getAssetsByType(TileType.Wall).keys();
@@ -115,11 +117,27 @@ public class IsoMapMaker extends Game {
 			for(int j=0; j<assets.size(); j++){
 				WallQuadrant quad = WallQuadrant.valueOf(assets.get(j).split("-")[1]);
 				try{
-				tileMapManager.getLayer(0).setWall(i, j, quad, TileAtlas.getInstance().getAssetsByType(TileType.Floor).getAssetFromAtlas(names.get(i), assets.get(j)));
+				tileMapManager.getLayer(0).setWall(i+lastSize, j, quad, TileAtlas.getInstance().get(TileType.Wall, names.get(i), assets.get(j)));
 				}
 				catch(Exception e){}
 			}
 		}
+
+		lastSize = names.size();
+
+		names = TileAtlas.getInstance().getAssetsByType(TileType.Object).keys();
+		for(int i=0; i<names.size(); i++){
+			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegionNames(names.get(i));
+			for(int j=0; j<assets.size(); j++){
+				WallQuadrant quad = WallQuadrant.valueOf(assets.get(j).split("-")[1]);
+				try{
+				tileMapManager.getLayer(0).setObject(i+lastSize, j, quad, TileAtlas.getInstance().get(TileType.Object, names.get(i), assets.get(j)));
+				}
+				catch(Exception e){}
+			}
+		}
+
+
 
 
 	}
