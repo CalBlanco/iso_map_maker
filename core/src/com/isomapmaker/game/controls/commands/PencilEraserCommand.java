@@ -10,8 +10,8 @@ public class PencilEraserCommand extends Command {
     PlacementModes mode;
     Vector2 tilePos;
     WallQuadrant quad;
-    public PencilEraserCommand(PlacementModes mode, Vector2 tilePos, WallQuadrant quad, TileLoader loader, TileMap map) {
-        super(loader, map);
+    public PencilEraserCommand(PlacementModes mode, Vector2 tilePos, WallQuadrant quad, TileMap map) {
+        super(map);
         this.mode = mode;
         this.tilePos = tilePos;
         this.quad = quad;

@@ -1,16 +1,17 @@
 package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.Floor;
 import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 
 public class BoxCommand extends Command {
-    Floor floor;
+    Asset floor;
     Vector2 tilePos, endpos;
-    public BoxCommand(Vector2 tilePos, Vector2 endpos, Floor floor, TileLoader loader, TileMap map) {
-        super(loader, map);
+    public BoxCommand(Vector2 tilePos, Vector2 endpos, Asset floor, TileMap map) {
+        super(map);
         this.tilePos = tilePos;
         this.endpos = endpos;
         this.floor = floor;

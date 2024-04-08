@@ -228,7 +228,7 @@ public void setObject(int x, int y, WallQuadrant rot, Asset o){
      * @param inMap
      * @param loader
      */
-    public void loadMap(String[] inMap , TileLoader loader){
+    public void loadMap(String[] inMap ){
         reloadMap(); // wipe everything and load from this
 
         /* for(int line=0; line < inMap.length && line < size; line++){ // ensure our provided map is not bigger than allowed map 

@@ -29,8 +29,7 @@ public abstract class Command {
      * @param loader
      * @param map
      */
-    public Command(TileLoader loader, TileMap map){
-        this.loader = loader;
+    public Command( TileMap map){
         this.map = map;
         this.state = MapCopy.deepCopy(map.getMapState());
     }

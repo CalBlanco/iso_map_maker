@@ -18,7 +18,7 @@ public class AtlasContainer {
     }
 
     public TextureRegion getRegion(String name, String region){
-        System.out.println("File: " + name + ", " + region);
+        
         try{
             return atMap.get(name).findRegion(region);
         }

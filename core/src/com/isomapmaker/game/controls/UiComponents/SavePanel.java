@@ -52,7 +52,7 @@ public class SavePanel extends Table {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Attempting to load map: " + name);
-                MapSaver.getInstance().readMaps(name, manager, loader);
+                MapSaver.getInstance().readMaps(name, manager);
             }
         });
 

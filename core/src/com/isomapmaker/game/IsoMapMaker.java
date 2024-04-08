@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.isomapmaker.game.controls.AssetController;
+
 import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.controls.ModeController;
@@ -20,7 +20,7 @@ import com.isomapmaker.game.controls.AtlasBrowser.AtlasBrowser;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.map.Tiles.Floor;
@@ -48,9 +48,6 @@ public class IsoMapMaker extends Game {
 
 	//MapHud mh;
 	
-
-	TileLoader tileLoader;
-	AssetController assetControler;
 	AssetPlacer assetPlacer;
 
 	CamController cameraController;
@@ -64,33 +61,28 @@ public class IsoMapMaker extends Game {
 
 	@Override
 	public void create () {
-		
+		System.out.println("Running");
 		
 		
 
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // main camera
 
-		tileLoader = new TileLoader("assets.xml"); // Loader is responsible for getting assets into the game
-		tileMapManager = new TileMapManager(tileLoader, 300); // Manages tilemaps for multiple layers 
+		tileMapManager = new TileMapManager(300); // Manages tilemaps for multiple layers 
 
 		// Sprite batches to render what we need
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
 
 		cameraController = new CamController(cam, 2f, 5f, 5f); // camera controls 
-		assetControler = new AssetController(tileLoader,tileMapManager); // UI for assets 
-		assetPlacer = new AssetPlacer(cam, assetControler, tileMapManager, tileLoader); // Asset placer that manages the map using the tile loader
+		assetPlacer = new AssetPlacer(cam, tileMapManager); // Asset placer that manages the map using the tile loader
 
-		while(TileAtlas.getInstance() == null){
-
-		}
+		
 		atlasBrowser = new AtlasBrowser();
 
 		//Controls input flow (placement determines order of input [i believe last added is first])
 		ip = new InputMultiplexer();
 
 		ip.addProcessor(atlasBrowser);
-		ip.addProcessor(assetControler);
 		ip.addProcessor(cameraController);
 		ip.addProcessor(assetPlacer);
 		
@@ -161,22 +153,19 @@ public class IsoMapMaker extends Game {
 		//batch.draw(TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegion("Containers(Dumpster)", "dmpsterpink_open-bottom"), 0,0);
 		
 		cameraController.render(batch); // apply and camera movements
-		assetPlacer.activeTileRender(batch); // highlight editing tiles 
+		
 		batch.end();
 
 		hudBatch.begin(); // don't think this gets used at all anymore
 		//mh.render(hudBatch, cameraController, ml);
-		assetPlacer.renderSelectionTiles(hudBatch);
+		
 		hudBatch.end(); 
 
 		//assetControler.render(); // render our ui last so it is always on top
 		atlasBrowser.render();
 	}
 	
-	@Override
-    public void resize(int width, int height) {
-        assetControler.getViewport().update(width, height, true);
-    }
+	
 
 	@Override
 	public void dispose () {

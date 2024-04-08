@@ -12,10 +12,10 @@ import com.isomapmaker.game.map.TileMaps.TileMap;
 
 public class CircleCommand extends Command{
     int x0, y0, r;
-    Floor floor;
+    Asset floor;
 
-    public CircleCommand(int x0, int y0, int r, Floor floor, TileLoader loader, TileMap map) {
-        super(loader, map);
+    public CircleCommand(int x0, int y0, int r, Asset floor, TileMap map) {
+        super(map);
         this.x0 = x0;
         this.y0 = y0;
         this.r = r;

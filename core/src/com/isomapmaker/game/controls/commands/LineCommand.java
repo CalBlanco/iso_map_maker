@@ -12,10 +12,10 @@ import com.isomapmaker.game.map.TileMaps.TileMap;
 
 public class LineCommand extends Command{
     Vector2 clickPos, endPos;
-    Floor floor;
+    Asset floor;
 
-    public LineCommand(Vector2 clickPos, Vector2 endPos, Floor floor ,TileLoader loader, TileMap map) {
-        super(loader, map);
+    public LineCommand(Vector2 clickPos, Vector2 endPos, Asset floor , TileMap map) {
+        super(map);
         this.clickPos = clickPos;
         this.endPos = endPos;
         this.floor = floor;

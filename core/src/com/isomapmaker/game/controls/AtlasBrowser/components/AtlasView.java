@@ -8,12 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -59,6 +61,21 @@ public class AtlasView extends Table {
 
 
     private class FileView extends Table {
+        class AssetChangeListener extends ChangeListener{
+            TileType type;
+            String name, assetName;
+            public AssetChangeListener(TileType type, String name, String assetName){
+                this.type = type;
+                this.name = name;
+                this.assetName = assetName;
+            }
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ModeController.getInstance().setPlacementMode(type, name, assetName);
+            }
+            
+        }
         
         /**
          * Create a type view that will show 
@@ -74,6 +91,9 @@ public class AtlasView extends Table {
             this.add(l).row();
             Vector<String> names = TileAtlas.getInstance().getAssetsByType(type).getRegionNames(name);
             Image im = null;
+
+            ImageTextButton imText = null;
+            
             
             Asset r = null;
             
@@ -83,9 +103,20 @@ public class AtlasView extends Table {
                 if(r == null) continue;
                 im = new Image(r.getRegion());
                 im.setScaling(Scaling.contain);
+                
                 l = new Label(names.get(i), skin);
-                this.add(l).pad(5);
-                this.add(im).pad(5);
+                ImageTextButton.ImageTextButtonStyle sty = new ImageTextButton.ImageTextButtonStyle();
+                sty.up = im.getDrawable();
+                sty.down = im.getDrawable();
+                sty.over = im.getDrawable();
+                sty.font = skin.getFont("default-font");
+                imText = new ImageTextButton(names.get(i), sty);
+                
+                imText.addListener(new AssetChangeListener(type, name, names.get(i)));
+
+                
+                this.add(imText).pad(5);
+                
             }
         }
 

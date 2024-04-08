@@ -37,11 +37,9 @@ public class AssetPlacer implements InputProcessor {
     private static final int[] bucket_col = { 0, 1, 0, -1};
  
     OrthographicCamera cam;
-    AssetController ass;
     TileMapManager manager;
     int selection = 0;
     int layer = 0;
-    TileLoader loader;
     TileMap map;
 
     Vector2 tilePos;
@@ -64,19 +62,14 @@ public class AssetPlacer implements InputProcessor {
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
     Pixmap pencil,pm;
 
-    public AssetPlacer(OrthographicCamera cam, AssetController ass, TileMapManager manager, TileLoader loader){
+    public AssetPlacer(OrthographicCamera cam, TileMapManager manager){
         this.paintState = ModeController.getInstance().getState(); 
         this.cam = cam; 
-        this.ass= ass; 
         this.manager = manager;
-        this.loader = loader;
         this.map = manager.getLayer(layer);
         this.tilePos = new Vector2(0,0);
         this.screenPos = new Vector2(0,0);
-        quadrantToHighlight.put("top", loader.floors.get("QuadrantHighlights").get(0).getTexture());
-        quadrantToHighlight.put("right", loader.floors.get("QuadrantHighlights").get(1).getTexture());
-        quadrantToHighlight.put("left", loader.floors.get("QuadrantHighlights").get(2).getTexture());
-        quadrantToHighlight.put("bottom", loader.floors.get("QuadrantHighlights").get(3).getTexture());
+        
 
         pm = new Pixmap(Gdx.files.internal("cursor.png"));
         pencil = new Pixmap(Gdx.files.internal("pencil.png"));
@@ -92,14 +85,8 @@ public class AssetPlacer implements InputProcessor {
     public boolean keyDown(int keycode) {
         // TODO Auto-generated method stub
         switch(keycode){
-            case Input.Keys.Q:
-                incrementSelection(-1);
-                return true;
-            case Input.Keys.E:
-                incrementSelection(1);
-                return true;
             case Input.Keys.C:
-                PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, WallQuadrant.bottom, loader, map);
+                PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, WallQuadrant.bottom, map);
                 Commander.getInstance().run(peraser);
                 return true;
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
@@ -141,7 +128,7 @@ public class AssetPlacer implements InputProcessor {
                 MapSaver.getInstance().saveNewMap("MyMap", manager);
                 break;
             case Input.Keys.NUM_0:
-                MapSaver.getInstance().readMaps("MyMap", manager, loader);
+                MapSaver.getInstance().readMaps("MyMap", manager);
             
         }
         return false;
@@ -167,23 +154,23 @@ public class AssetPlacer implements InputProcessor {
 
         switch(this.paintState){
             case Box:
-                BoxCommand box = new BoxCommand(clickPos, endclick, null, loader, map);
+                BoxCommand box = new BoxCommand(clickPos, endclick, ModeController.getInstance().getActiveAsset(), map);
                 Commander.getInstance().run(box);
                 break;
             case Circle:
-                CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), null, loader, map);
+                CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), ModeController.getInstance().getActiveAsset(), map);
                 Commander.getInstance().run(circ);
                 break;
             case Line:
-                LineCommand li = new LineCommand(clickPos, endclick, null, loader, map);
+                LineCommand li = new LineCommand(clickPos, endclick, ModeController.getInstance().getActiveAsset(), map);
                 Commander.getInstance().run(li);
                 break;
             case Pencil:
-                PencilCommand pen = new PencilCommand(mode, file, WallQuadrant.bottom, selection, endclick, screenPos, loader, map);
+                PencilCommand pen = new PencilCommand(mode, file, WallQuadrant.bottom, selection, endclick, screenPos, map);
                 Commander.getInstance().run(pen);
                 break;
             case Bucket:
-                BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, null, loader, map);
+                BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, ModeController.getInstance().getActiveAsset(), map);
                 Commander.getInstance().run(buk);
                 break;
             default:
@@ -199,14 +186,12 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        updatePlacementView();
+        
         
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/4f, wpos.y-IsoUtil.FLOOR_SIZE.y/4f);
         tilePos = IsoUtil.worldPosToIsometric(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/2f,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
         quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
-        
-        ass.updateTileInfo(screenPos, tilePos, map.getTileString((int)tilePos.x, (int)tilePos.y), quadrant, layer);
         
         
         return true;
@@ -222,40 +207,11 @@ public class AssetPlacer implements InputProcessor {
      */
     
     
-    /**
-     * Increment the selected tile by a certain amount
-     * @param i
-     */
-    public void incrementSelection(int i){
-        if (selection + i < 0) {selection = loader.getNumRegions(file, mode.toString()) -1; return;}
-        if (selection + i >  loader.getNumRegions(file, mode.toString()) -1){ selection = 0; return;}
-        selection = selection + i;
-    }
-
-    /**
-     * Render the available selection info to the ui
-     * @param hudBatch
-     */
-    public void renderSelectionTiles(SpriteBatch hudBatch){
-        Vector<TextureRegion> regions = mode != PlacementModes.Wall ? loader.getTextureRegions(file, mode.toString()) : loader.getTextureRegions(quadrant, mode.toString()) ;
-        int lower = (selection - 1 >= 0) ? selection-1 : loader.getNumRegions(file, mode.toString()) -1 ;
-        int upper = (selection + 1 <= loader.getNumRegions(file, mode.toString()) -1 ) ? selection + 1 : 0;
-        if(regions == null || regions.size() < 3){return ;}
-        TextureRegion[] active = new TextureRegion[]{regions.get(lower), regions.get(selection), regions.get(upper)};
-
-        ass.updateTileBrowser(active);
-    }
+    
 
     
 
-    /**
-     * Update the placement information for the asset highlighting mechanic
-     */
-    private void updatePlacementView(){
-        if(mode != ass.mode) {mode = ass.mode ; selection=0;};
-        if(file != ass.activeFile && mode != PlacementModes.Wall) {file = ass.activeFile; selection=0;}
-        if(mode == PlacementModes.Wall){file = quadrant;}
-    }
+
     
     /*
 ███████╗████████╗ █████╗ ████████╗███████╗    ██████╗ ███████╗███╗   ██╗██████╗ ███████╗██████╗ 
@@ -298,11 +254,11 @@ public class AssetPlacer implements InputProcessor {
         try{
         switch (mode) {
             case Floor:
-                b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
+                b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
                 break;
             case Wall:
                 b.draw(quadrantToHighlight.get(quadrant), tVector.x, tVector.y);
-                b.draw(loader.walls.get(quadrant).get(selection).getTexture(), tVector.x, tVector.y);
+                b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
                 break;
             default:
                 break;
@@ -323,7 +279,7 @@ public class AssetPlacer implements InputProcessor {
         Vector<Integer[]> linePoints = PaintTools.line(v, new Vector2(1,1).scl(layer).add(ht));
         for(int i=0; i<linePoints.size(); i++){
             tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
-            b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
+            b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         }
         b.setColor(1,1,1,1);
 
@@ -340,7 +296,7 @@ public class AssetPlacer implements InputProcessor {
         try{
         for(int i=0; i<linePoints.size(); i++){
             tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
-            b.draw(loader.floors.get(file).get(selection).getTexture(), tVector.x, tVector.y);
+            b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         }
         }
         catch(Exception e){e.printStackTrace();}
@@ -355,10 +311,10 @@ public class AssetPlacer implements InputProcessor {
         Vector<Vector2> bSel = PaintTools.box(v, ht);
         b.setColor(1f,1f,1f,0.7f);
         tVector = IsoUtil.isometricToWorldPos(v, IsoUtil.FLOOR_SIZE);
-        b.draw(loader.getFloor(file,selection).getTexture(), tVector.x, tVector.y);
+        b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         for(int i=0;i<bSel.size(); i++){
             tVector = IsoUtil.isometricToWorldPos(bSel.get(i).add(new Vector2(1,1).scl(layer)), IsoUtil.FLOOR_SIZE);
-            b.draw(loader.getFloor(file, selection).getTexture(), tVector.x, tVector.y);
+            b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         }
         b.setColor(1,1,1,1);
     }

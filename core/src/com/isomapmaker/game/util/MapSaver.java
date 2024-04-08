@@ -69,13 +69,13 @@ public class MapSaver {
     }
     
 
-    public void readMaps(String mapName, TileMapManager manager, TileLoader loader){
+    public void readMaps(String mapName, TileMapManager manager){
         ExecutorService exec = Executors.newFixedThreadPool(1);
-        exec.submit(() -> readSavedMap(mapName, manager, loader));
+        exec.submit(() -> readSavedMap(mapName, manager));
         exec.shutdown();
     }
 
-    public void readSavedMap(String mapName, TileMapManager manager, TileLoader loader){
+    public void readSavedMap(String mapName, TileMapManager manager){
         File dir = new File("maps/"+mapName);
         try{
         
@@ -91,7 +91,7 @@ public class MapSaver {
                 if( i > manager.maxLayer()) break;
                 updateCompletion(i, matches.length);
                 read = new BufferedReader(new FileReader(matches[i]));
-                manager.getLayer(i).loadMap(read.lines().toArray(String[]::new), loader);
+                manager.getLayer(i).loadMap(read.lines().toArray(String[]::new));
             }
         }
         catch(Exception e){
