@@ -17,6 +17,10 @@
             <name>Dumpsters</name>
             <path>atlas/Objects/Dumpsters.atlas</path>
         </asset>
+        <asset>
+            <name>Ovens</name>
+            <path>atlas/Objects/Ovens.atlas</path>
+        </asset>
     </Object>
     
 </Container>
