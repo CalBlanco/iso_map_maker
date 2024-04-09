@@ -85,6 +85,10 @@ public class TileAtlas {
         return assets.get(type).getAssetFromAtlas(name, assetName);
     }
 
+    public void dispose(){
+        
+    }
+
     /**
      * TileMap: {
      *  "Floor": {

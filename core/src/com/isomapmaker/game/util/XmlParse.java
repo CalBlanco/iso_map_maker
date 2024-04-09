@@ -106,11 +106,12 @@ public class XmlParse {
     private static TextureAtlas parseAssetToAtlas(Element assetElement){
         
         String path = assetElement.getElementsByTagName("path").item(0).getTextContent();
-
+        System.out.println("At Path: " + path);
         return new TextureAtlas(path);
     }
 
     private static String parseAssetName(Element assetElement){
+
         return assetElement.getElementsByTagName("name").item(0).getTextContent();
     }
 

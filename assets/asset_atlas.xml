@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Container>
-    <Floor>
-        <asset>
-            <name>Simpleton Floors</name>
-            <path>atlas/Floors/SimpletonFloors.atlas</path>
-        </asset>
-    </Floor>
+    
     <Wall>
         <asset>
 	        <name>Simpleton Walls</name>
@@ -18,4 +13,10 @@
             <path>atlas/Objects/Dumpsters.atlas</path>
         </asset>
     </Object>
+    <Floor>
+        <asset>
+            <name>Test</name>
+            <path>atlas/Floors/SimpletonFloors.atlas</path>
+        </asset>
+    </Floor>
 </Container>
