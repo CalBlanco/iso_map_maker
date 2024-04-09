@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.isomapmaker.game.map.Tiles.Tile;
 
 
 public class TileMapManager {

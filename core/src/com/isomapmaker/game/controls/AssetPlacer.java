@@ -20,12 +20,10 @@ import com.isomapmaker.game.controls.commands.Commander;
 import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
-import com.isomapmaker.game.map.Tiles.Floor;
-import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.MapSaver;
 import com.isomapmaker.game.util.CursorSetter;
 import com.isomapmaker.game.util.IsoUtil;
@@ -44,8 +42,8 @@ public class AssetPlacer implements InputProcessor {
 
     Vector2 tilePos;
     Vector2 screenPos;
-    String quadrant = "top";
-    PlacementModes mode = PlacementModes.Floor;
+    WallQuadrant quadrant = WallQuadrant.top;
+    TileType mode = TileType.Floor;
     String file = "Dry";
 
 
@@ -86,7 +84,7 @@ public class AssetPlacer implements InputProcessor {
         // TODO Auto-generated method stub
         switch(keycode){
             case Input.Keys.C:
-                PencilEraserCommand peraser = new PencilEraserCommand(mode, tilePos, WallQuadrant.bottom, map);
+                PencilEraserCommand peraser = new PencilEraserCommand(tilePos, WallQuadrant.bottom, map);
                 Commander.getInstance().run(peraser);
                 return true;
             case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
@@ -166,7 +164,7 @@ public class AssetPlacer implements InputProcessor {
                 Commander.getInstance().run(li);
                 break;
             case Pencil:
-                PencilCommand pen = new PencilCommand(mode, file, WallQuadrant.bottom, selection, endclick, screenPos, map);
+                PencilCommand pen = new PencilCommand(file, quadrant, selection, endclick, screenPos, map);
                 Commander.getInstance().run(pen);
                 break;
             case Bucket:
@@ -270,7 +268,7 @@ public class AssetPlacer implements InputProcessor {
     }
 
     private void lineRender(SpriteBatch b){
-        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        if (mode != TileType.Floor) return; // remove this after implementing some wall code
         Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
         Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
@@ -286,7 +284,7 @@ public class AssetPlacer implements InputProcessor {
     }
     
     private void circleRender(SpriteBatch b){
-        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        if (mode != TileType.Floor) return; // remove this after implementing some wall code
         Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
         Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
@@ -304,7 +302,7 @@ public class AssetPlacer implements InputProcessor {
     }
 
     private void boxRender(SpriteBatch b){
-        if (mode != PlacementModes.Floor) return; // remove this after implementing some wall code
+        if (mode != TileType.Floor) return; // remove this after implementing some wall code
         Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
         Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);

@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Container>
-    
-    <Wall>
-        <asset>
-	        <name>Simpleton Walls</name>
-	        <path>atlas/Walls/SimpletonWalls.atlas</path>
-	    </asset>
-    </Wall>
-    <Object>
-        <asset>
-            <name>Containers(Dumpster)</name>
-            <path>atlas/Objects/Dumpsters.atlas</path>
-        </asset>
-    </Object>
     <Floor>
         <asset>
-            <name>Test</name>
+            <name>Basic Floor</name>
             <path>atlas/Floors/SimpletonFloors.atlas</path>
         </asset>
     </Floor>
+    <Wall>
+        <asset>
+            <name>Basic Walls</name>
+            <path>atlas/Walls/SimpletonWalls.atlas</path>
+        </asset>
+    </Wall>
+    <Object>
+        <asset>
+            <name>Dumpsters</name>
+            <path>atlas/Objects/Dumpsters.atlas</path>
+        </asset>
+    </Object>
+    
 </Container>
+

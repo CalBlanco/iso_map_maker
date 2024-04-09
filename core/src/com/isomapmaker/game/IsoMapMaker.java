@@ -23,8 +23,6 @@ import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
-import com.isomapmaker.game.map.Tiles.Floor;
-import com.isomapmaker.game.map.Tiles.Wall;
 import com.isomapmaker.game.util.IsoUtil;
 import com.isomapmaker.game.util.MapSaver;
 import com.isomapmaker.game.util.XmlParse;
@@ -91,12 +89,17 @@ public class IsoMapMaker extends Game {
 		int lastSize = 0;
 		Vector<String> names = TileAtlas.getInstance().getAssetsByType(TileType.Floor).keys();
 		for(int i=0; i<names.size(); i++){
+			System.out.println(names.get(i));
 			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Floor).getRegionNames(names.get(i));
-			for(int j=0; i<assets.size(); j++){
+			System.out.println(assets.size());
+			for(int j=0; j<assets.size(); j++){
+				
 				try{
 					tileMapManager.getLayer(0).setFloor(i, j, TileAtlas.getInstance().get(TileType.Floor, names.get(i), assets.get(j)));
 				}
-				catch(Exception e){}
+				catch(Exception e){
+					//e.printStackTrace();
+				}
 			}
 		}
 
@@ -115,15 +118,15 @@ public class IsoMapMaker extends Game {
 			}
 		}
 
-		lastSize = names.size();
+		lastSize = lastSize + names.size();
 
 		names = TileAtlas.getInstance().getAssetsByType(TileType.Object).keys();
 		for(int i=0; i<names.size(); i++){
 			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegionNames(names.get(i));
 			for(int j=0; j<assets.size(); j++){
-				WallQuadrant quad = WallQuadrant.valueOf(assets.get(j).split("-")[1]);
+				
 				try{
-				tileMapManager.getLayer(0).setObject(i+lastSize, j, quad, TileAtlas.getInstance().get(TileType.Object, names.get(i), assets.get(j)));
+				tileMapManager.getLayer(0).setObject(i+lastSize, j,TileAtlas.getInstance().get(TileType.Object, names.get(i), assets.get(j)));
 				}
 				catch(Exception e){}
 			}

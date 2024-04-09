@@ -3,7 +3,7 @@ package com.isomapmaker.game.controls.commands;
 import com.badlogic.gdx.math.Vector2;
 import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.Floor;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 

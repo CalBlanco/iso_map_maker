@@ -77,22 +77,25 @@ public class XmlParse {
             Node walls = doc.getElementsByTagName("Wall").item(0);
             Node objects = doc.getElementsByTagName("Object").item(0);
 
+            //Floor parsing
             Element f = (Element) floors;
             NodeList nl = f.getElementsByTagName("asset");
             for(int i=0; i<nl.getLength(); i++){
                 assets.get(TileType.Floor).addAtlas(parseAssetName((Element)nl.item(i)),parseAssetToAtlas((Element)nl.item(i)));
             }
 
+            // Wall Parsing
             Element w = (Element) walls;
-            nl = w.getElementsByTagName("asset");
-            for(int i=0; i<nl.getLength(); i++){
-                assets.get(TileType.Wall).addAtlas(parseAssetName((Element)nl.item(i)),parseAssetToAtlas((Element)nl.item(i)));
+            NodeList n2 = w.getElementsByTagName("asset");
+            for(int i=0; i<n2.getLength(); i++){
+                assets.get(TileType.Wall).addAtlas(parseAssetName((Element)n2.item(i)),parseAssetToAtlas((Element)n2.item(i)));
             }
 
+            // Object Parsing
             Element o = (Element) objects;
-            nl = o.getElementsByTagName("asset");
-            for(int i=0; i<nl.getLength(); i++){
-                assets.get(TileType.Object).addAtlas(parseAssetName((Element)nl.item(i)),parseAssetToAtlas((Element)nl.item(i)));
+            NodeList n3 = o.getElementsByTagName("asset");
+            for(int i=0; i<n3.getLength(); i++){
+                assets.get(TileType.Object).addAtlas(parseAssetName((Element)n3.item(i)),parseAssetToAtlas((Element)n3.item(i)));
             }
 
             return assets;
@@ -106,13 +109,14 @@ public class XmlParse {
     private static TextureAtlas parseAssetToAtlas(Element assetElement){
         
         String path = assetElement.getElementsByTagName("path").item(0).getTextContent();
-        System.out.println("At Path: " + path);
+        System.out.println("ParseAssetToAtlas: " + path);
         return new TextureAtlas(path);
     }
 
     private static String parseAssetName(Element assetElement){
-
-        return assetElement.getElementsByTagName("name").item(0).getTextContent();
+        String name = assetElement.getElementsByTagName("name").item(0).getTextContent();
+        System.out.println("parseAssetName: " + name);
+        return name;
     }
 
  

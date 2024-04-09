@@ -3,10 +3,11 @@ package com.isomapmaker.game.controls.commands;
 import java.util.Vector;
 
 import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.controls.PaintTools;
 import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.Floor;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 
@@ -31,6 +32,8 @@ public class CircleCommand extends Command{
 
     private boolean circle(){
         Vector<Integer[]> c = PaintTools.circle(x0,y0,r);
+        
+
 
         for(int i = 0; i<c.size(); i++){
             map.setFloor(c.get(i)[0], c.get(i)[1], (Asset) floor);

@@ -54,6 +54,7 @@ public class TileAtlas {
                     String name = regionNames.get(regionIndex);
                     String assetName = assetNames.get(assetIndex);
                     TextureRegion region = atlas.get(types[typeIndex]).getRegion(assetName, name);
+                    System.out.println(name +" , " + assetName);
                     switch(types[typeIndex]){
                         case Floor:
                             Floor f = (Floor)assetFac.createAsset(name, types[typeIndex], region );

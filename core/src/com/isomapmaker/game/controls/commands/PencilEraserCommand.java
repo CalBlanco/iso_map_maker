@@ -1,18 +1,19 @@
 package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
-import com.isomapmaker.game.controls.PlacementModes;
+import com.isomapmaker.game.controls.ModeController;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 public class PencilEraserCommand extends Command {
-    PlacementModes mode;
+    TileType mode;
     Vector2 tilePos;
     WallQuadrant quad;
-    public PencilEraserCommand(PlacementModes mode, Vector2 tilePos, WallQuadrant quad, TileMap map) {
+    public PencilEraserCommand(Vector2 tilePos, WallQuadrant quad, TileMap map) {
         super(map);
-        this.mode = mode;
+        this.mode = ModeController.getInstance().getAssetState();
         this.tilePos = tilePos;
         this.quad = quad;
         //TODO Auto-generated constructor stub

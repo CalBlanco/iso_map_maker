@@ -8,7 +8,7 @@ import java.io.FilenameFilter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 public class MapSaver {

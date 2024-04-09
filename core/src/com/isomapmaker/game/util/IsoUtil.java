@@ -1,6 +1,7 @@
 package com.isomapmaker.game.util;
 
 import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
 public class IsoUtil {
     final public static Vector2 FLOOR_SIZE = new Vector2(128,64);
@@ -47,7 +48,7 @@ public class IsoUtil {
      * @param mousePos the mouse position (honestly dont know why im taking both when i can just generate one but not gonna fw that rn)
      * @return
      */
-    public static String getTileQuadrant(Vector2 worldPos, Vector2 mousePos) {
+    public static WallQuadrant getTileQuadrant(Vector2 worldPos, Vector2 mousePos) {
         Vector2 isoPos = isometricToWorldPos(worldPos, FLOOR_SIZE);
         int tileX = (int) ((worldPos.x - isoPos.x) / FLOOR_SIZE.x);
         int tileY = (int) ((worldPos.y - isoPos.y) / FLOOR_SIZE.y);
@@ -56,15 +57,15 @@ public class IsoUtil {
 
         if (mousePos.x > isoPos.x + tileX * FLOOR_SIZE.x + halfWidth) {
             if (mousePos.y < isoPos.y + tileY * FLOOR_SIZE.y + halfHeight) {
-                return "bottom";
+                return WallQuadrant.bottom;
             } else {
-                return "right";
+                return WallQuadrant.right;
             }
         } else {
             if (mousePos.y < isoPos.y + tileY * FLOOR_SIZE.y + halfHeight) {
-                return "left";
+                return WallQuadrant.left;
             } else {
-                return "top";
+                return WallQuadrant.right;
             }
         }
     }

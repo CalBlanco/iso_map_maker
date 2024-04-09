@@ -154,7 +154,7 @@ public class TileMap {
  ╚═════╝ ╚═════╝  ╚════╝     
 */
 
-public void setObject(int x, int y, WallQuadrant rot, Asset o){
+public void setObject(int x, int y, Asset o){
     if(!inBounds(x, y)) return;
     if(map[x][y] == null) map[x][y] = new Tile();
     map[x][y].setObject(o);
