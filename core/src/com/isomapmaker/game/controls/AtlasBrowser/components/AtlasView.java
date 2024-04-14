@@ -1,5 +1,7 @@
 package com.isomapmaker.game.controls.AtlasBrowser.components;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -97,6 +99,8 @@ public class AtlasView extends Table {
             
             Asset r = null;
             
+            Collections.sort(names);
+
             for(int i=0; i<names.size(); i++){
                 if(i % 3 == 0) this.row();
                 r = TileAtlas.getInstance().getAssetsByType(type).getAssetFromAtlas(name, names.get(i));

@@ -45,8 +45,8 @@ public class Tile {
         try{b.draw(this.floor.getRegion(), pos.x, pos.y);}catch(Exception e){};
         
         //upper walls
-        try{b.draw(this.walls.get(WallQuadrant.top).getRegion(), pos.x, pos.y);}catch(Exception e){};
         try{b.draw(this.walls.get(WallQuadrant.right).getRegion(), pos.x, pos.y);}catch(Exception e){};
+        try{b.draw(this.walls.get(WallQuadrant.top).getRegion(), pos.x, pos.y);}catch(Exception e){};
 
         //Object
         try{b.draw(this.object.getRegion(), pos.x,pos.y);}catch(Exception e){};

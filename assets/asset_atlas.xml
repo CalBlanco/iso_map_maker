@@ -11,6 +11,10 @@
             <name>Basic Walls</name>
             <path>atlas/Walls/SimpletonWalls.atlas</path>
         </asset>
+        <asset>
+            <name>Cool Walls</name>
+            <path>atlas/Walls/CoolWalls.atlas</path>
+        </asset>
     </Wall>
     <Object>
         <asset>
@@ -18,9 +22,14 @@
             <path>atlas/Objects/Dumpsters.atlas</path>
         </asset>
         <asset>
-            <name>Ovens</name>
-            <path>atlas/Objects/Ovens.atlas</path>
+            <name>Items</name>
+            <path>atlas/Objects/Items.atlas</path>
         </asset>
+        <asset>
+            <name>Generator</name>
+            <path>atlas/Objects/Generator.atlas</path>
+        </asset>
+
     </Object>
     
 </Container>
