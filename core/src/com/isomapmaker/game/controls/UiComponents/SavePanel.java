@@ -11,14 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.util.MapSaver;
 
 public class SavePanel extends Table {
     String name="myMap";
 
-    public SavePanel(Skin skin, TileMapManager manager, TileLoader loader){
+    public SavePanel(Skin skin, TileMapManager manager){
         super(skin);
 
         
@@ -52,7 +51,7 @@ public class SavePanel extends Table {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Attempting to load map: " + name);
-                MapSaver.getInstance().readMaps(name, manager, loader);
+                MapSaver.getInstance().readMaps(name, manager);
             }
         });
 

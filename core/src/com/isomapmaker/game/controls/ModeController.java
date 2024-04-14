@@ -1,10 +1,17 @@
 package com.isomapmaker.game.controls;
 
+import com.isomapmaker.game.map.Assets.Asset;
+import com.isomapmaker.game.map.Assets.Tile;
+import com.isomapmaker.game.map.Atlas.TileAtlas;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.util.CursorSetter;
 
 public class ModeController {
-    private static ModeController instance;
-    private PaintModes paintMode;
+    private static ModeController instance; // the singleton instance
+    private PaintModes paintMode; // the paint mode we are in (pencil, box, etc..)
+    private TileType assetMode; // The asset type we are using (Floor, Wall, Object)
+    private String activeFile; // The active atlas we are pulling from 
+    private String activeRegion; // The active atlas region we want 
 
     public static ModeController getInstance(){
         if(ModeController.instance == null){
@@ -16,6 +23,9 @@ public class ModeController {
 
     private ModeController(){
         paintMode = PaintModes.Pencil; // initialize to pencil mode
+        assetMode = TileType.Floor;
+        activeFile = TileAtlas.getInstance().getAssetsByType(assetMode).keys().get(0);
+        activeRegion = TileAtlas.getInstance().getAssetsByType(assetMode).getRegionNames(activeFile).get(0);
     }
 
     public void setState(PaintModes newMode){
@@ -24,4 +34,35 @@ public class ModeController {
     }
 
     public PaintModes getState(){return paintMode;}
+
+    public void setAssetState(TileType state){
+        assetMode = state;
+    }
+    public TileType getAssetState(){return assetMode;}
+
+    public void setActiveFile(String name){
+        if(!TileAtlas.getInstance().getAssetsByType(assetMode).keys().contains(name)) return;
+        activeFile = name;
+    }
+    public String getActiveFile(){return activeFile;}
+
+    public void setActiveRegion(String name){
+        if(!TileAtlas.getInstance().getAssetsByType(assetMode).getRegionNames(activeFile).contains(name)) return;
+        activeRegion = name;
+    }
+    public String getActiveRegion(){return activeRegion;}
+
+
+    public Asset getActiveAsset(){
+        return TileAtlas.getInstance().get(assetMode, activeFile, activeRegion);
+    }
+
+    public void setPlacementMode(TileType type, String name, String assetName){
+        if(!TileAtlas.getInstance().getAssetsByType(type).keys().contains(name) || !TileAtlas.getInstance().getAssetsByType(type).getRegionNames(name).contains(assetName)) return;
+        assetMode = type;
+        activeFile = name;
+        activeRegion = assetName;
+        System.out.println("Active Asset: " + assetMode.toString() +", " + activeFile +", " + activeRegion);
+    }
+
 }

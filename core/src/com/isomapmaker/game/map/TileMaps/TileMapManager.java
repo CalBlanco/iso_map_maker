@@ -4,37 +4,25 @@ import java.util.Vector;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.isomapmaker.game.map.Tiles.Tile;
 
 
 public class TileMapManager {
     Vector<TileMap> layers;
     private int size = 400; 
-    TileLoader loader;
 
-    /**
-     * Build a default sized TileMap manager providing a means for tiles to get information from
-     * @param loader
-     */
-    public TileMapManager(TileLoader loader){
-        this.loader = loader;
-        layers = new Vector<TileMap>();
-        TileMap base = new TileMap(size, new Vector2(0,0), loader.getFloor("Highlights", 4));
-        addLayer(base); // add initial layer
-    }
-
+    
     /**
      * Build a manager of a specified size
      * @param loader Loader for tile assets
      * @param size The size we want all maps made by this manager to be 
      */
-    public TileMapManager(TileLoader loader, int size){
-        this.loader = loader;
+    public TileMapManager(int size){
+        
         layers = new Vector<TileMap>();
-        TileMap base = new TileMap(size, new Vector2(0,0), loader.getFloor("Highlights", 4));
-        TileMap first = new TileMap(size, new Vector2(1,1), loader.getFloor("Highlights", 4));
-        TileMap second = new TileMap(size, new Vector2(2,2), loader.getFloor("Highlights", 4));
-        TileMap fourth = new TileMap(size, new Vector2(3,3), loader.getFloor("Highlights", 4));
+        TileMap base = new TileMap(size, new Vector2(0,0),null);
+        TileMap first = new TileMap(size, new Vector2(1,1),null);
+        TileMap second = new TileMap(size, new Vector2(2,2),null);
+        TileMap fourth = new TileMap(size, new Vector2(3,3),null);
         
         layers.add(base); // add initial layer
         layers.add(first); // add initial layer
@@ -89,7 +77,7 @@ public class TileMapManager {
      * Add a fresh layer to the next availble index
      */
     public void addNewLayer(){
-        layers.add(new TileMap(size, layers.get(maxLayer()).tileOffset.add(new Vector2(1,1)), loader.getFloor("Highlights", 2)));
+        layers.add(new TileMap(size, layers.get(maxLayer()).tileOffset.add(new Vector2(1,1)), null));
     }
 
     
@@ -102,7 +90,7 @@ public class TileMapManager {
     public void setLayerMap(int layer, String[] inMap){
         try{
             TileMap t = layers.get(layer);
-            t.loadMap(inMap, loader);
+            t.loadMap(inMap);
         }   
         catch(Exception e){
             System.out.println("Failed to load map");

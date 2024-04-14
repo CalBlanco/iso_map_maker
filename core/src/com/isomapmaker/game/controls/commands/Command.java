@@ -2,9 +2,9 @@ package com.isomapmaker.game.controls.commands;
 
 import java.util.Arrays;
 
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.map.Assets.Tile;
 import com.isomapmaker.game.map.TileMaps.TileMap;
-import com.isomapmaker.game.map.Tiles.Tile;
+
 import com.isomapmaker.game.util.MapCopy;
 
 /**
@@ -13,7 +13,6 @@ import com.isomapmaker.game.util.MapCopy;
  * and reverting map state if needed
  */
 public abstract class Command {
-    TileLoader loader;
     TileMap map;
     Tile[][] state;
     
@@ -28,8 +27,7 @@ public abstract class Command {
      * @param loader
      * @param map
      */
-    public Command(TileLoader loader, TileMap map){
-        this.loader = loader;
+    public Command( TileMap map){
         this.map = map;
         this.state = MapCopy.deepCopy(map.getMapState());
     }

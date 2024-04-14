@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container>
+    <Floor>
+        <asset>
+            <name>Basic Floor</name>
+            <path>atlas/Floors/SimpletonFloors.atlas</path>
+        </asset>
+    </Floor>
+    <Wall>
+        <asset>
+            <name>Basic Walls</name>
+            <path>atlas/Walls/SimpletonWalls.atlas</path>
+        </asset>
+        <asset>
+            <name>Cool Walls</name>
+            <path>atlas/Walls/CoolWalls.atlas</path>
+        </asset>
+    </Wall>
+    <Object>
+        <asset>
+            <name>Dumpsters</name>
+            <path>atlas/Objects/Dumpsters.atlas</path>
+        </asset>
+        <asset>
+            <name>Items</name>
+            <path>atlas/Objects/Items.atlas</path>
+        </asset>
+        <asset>
+            <name>Generator</name>
+            <path>atlas/Objects/Generator.atlas</path>
+        </asset>
+
+    </Object>
+    
+</Container>
+

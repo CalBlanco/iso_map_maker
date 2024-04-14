@@ -1,23 +1,29 @@
 package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
-import com.isomapmaker.game.controls.PlacementModes;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.controls.ModeController;
+
+import com.isomapmaker.game.map.Atlas.TileAtlas;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
+import com.isomapmaker.game.map.Assets.Wall;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.util.IsoUtil;
 
 public class PencilCommand extends Command {
-    PlacementModes mode;
-    String file, quadrant;
+    
+    String file;
+    WallQuadrant quad;
+    TileType mode;
     int selection;
     Vector2 tilePos;
     Vector2 screenPos;
 
-    public PencilCommand(PlacementModes mode, String file, String quadrant, int selection, Vector2 tilePos, Vector2 screenPos, TileLoader loader, TileMap map) {
-        super(loader, map);
-        this.mode = mode;
+    public PencilCommand(String file, WallQuadrant quadrant, int selection, Vector2 tilePos, Vector2 screenPos, TileMap map) {
+        super( map);
+        
         this.file = file;
-        this.quadrant = quadrant;
+        this.quad = quadrant;
         this.selection = selection;
         this.tilePos = tilePos;
         this.screenPos = screenPos;
@@ -25,22 +31,31 @@ public class PencilCommand extends Command {
     }
 
     private boolean pencil(){
-        
+        TileType mode = ModeController.getInstance().getAssetState();
+        System.out.println("Pencil: " + tilePos.toString() +", " + mode.toString() +", " + quad);
         switch(mode){
             case Floor:
                 try{
-                    map.setFloor((int)tilePos.x, (int)tilePos.y, loader.floors.get(file).get(selection));
-                    return true;
+                   map.setFloor((int)tilePos.x, (int)tilePos.y, ModeController.getInstance().getActiveAsset());
                 }
                 catch(Exception e){return false;}
             case Wall:
                 try{
-                    map.setWall((int)tilePos.x, (int)tilePos.y, IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y)),loader.walls.get(quadrant).get(selection));
-                    return true;
+                    Wall w = (Wall)ModeController.getInstance().getActiveAsset();
+                    map.setWall((int)tilePos.x, (int)tilePos.y, w.getQuadrant(), ModeController.getInstance().getActiveAsset());
                 }
-                catch(Exception e){return false;}
+                catch(Exception e){
+                    e.printStackTrace();
+                    return false;}
             case Object:
+            try{
+                map.setObject((int)tilePos.x, (int)tilePos.y, ModeController.getInstance().getActiveAsset());
+               
+            }
+            catch(Exception e){
+                e.printStackTrace();
                 return false;
+            }
         }
         return false;
     }

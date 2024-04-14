@@ -1,19 +1,21 @@
 package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
-import com.isomapmaker.game.controls.PlacementModes;
-import com.isomapmaker.game.map.TileMaps.TileLoader;
+import com.isomapmaker.game.controls.ModeController;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
+
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 public class PencilEraserCommand extends Command {
-    PlacementModes mode;
+    TileType mode;
     Vector2 tilePos;
-    String quadrant;
-    public PencilEraserCommand(PlacementModes mode, Vector2 tilePos, String quadrant, TileLoader loader, TileMap map) {
-        super(loader, map);
-        this.mode = mode;
+    WallQuadrant quad;
+    public PencilEraserCommand(Vector2 tilePos, WallQuadrant quad, TileMap map) {
+        super(map);
+        this.mode = ModeController.getInstance().getAssetState();
         this.tilePos = tilePos;
-        this.quadrant = quadrant;
+        this.quad = quad;
         //TODO Auto-generated constructor stub
     }
 
@@ -28,7 +30,7 @@ public class PencilEraserCommand extends Command {
                 map.setFloor((int)tilePos.x, (int)tilePos.y, null);
                 return true;
             case Wall:
-                map.setWall((int)tilePos.x, (int)tilePos.y, quadrant, null);
+                map.setWall((int)tilePos.x, (int)tilePos.y, quad, null);
                 return true;
             case Object:
                 return true;
