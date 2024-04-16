@@ -45,6 +45,8 @@ public class AtlasView extends Table {
      * Then just add this as a listener passing the args we want to and we avoid the annoying global problems with these lambdas
      * 
      */
+
+    
     
     private class TypeView extends Table {
         
@@ -54,9 +56,20 @@ public class AtlasView extends Table {
 
             Vector<String> fileNames = TileAtlas.getInstance().getAssetsByType(type).keys();
             this.add(new Label(type.name(),skin)).row();
-            for(int i=0; i<fileNames.size(); i++){
-                this.add(new FileView(type, fileNames.get(i), skin));
-            }
+
+            SelectBox<String> selectbox = new SelectBox<String>(skin);
+            String[] arr = fileNames.toArray(new String[fileNames.size()]);
+            selectbox.setItems(arr);
+            selectbox.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    ModeController.getInstance().setActiveFile(selectbox.getSelected());
+                    
+                    renderFile();
+                }
+            });
+
+            this.add(selectbox);
         }
     }
 
@@ -101,7 +114,10 @@ public class AtlasView extends Table {
             
             Collections.sort(names);
 
+            boolean displayRotation = type == TileType.Object || type == TileType.Wall;
+
             for(int i=0; i<names.size(); i++){
+                if(displayRotation && names.get(i).indexOf(ModeController.getInstance().getQuadrant().toString()) == -1) continue;
                 if(i % 3 == 0) this.row();
                 r = TileAtlas.getInstance().getAssetsByType(type).getAssetFromAtlas(name, names.get(i));
                 if(r == null) continue;
@@ -142,14 +158,15 @@ public class AtlasView extends Table {
             public void changed(ChangeEvent event, Actor actor) {
                 ModeController.getInstance().setAssetState(selectbox.getSelected());
                 renderView();
+                
             }
         });
 
         this.add(selectbox).row();
     
+
         Table t = new Table(skin);
         t.setName("TileTypeContainer");
-        t.add(new TypeView(ModeController.getInstance().getAssetState(), skin));
         this.add(t);
 
 
@@ -162,6 +179,15 @@ public class AtlasView extends Table {
     public void renderView(){
         Table t = this.findActor("TileTypeContainer");
         t.clear();
-        t.add(new TypeView(ModeController.getInstance().getAssetState(), skin)).grow();
+        TypeView tv = new TypeView(ModeController.getInstance().getAssetState(), skin);
+        tv.setName("TypeView");
+        t.add(tv).grow();
+    }
+
+    public void renderFile(){
+        Table t = this.findActor("TypeView");
+        t.clear();
+        t.add(new FileView(ModeController.getInstance().getAssetState(), ModeController.getInstance().getActiveFile(), skin));
+
     }
 }

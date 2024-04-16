@@ -127,6 +127,10 @@ public class AssetPlacer implements InputProcessor {
                 break;
             case Input.Keys.NUM_0:
                 MapSaver.getInstance().readMaps("MyMap", manager);
+                break;
+            case Input.Keys.R:
+                ModeController.getInstance().incrementQuadrant();
+                break;
             
         }
         return false;

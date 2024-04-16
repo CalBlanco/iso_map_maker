@@ -42,6 +42,7 @@ public class PencilCommand extends Command {
             case Wall:
                 try{
                     Wall w = (Wall)ModeController.getInstance().getActiveAsset();
+                    
                     map.setWall((int)tilePos.x, (int)tilePos.y, w.getQuadrant(), ModeController.getInstance().getActiveAsset());
                 }
                 catch(Exception e){
