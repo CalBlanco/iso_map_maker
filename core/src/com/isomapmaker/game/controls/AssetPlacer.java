@@ -51,7 +51,7 @@ public class AssetPlacer implements InputProcessor {
     Vector2 highHighlightBound = new Vector2(0,0);
 
     Vector2 clickPos = new Vector2(0,0);
-    HashMap<String, TextureRegion> quadrantToHighlight = new HashMap<String,TextureRegion>();
+    HashMap<WallQuadrant, TextureRegion> quadrantToHighlight = new HashMap<WallQuadrant, TextureRegion>();
 
     Vector2 tVector = new Vector2(0,0);
 
@@ -72,6 +72,8 @@ public class AssetPlacer implements InputProcessor {
         pm = new Pixmap(Gdx.files.internal("cursor.png"));
         pencil = new Pixmap(Gdx.files.internal("pencil.png"));
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 15, 15));
+
+        
 		
     }
    
@@ -259,7 +261,7 @@ public class AssetPlacer implements InputProcessor {
                 b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
                 break;
             case Wall:
-                b.draw(quadrantToHighlight.get(quadrant), tVector.x, tVector.y);
+                b.draw(quadrantToHighlight.get(this.quadrant), tVector.x, tVector.y);
                 b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
                 break;
             default:
