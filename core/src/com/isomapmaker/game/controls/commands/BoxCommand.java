@@ -1,9 +1,11 @@
 package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.Floor;
-
+import com.isomapmaker.game.map.Atlas.enums.TileType;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 
@@ -30,10 +32,26 @@ public class BoxCommand extends Command {
         int dx = (int)Math.abs(tilePos.x - endpos.x);
         int dy = (int)Math.abs(tilePos.y - endpos.y);
 
+        TileType type = ModeController.getInstance().getAssetState();
+        
         for(int x=lx; x<lx+dx+1; x++){
             for(int y=ly; y<ly+dy+1; y++){
                 if(x == tilePos.x || x == endpos.x || y == tilePos.y || y == endpos.y){
-                    map.setFloor(x,y,floor);
+                    switch(type){
+                        case Floor:
+                        map.setFloor(x,y,floor);
+                        break;
+                        case Wall:
+                            if(x == tilePos.x) map.setWall(x,y,WallQuadrant.left,ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                            if(x == endpos.x) map.setWall(x,y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                            if(y == tilePos.y) map.setWall(x,y-1, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                            if(y == endpos.y) map.setWall(x,y+1, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+                        break;
+                        case Object:
+                            map.setObject(x, y, floor);
+                        break;
+                    }
+                    
                 }
             }
         }

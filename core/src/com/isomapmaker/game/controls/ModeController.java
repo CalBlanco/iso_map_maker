@@ -63,6 +63,11 @@ public class ModeController {
         return TileAtlas.getInstance().get(assetMode, activeFile, activeRegion);
     }
 
+    public Asset getWallRegion(WallQuadrant quad){
+        if(assetMode != TileType.Wall) return null;
+        return TileAtlas.getInstance().get(assetMode, activeFile, activeRegion.split("-")[0]+"-"+quad.toString());
+    }
+
     public void setPlacementMode(TileType type, String name, String assetName){
         if(!TileAtlas.getInstance().getAssetsByType(type).keys().contains(name) || !TileAtlas.getInstance().getAssetsByType(type).getRegionNames(name).contains(assetName)) return;
         assetMode = type;
