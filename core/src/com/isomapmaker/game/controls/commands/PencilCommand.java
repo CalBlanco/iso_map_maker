@@ -37,6 +37,7 @@ public class PencilCommand extends Command {
             case Floor:
                 try{
                    map.setFloor((int)tilePos.x, (int)tilePos.y, ModeController.getInstance().getActiveAsset());
+                   break;
                 }
                 catch(Exception e){return false;}
             case Wall:
@@ -44,6 +45,7 @@ public class PencilCommand extends Command {
                     Wall w = (Wall)ModeController.getInstance().getActiveAsset();
                     
                     map.setWall((int)tilePos.x, (int)tilePos.y, w.getQuadrant(), ModeController.getInstance().getActiveAsset());
+                    break;
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -51,6 +53,7 @@ public class PencilCommand extends Command {
             case Object:
             try{
                 map.setObject((int)tilePos.x, (int)tilePos.y, ModeController.getInstance().getActiveAsset());
+                break;
                
             }
             catch(Exception e){

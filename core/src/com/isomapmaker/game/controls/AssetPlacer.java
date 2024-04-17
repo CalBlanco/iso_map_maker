@@ -132,6 +132,7 @@ public class AssetPlacer implements InputProcessor {
                 break;
             case Input.Keys.R:
                 ModeController.getInstance().incrementQuadrant();
+                System.out.println("Aye aye");
                 break;
             
         }

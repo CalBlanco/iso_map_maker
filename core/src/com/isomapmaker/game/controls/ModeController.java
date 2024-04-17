@@ -73,6 +73,8 @@ public class ModeController {
 
     public void setQuadrant(WallQuadrant quad){
         activeQuad = quad;
+        
+        setActiveRegion(activeRegion.split("-")[0]+"-"+quad.toString());
     }
 
     public WallQuadrant getQuadrant(){return activeQuad;}
@@ -81,7 +83,7 @@ public class ModeController {
     public void incrementQuadrant(){
         int quadIndex = activeQuad.ordinal();
         int next = (quadIndex + 1) % 4; // this should always be 4
-        activeQuad = WallQuadrant.values()[next];
+        setQuadrant(WallQuadrant.values()[next]);
     }
 
 }
