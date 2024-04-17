@@ -83,6 +83,7 @@ public class IsoMapMaker extends Game {
 
 		ip.addProcessor(atlasBrowser);
 		ip.addProcessor(cameraController);
+		
 		ip.addProcessor(assetPlacer);
 		
 		Gdx.input.setInputProcessor(ip);

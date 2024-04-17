@@ -8,10 +8,6 @@
     </Floor>
     <Wall>
         <asset>
-            <name>Basic Walls</name>
-            <path>atlas/Walls/SimpletonWalls.atlas</path>
-        </asset>
-        <asset>
             <name>Cool Walls</name>
             <path>atlas/Walls/CoolWalls.atlas</path>
         </asset>

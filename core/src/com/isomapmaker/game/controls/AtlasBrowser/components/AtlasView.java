@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,6 +27,7 @@ import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Atlas.AtlasContainer;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
+import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
 public class AtlasView extends Table {
     /**
@@ -46,8 +48,9 @@ public class AtlasView extends Table {
      * 
      */
 
-    
-    
+    private TileType mode;
+    private String fileName, regionName;
+    private WallQuadrant activeQuad;
     private class TypeView extends Table {
         
         public TypeView(TileType type, Skin skin){
@@ -64,8 +67,6 @@ public class AtlasView extends Table {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     ModeController.getInstance().setActiveFile(selectbox.getSelected());
-                    
-                    renderFile();
                 }
             });
 
@@ -88,6 +89,7 @@ public class AtlasView extends Table {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 ModeController.getInstance().setPlacementMode(type, name, assetName);
+                System.out.println("changed");
             }
             
         }
@@ -130,7 +132,7 @@ public class AtlasView extends Table {
                 sty.down = im.getDrawable();
                 sty.over = im.getDrawable();
                 sty.font = skin.getFont("default-font");
-                imText = new ImageTextButton(names.get(i), sty);
+                imText = new ImageTextButton(names.get(i).split("-")[0], sty);
                 
                 imText.addListener(new AssetChangeListener(type, name, names.get(i)));
 
@@ -151,13 +153,16 @@ public class AtlasView extends Table {
 
         super(skin);
         this.skin = skin;
+        this.mode = TileType.Floor;
+        this.fileName = "";
+        this.regionName = "";
+        this.activeQuad = WallQuadrant.bottom;
         SelectBox<TileType> selectbox = new SelectBox<TileType>(skin);
         selectbox.setItems(TileType.values());
         selectbox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 ModeController.getInstance().setAssetState(selectbox.getSelected());
-                renderView();
                 
             }
         });
@@ -180,8 +185,11 @@ public class AtlasView extends Table {
         Table t = this.findActor("TileTypeContainer");
         t.clear();
         TypeView tv = new TypeView(ModeController.getInstance().getAssetState(), skin);
-        tv.setName("TypeView");
-        t.add(tv).grow();
+        tv.setName("TypeViewRoot");
+        Table r = new Table(skin);
+        r.setName("TypeView");
+        tv.add(r).row();
+        t.add(tv).row();
     }
 
     public void renderFile(){
@@ -189,5 +197,22 @@ public class AtlasView extends Table {
         t.clear();
         t.add(new FileView(ModeController.getInstance().getAssetState(), ModeController.getInstance().getActiveFile(), skin));
 
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        // TODO Auto-generated method stub
+        super.draw(batch, parentAlpha);
+
+        // Check if we need to update the ui 
+        if(mode != ModeController.getInstance().getAssetState() || fileName != ModeController.getInstance().getActiveFile() || regionName != ModeController.getInstance().getActiveRegion() || activeQuad != ModeController.getInstance().getQuadrant()){
+            mode = ModeController.getInstance().getAssetState();
+            fileName = ModeController.getInstance().getActiveFile();
+            regionName = ModeController.getInstance().getActiveRegion();
+            activeQuad = ModeController.getInstance().getQuadrant();
+            renderView();
+            renderFile();
+        }
+        
     }
 }
