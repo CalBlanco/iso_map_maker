@@ -17,7 +17,7 @@ public class AtlasBrowser extends Stage{
         this.root = new Table();
         this.root.setFillParent(true);
         this.addActor(root);
-        this.root.add(new Label("Carl wuz here",skin)).row();
+        this.root.add(new Label("New UI Sux",skin)).row();
         
         ScrollPane scp = new ScrollPane(new AtlasView(skin, this));
 
