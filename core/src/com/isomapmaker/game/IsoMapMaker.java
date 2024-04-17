@@ -1,5 +1,6 @@
 package com.isomapmaker.game;
 
+import java.util.Collections;
 import java.util.Vector;
 
 import com.badlogic.gdx.Game;
@@ -107,6 +108,7 @@ public class IsoMapMaker extends Game {
 		
 
 		names = TileAtlas.getInstance().getAssetsByType(TileType.Wall).keys();
+		Collections.sort(names);
 		for(int i=0; i<names.size(); i++){
 			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Wall).getRegionNames(names.get(i));
 			for(int j=0; j<assets.size(); j++){
@@ -121,6 +123,7 @@ public class IsoMapMaker extends Game {
 		lastSize = lastSize + names.size();
 
 		names = TileAtlas.getInstance().getAssetsByType(TileType.Object).keys();
+		Collections.sort(names);
 		for(int i=0; i<names.size(); i++){
 			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegionNames(names.get(i));
 			for(int j=0; j<assets.size(); j++){
@@ -154,7 +157,7 @@ public class IsoMapMaker extends Game {
 		batch.begin(); // map batch
 		tileMapManager.render(batch); // render the map
 		//batch.draw(TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegion("Containers(Dumpster)", "dmpsterpink_open-bottom"), 0,0);
-		
+		assetPlacer.activeTileRender(batch);
 		cameraController.render(batch); // apply and camera movements
 		
 		batch.end();
@@ -166,6 +169,7 @@ public class IsoMapMaker extends Game {
 
 		//assetControler.render(); // render our ui last so it is always on top
 		atlasBrowser.render();
+		
 	}
 	
 	
