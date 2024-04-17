@@ -80,6 +80,8 @@ public class TileAtlas {
         }
     }
 
+    
+
     public AssetContainer getAssetsByType(TileType type){return this.assets.get(type);}
 
     public Asset get(TileType type, String name, String assetName){

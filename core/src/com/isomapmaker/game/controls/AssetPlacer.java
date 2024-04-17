@@ -85,52 +85,52 @@ public class AssetPlacer implements InputProcessor {
     public boolean keyDown(int keycode) {
         // TODO Auto-generated method stub
         switch(keycode){
-            case Input.Keys.C:
-                PencilEraserCommand peraser = new PencilEraserCommand(tilePos, WallQuadrant.bottom, map);
+            case Input.Keys.C: // Eraser tool 
+                PencilEraserCommand peraser = new PencilEraserCommand(tilePos, ModeController.getInstance().getQuadrant(), map);
                 Commander.getInstance().run(peraser);
                 return true;
-            case Input.Keys.PAGE_UP: // go to next layer or make new layer above this one 
+            case Input.Keys.PAGE_UP: // shift up a layer
                 System.out.println("Layers: " + manager.maxLayer());
                 if(layer+1 > manager.maxLayer()) return false; // make a new layer if there is not one
                 layer +=1;
                 map = manager.getLayer(layer); // get next layer
                 return true;
-            case Input.Keys.PAGE_DOWN:
+            case Input.Keys.PAGE_DOWN: // Shift down a layer 
                 if(layer-1 < 0) return false;
                 layer -= 1;
                 map = manager.getLayer(layer);
                 return true;
-            case Input.Keys.DEL:
+            case Input.Keys.DEL: // remove the top layer (don't think I want this anymore with fixed layers )
                 if(manager.maxLayer() != 0) manager.popLayer();
                 return true;
-            case Input.Keys.L:
+            case Input.Keys.L: // Change edit mode to line 
                 setState(PaintModes.Line);
                 return true;                
-            case Input.Keys.P:
+            case Input.Keys.P: // Change edit mode to pencil 
                 setState(PaintModes.Pencil);
                 return true;
-            case Input.Keys.O:
+            case Input.Keys.O: // Change edit mode to cirlce 
                 setState(PaintModes.Circle);
                 return true;
-            case Input.Keys.K:
+            case Input.Keys.K: // Change edit mode to bucket
                 setState(PaintModes.Bucket);
                 return true;
-            case Input.Keys.B:
+            case Input.Keys.B: // Change edit mode to box 
                 setState(PaintModes.Box);
                 return true;
-            case Input.Keys.Z:
+            case Input.Keys.Z: // Undo last performed command 
                 Commander.getInstance().undo();
                 return true;
-            case Input.Keys.V:
+            case Input.Keys.V: // Redo last undone command 
                 Commander.getInstance().redo();
                 return true;
-            case Input.Keys.NUM_9:
+            case Input.Keys.NUM_9: // Save Map 
                 MapSaver.getInstance().saveNewMap("MyMap", manager);
                 break;
-            case Input.Keys.NUM_0:
+            case Input.Keys.NUM_0: // Load Map 
                 MapSaver.getInstance().readMaps("MyMap", manager);
                 break;
-            case Input.Keys.R:
+            case Input.Keys.R: // Change Rotation 
                 ModeController.getInstance().incrementQuadrant();
                 System.out.println("Aye aye");
                 break;

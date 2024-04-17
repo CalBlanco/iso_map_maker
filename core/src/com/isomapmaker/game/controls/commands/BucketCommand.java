@@ -2,9 +2,10 @@ package com.isomapmaker.game.controls.commands;
 
 import java.util.Vector;
 
+import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.Floor;
-
+import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 
@@ -37,7 +38,7 @@ public class BucketCommand extends Command {
     }
 
     private boolean bucket(){
-        
+        if(ModeController.getInstance().getAssetState() != TileType.Floor) return false;
         Vector<Integer[]> queue = new Vector<Integer[]>(); // queue for points
         Floor oldFloor = map.getFloor(x0, y0);
         queue.add(new Integer[]{x0, y0}); // add our first point 
