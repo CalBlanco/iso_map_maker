@@ -70,7 +70,7 @@ public class AtlasView extends Table {
                 }
             });
 
-            this.add(selectbox);
+            this.add(selectbox).row();
         }
     }
 
@@ -189,7 +189,7 @@ public class AtlasView extends Table {
         Table r = new Table(skin);
         r.setName("TypeView");
         tv.add(r).row();
-        t.add(tv).row();
+        t.add(tv).grow();
     }
 
     public void renderFile(){
