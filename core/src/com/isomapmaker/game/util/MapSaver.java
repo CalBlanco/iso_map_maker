@@ -37,12 +37,17 @@ public class MapSaver {
         }
     }
 
+    //broke
     private void updateCompletion(int at, int max){
         completionP = at/max;
     }
 
-
-    public void saveNewMap(String mapName, TileMapManager manager){
+    /**
+     * Save a map (creates a thread per layer to save faster lmao) [Broken]
+     * @param mapName
+     */
+    public void saveNewMap(String mapName){
+        TileMapManager manager = TileMapManager.getInstance();
         ExecutorService exec = Executors.newFixedThreadPool(4);
         exec.submit(() -> saveMap(mapName, 0,  manager.getLayer(0)));
         exec.submit(() -> saveMap(mapName, 1,  manager.getLayer(1)));
@@ -69,14 +74,20 @@ public class MapSaver {
     }
     
 
-    public void readMaps(String mapName, TileMapManager manager){
+    /**
+     * Public method to call thread load [Broken]
+     * @param mapName
+     */
+    public void readMaps(String mapName){
         ExecutorService exec = Executors.newFixedThreadPool(1);
-        exec.submit(() -> readSavedMap(mapName, manager));
+        exec.submit(() -> readSavedMap(mapName));
         exec.shutdown();
     }
 
-    public void readSavedMap(String mapName, TileMapManager manager){
+
+    private void readSavedMap(String mapName){
         File dir = new File("maps/"+mapName);
+        TileMapManager manager = TileMapManager.getInstance();
         try{
         
             File[] matches = dir.listFiles(new FilenameFilter(){

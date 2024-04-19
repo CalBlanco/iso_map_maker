@@ -5,18 +5,28 @@ import java.util.Vector;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-
+//Singleton Manager of tile maps
 public class TileMapManager {
     Vector<TileMap> layers;
     private int size = 400; 
+    private static TileMapManager instance;
+    
 
+
+    public static TileMapManager getInstance(){
+        if(instance == null){
+            return new TileMapManager(400);
+        }
+
+        return instance;
+    }
     
     /**
      * Build a manager of a specified size
      * @param loader Loader for tile assets
      * @param size The size we want all maps made by this manager to be 
      */
-    public TileMapManager(int size){
+    private TileMapManager(int size){
         
         layers = new Vector<TileMap>();
         TileMap base = new TileMap(size, new Vector2(0,0),null);

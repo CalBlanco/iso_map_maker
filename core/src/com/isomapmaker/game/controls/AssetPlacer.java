@@ -125,10 +125,10 @@ public class AssetPlacer implements InputProcessor {
                 Commander.getInstance().redo();
                 return true;
             case Input.Keys.NUM_9: // Save Map 
-                MapSaver.getInstance().saveNewMap("MyMap", manager);
+                MapSaver.getInstance().saveNewMap("MyMap");
                 break;
             case Input.Keys.NUM_0: // Load Map 
-                MapSaver.getInstance().readMaps("MyMap", manager);
+                MapSaver.getInstance().readMaps("MyMap");
                 break;
             case Input.Keys.R: // Change Rotation 
                 ModeController.getInstance().incrementQuadrant();
