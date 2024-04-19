@@ -47,6 +47,7 @@ public class MapSaver {
      * @param mapName
      */
     public void saveNewMap(String mapName){
+        System.out.println("Called Save Wrapper");
         TileMapManager manager = TileMapManager.getInstance();
         ExecutorService exec = Executors.newFixedThreadPool(4);
         exec.submit(() -> saveMap(mapName, 0,  manager.getLayer(0)));
@@ -79,6 +80,7 @@ public class MapSaver {
      * @param mapName
      */
     public void readMaps(String mapName){
+        System.out.println("Called Load Wrapper");
         ExecutorService exec = Executors.newFixedThreadPool(1);
         exec.submit(() -> readSavedMap(mapName));
         exec.shutdown();

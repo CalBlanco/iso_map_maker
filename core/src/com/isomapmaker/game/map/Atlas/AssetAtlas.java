@@ -8,9 +8,11 @@ import com.isomapmaker.game.map.Assets.Asset;
 public class AssetAtlas {
     HashMap<String, Asset> atlas;
     
-    public AssetAtlas(){
+    private int id;
+    public int getId(){return id;}
+    public AssetAtlas(int id){
         this.atlas = new HashMap<String, Asset>();
-
+        this.id = id;
     }
 
     public Asset getAsset(String name){ return atlas.get(name);} 

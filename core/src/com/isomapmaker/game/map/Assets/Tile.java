@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
 public class Tile {
@@ -87,6 +88,10 @@ public class Tile {
     public Wall getWall(WallQuadrant quad){return this.walls.get(quad);}
     public Obj getObject(){return this.object;}
 
+
+    public void parseString(String tile){
+        
+    }
 
     
 }

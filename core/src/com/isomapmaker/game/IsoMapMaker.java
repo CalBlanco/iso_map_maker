@@ -60,7 +60,7 @@ public class IsoMapMaker extends Game {
 
 	@Override
 	public void create () {
-		System.out.println("Running");
+		System.out.println("Starting Map Maker");
 		
 		
 
@@ -91,9 +91,9 @@ public class IsoMapMaker extends Game {
 		int lastSize = 0;
 		Vector<String> names = TileAtlas.getInstance().getAssetsByType(TileType.Floor).keys();
 		for(int i=0; i<names.size(); i++){
-			System.out.println(names.get(i));
+			
 			Vector<String> assets = TileAtlas.getInstance().getAssetsByType(TileType.Floor).getRegionNames(names.get(i));
-			System.out.println(assets.size());
+			
 			for(int j=0; j<assets.size(); j++){
 				
 				try{
@@ -148,9 +148,7 @@ public class IsoMapMaker extends Game {
 		this.batch.setProjectionMatrix(cam.combined);
 		cam.update();
 		
-		if(MapSaver.getInstance().getCompletion() > 0f){
-			System.out.println((MapSaver.getInstance().getCompletion()*100) + "%");
-		}
+		
 
 		
 

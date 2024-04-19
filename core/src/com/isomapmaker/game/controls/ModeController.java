@@ -26,6 +26,9 @@ public class ModeController {
     private ModeController(){
         paintMode = PaintModes.Pencil; // initialize to pencil mode
         assetMode = TileType.Floor;
+        while(TileAtlas.getInstance().isLoading == true){
+            
+        }
         activeFile = TileAtlas.getInstance().getAssetsByType(assetMode).keys().get(0);
         activeRegion = TileAtlas.getInstance().getAssetsByType(assetMode).getRegionNames(activeFile).get(0);
         activeQuad = WallQuadrant.bottom;

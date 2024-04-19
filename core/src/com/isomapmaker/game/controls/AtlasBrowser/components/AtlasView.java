@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.Assets.Asset;
-import com.isomapmaker.game.map.Atlas.AtlasContainer;
+
 import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;

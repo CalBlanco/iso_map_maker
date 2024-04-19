@@ -20,6 +20,7 @@ import com.isomapmaker.game.controls.commands.Commander;
 import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
+import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
@@ -61,7 +62,9 @@ public class AssetPlacer implements InputProcessor {
     Pixmap pencil,pm;
 
     public AssetPlacer(OrthographicCamera cam, TileMapManager manager){
-        this.paintState = ModeController.getInstance().getState(); 
+
+        
+        this.paintState = ModeController.getInstance().getState();
         this.cam = cam; 
         this.manager = manager;
         this.map = manager.getLayer(layer);
@@ -132,7 +135,7 @@ public class AssetPlacer implements InputProcessor {
                 break;
             case Input.Keys.R: // Change Rotation 
                 ModeController.getInstance().incrementQuadrant();
-                System.out.println("Aye aye");
+                
                 break;
             
         }
@@ -154,7 +157,7 @@ public class AssetPlacer implements InputProcessor {
         // handle area selection
         Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
         Vector2 endclick = IsoUtil.worldPosToIsometric(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
-        System.out.println("Mouse Raised");
+        
 
 
         switch(this.paintState){

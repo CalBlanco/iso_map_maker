@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Container>
     <Floor>
-        <asset>
+        <asset uid="100">
             <name>Basic Floor</name>
             <path>atlas/Floors/SimpletonFloors.atlas</path>
         </asset>
     </Floor>
     <Wall>
-        <asset>
-            <name>Cool Walls</name>
-            <path>atlas/Walls/CoolWalls.atlas</path>
+        <asset uid="200">
+            <name>Walls</name>
+            <path>atlas/Walls/Walls.atlas</path>
         </asset>
     </Wall>
     <Object>
-        <asset>
+        <asset uid="300">
             <name>Dumpsters</name>
             <path>atlas/Objects/Dumpsters.atlas</path>
         </asset>
-        <asset>
+        <asset uid="301">
             <name>Items</name>
             <path>atlas/Objects/Items.atlas</path>
         </asset>
-        <asset>
+        <asset uid="302">
             <name>Generator</name>
             <path>atlas/Objects/Generator.atlas</path>
         </asset>
