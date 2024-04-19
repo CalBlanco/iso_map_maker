@@ -120,7 +120,7 @@ public class AtlasView extends Table {
 
             for(int i=0; i<names.size(); i++){
                 if(displayRotation && names.get(i).indexOf(ModeController.getInstance().getQuadrant().toString()) == -1) continue;
-                if(i % 3 == 0) this.row();
+                if(i % 7 == 0) this.row();
                 r = TileAtlas.getInstance().getAssetsByType(type).getAssetFromAtlas(name, names.get(i));
                 if(r == null) continue;
                 im = new Image(r.getRegion());
@@ -172,8 +172,9 @@ public class AtlasView extends Table {
 
         Table t = new Table(skin);
         t.setName("TileTypeContainer");
-        this.add(t);
+        this.add(t).grow();
 
+        this.background("default-window");
 
         
         
