@@ -6,19 +6,70 @@ import java.util.Vector;
 import com.isomapmaker.game.map.Assets.Asset;
 
 public class AssetAtlas {
-    HashMap<String, Asset> atlas;
+    HashMap<String, AssetPack> atlas;
+    HashMap<Integer, String> idMap;
     
     private int id;
     public int getId(){return id;}
+
+    /**
+     * Simple HashMap for asset names and the assets themselves
+     * @param id an id for this map 
+     */
     public AssetAtlas(int id){
-        this.atlas = new HashMap<String, Asset>();
+        this.atlas = new HashMap<String, AssetPack>();
+        this.idMap = new HashMap<Integer, String>();
         this.id = id;
     }
 
-    public Asset getAsset(String name){ return atlas.get(name);} 
-    public void setAsset(String name, Asset asset){ this.atlas.put(name, asset);}
+    public Asset getAsset(String name){ return atlas.get(name).asset;} 
+    /**
+     * Set a new asset into the map 
+     * @param name Name of the asset
+     * @param asset The actual asset 
+     * @param id an id for the asset 
+     */
+    public void setAsset(String name, Asset asset, int id){ 
+        this.atlas.put(name, new AssetPack(name, asset, id));
+        this.idMap.put(id, name);
+    }
 
+    /**
+     * Get a list of keys for the assets contained in this map
+     * @return
+     */
     public Vector<String> keys(){
         return new Vector<String>(atlas.keySet());
+    }
+
+    /**
+     * Get the id of an asset 
+     * @param name
+     * @return
+     */
+    public int getAssetId(String name){
+        return this.atlas.get(name).id;
+    }
+
+    /**
+     * Get an asset based on the id
+     * @param id
+     * @return
+     */
+    public Asset getAsset(int id){
+        return atlas.get(idMap.get(id)).asset;
+    }
+
+    public class AssetPack{
+        public String name;
+        public int id;
+        public Asset asset;
+        public AssetPack(String name, Asset asset, int id){
+            this.name = name;
+            this.asset = asset;
+            this.id = id;
+        }
+
+
     }
 }

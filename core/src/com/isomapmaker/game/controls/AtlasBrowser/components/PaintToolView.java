@@ -94,7 +94,7 @@ public class PaintToolView extends Table {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println("Clicked in UI");
-                MapSaver.getInstance().saveNewMap(curName);
+                MapSaver.getInstance().saveNewMap("testmap");
             }
         });
 
@@ -112,7 +112,7 @@ public class PaintToolView extends Table {
         imText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MapSaver.getInstance().readMaps(curName);
+                MapSaver.getInstance().readMaps("testmap");
             }
         });
         t.add(imText).colspan(2).center().row();

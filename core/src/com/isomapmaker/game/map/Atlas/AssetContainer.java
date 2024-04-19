@@ -14,10 +14,12 @@ import com.isomapmaker.game.map.Atlas.enums.TileType;
 
 public class AssetContainer {
     HashMap<String, AssetAtlas> assets;
+    HashMap<Integer, String> idMap;
 
     AssetFactory factory;
     public AssetContainer(){
         this.assets = new HashMap<String, AssetAtlas>();
+        this.idMap = new HashMap<Integer, String>();
         this.factory = new AssetFactory();
     }
 
@@ -27,19 +29,10 @@ public class AssetContainer {
     }
 
     public Vector<String> getRegionNames(String name){
-        System.out.println(assets.get(name).keys().toString());
+        
         return this.assets.get(name).keys();
     }
 
-    public void addAssetToAtlas(String name, String assetName, Asset asset, int id){
-        try{
-            this.assets.get(name).setAsset(assetName,asset);
-        }
-        catch(Exception e){
-            this.assets.put(name, new AssetAtlas(id));
-            this.assets.get(name).setAsset(assetName, asset);
-        }
-    }
 
     public Asset getAssetFromAtlas(String name, String assetName){
         return this.assets.get(name).getAsset(assetName);
@@ -55,23 +48,24 @@ public class AssetContainer {
         Array<TextureAtlas.AtlasRegion> regions = textures.getRegions();
         int id = Integer.parseInt(sid);
         this.assets.put(name, new AssetAtlas(id));
+        this.idMap.put(id,name);
         for(int i=0; i<regions.size; i++){
             String regionName = regions.get(i).name;
-            System.out.println(regionName);
+            
             TextureAtlas.AtlasRegion r =  regions.get(i);
             
             try{
                 switch(type){
                     case Floor:
-                        this.assets.get(name).setAsset(regionName, (Floor)factory.createAsset(regionName, TileType.Floor, r));
+                        this.assets.get(name).setAsset(regionName, (Floor)factory.createAsset(regionName, TileType.Floor, r, id+"_"+i),i);
                         break;
                         
                     case Wall:
-                        this.assets.get(name).setAsset(regionName, (Wall)factory.createAsset(regionName, TileType.Wall, r));
+                        this.assets.get(name).setAsset(regionName, (Wall)factory.createAsset(regionName, TileType.Wall, r, id+"_"+i),i);
                         break;
                         
                     case Object:
-                        this.assets.get(name).setAsset(regionName, (Obj)factory.createAsset(regionName, TileType.Object, r));
+                        this.assets.get(name).setAsset(regionName, (Obj)factory.createAsset(regionName, TileType.Object, r, id+"_"+i),i);
                         break;
                 }
                 
@@ -80,6 +74,56 @@ public class AssetContainer {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+
+    /**
+     * Return an asset based on the id of the atlas and the id of the asset, returns null if unable to locate by id
+     * @param atlasId
+     * @param assetId
+     * @return
+     */
+    public Asset getAssetById(int atlasId, int assetId){
+        try{
+            return this.assets.get(idMap.get(atlasId)).getAsset(assetId);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Trys to get the atlas' id, returns -1 if fails 
+     * @param name
+     * @return
+     */
+    public int getAtlasId(String name){
+        try{
+            return this.assets.get(name).getId();
+        }
+        catch(Exception e){
+            return -1;
+        }
+    }
+
+
+    /**
+     * Get the Atlas' ID and Asset ID in a tuple (int[2]{atlasId, assetId})
+     * @param name
+     * @param assetName
+     * @return
+     */
+    public int[] getIds(String name, String assetName){
+        try{
+            int atlasId = this.assets.get(name).getId();
+            int assetId = this.assets.get(name).getAssetId(assetName);
+
+            return new int[]{atlasId,  assetId};
+        }
+        catch(Exception e){
+            return null;
         }
     }
     

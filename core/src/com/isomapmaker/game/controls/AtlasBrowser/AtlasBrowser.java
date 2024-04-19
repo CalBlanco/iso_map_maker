@@ -6,14 +6,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.controls.AtlasBrowser.components.AtlasView;
+import com.isomapmaker.game.controls.AtlasBrowser.components.MouseInfoView;
 import com.isomapmaker.game.controls.AtlasBrowser.components.PaintToolView;
 
 public class AtlasBrowser extends Stage{
     
     Skin skin;
     Table root;
-    public AtlasBrowser(){
+    public AtlasBrowser(AssetPlacer ap){
         this.skin = new Skin(Gdx.files.internal("skins/uiskin/uiskin.json"));
         this.root = new Table();
         this.root.setFillParent(true);
@@ -24,9 +26,11 @@ public class AtlasBrowser extends Stage{
         ScrollPane scp = new ScrollPane(new AtlasView(skin, this));
         
 
+    
         
-
+        
         this.root.add(new Label(" ",skin)).colspan(3).padBottom(Gdx.graphics.getHeight()*0.25f).row();
+        this.root.add(new MouseInfoView(skin, ap)).expand().left();
         this.root.add(new PaintToolView(skin)).expand().right().row();
         this.root.add(scp).colspan(3).growX();
         

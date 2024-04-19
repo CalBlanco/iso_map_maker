@@ -15,9 +15,14 @@ public class TileMapManager {
 
     public static TileMapManager getInstance(){
         if(instance == null){
-            return new TileMapManager(400);
+            synchronized (TileMapManager.class){
+                if(instance == null){
+                    instance = new TileMapManager(400);
+                }
+            }
+           
         }
-
+        
         return instance;
     }
     

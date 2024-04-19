@@ -76,7 +76,7 @@ public class IsoMapMaker extends Game {
 		assetPlacer = new AssetPlacer(cam, tileMapManager); // Asset placer that manages the map using the tile loader
 
 		
-		atlasBrowser = new AtlasBrowser();
+		atlasBrowser = new AtlasBrowser(assetPlacer);
 
 		//Controls input flow (placement determines order of input [i believe last added is first])
 		ip = new InputMultiplexer();
@@ -97,7 +97,7 @@ public class IsoMapMaker extends Game {
 			for(int j=0; j<assets.size(); j++){
 				
 				try{
-					tileMapManager.getLayer(0).setFloor(i, j, TileAtlas.getInstance().get(TileType.Floor, names.get(i), assets.get(j)));
+					TileMapManager.getInstance().getLayer(0).setFloor(i, j, TileAtlas.getInstance().get(TileType.Floor, names.get(i), assets.get(j)));
 				}
 				catch(Exception e){
 					//e.printStackTrace();
@@ -115,7 +115,7 @@ public class IsoMapMaker extends Game {
 			for(int j=0; j<assets.size(); j++){
 				WallQuadrant quad = WallQuadrant.valueOf(assets.get(j).split("-")[1]);
 				try{
-				tileMapManager.getLayer(0).setWall(i+lastSize, j, quad, TileAtlas.getInstance().get(TileType.Wall, names.get(i), assets.get(j)));
+				TileMapManager.getInstance().getLayer(0).setWall(i+lastSize, j, quad, TileAtlas.getInstance().get(TileType.Wall, names.get(i), assets.get(j)));
 				}
 				catch(Exception e){}
 			}
@@ -130,7 +130,7 @@ public class IsoMapMaker extends Game {
 			for(int j=0; j<assets.size(); j++){
 				
 				try{
-				tileMapManager.getLayer(0).setObject(i+lastSize, j,TileAtlas.getInstance().get(TileType.Object, names.get(i), assets.get(j)));
+				TileMapManager.getInstance().getLayer(0).setObject(i+lastSize, j,TileAtlas.getInstance().get(TileType.Object, names.get(i), assets.get(j)));
 				}
 				catch(Exception e){}
 			}
@@ -143,6 +143,10 @@ public class IsoMapMaker extends Game {
 
 	@Override
 	public void render () {
+
+	
+		
+
 		assetPlacer.setState(ModeController.getInstance().getState());
 		ScreenUtils.clear(0, 0, 0, 1);
 		this.batch.setProjectionMatrix(cam.combined);
@@ -154,7 +158,7 @@ public class IsoMapMaker extends Game {
 
 
 		batch.begin(); // map batch
-		tileMapManager.render(batch); // render the map
+		TileMapManager.getInstance().render(batch); // render the map
 		//batch.draw(TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegion("Containers(Dumpster)", "dmpsterpink_open-bottom"), 0,0);
 		assetPlacer.activeTileRender(batch);
 		cameraController.render(batch); // apply and camera movements

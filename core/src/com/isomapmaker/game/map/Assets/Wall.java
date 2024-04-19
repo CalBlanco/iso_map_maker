@@ -7,12 +7,12 @@ import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 public class Wall extends Asset {
     WallQuadrant quadrant;
 
-    public Wall(String name, TileType type, TextureRegion region){
-        super(name,type,region);
+    public Wall(String name, TileType type, TextureRegion region, String id){
+        super(name,type,region, id);
         quadrant = WallQuadrant.bottom;
     }
-    public Wall(String name, TileType type, TextureRegion region, WallQuadrant quadrant) {
-        super(name, type, region);
+    public Wall(String name, TileType type, TextureRegion region, String id, WallQuadrant quadrant) {
+        super(name, type, region, id);
         this.quadrant = quadrant;
         
     }

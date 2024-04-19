@@ -48,6 +48,7 @@ public class MapSaver {
      */
     public void saveNewMap(String mapName){
         System.out.println("Called Save Wrapper");
+        long startTime = System.currentTimeMillis();
         TileMapManager manager = TileMapManager.getInstance();
         ExecutorService exec = Executors.newFixedThreadPool(4);
         exec.submit(() -> saveMap(mapName, 0,  manager.getLayer(0)));
@@ -56,6 +57,9 @@ public class MapSaver {
         exec.submit(() -> saveMap(mapName, 3,  manager.getLayer(3)));
 
         exec.shutdown();
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Took " + ((endTime - startTime)/1000000) + " to save the map");
     }
 
     private void saveMap(String mapName, int layer,TileMap map){
@@ -63,9 +67,9 @@ public class MapSaver {
             boolean made = new File("maps/"+mapName).mkdir();
             
                 
-                BufferedWriter writer = new BufferedWriter(new FileWriter("maps/"+mapName+"/"+layer+".txt"));
-                writer.write(map.saveMap());
-                writer.close();
+            BufferedWriter writer = new BufferedWriter(new FileWriter("maps/"+mapName+"/"+layer+".txt"));
+            writer.write(map.saveMap());
+            writer.close();
             
             
         }

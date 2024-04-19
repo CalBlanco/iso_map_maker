@@ -9,12 +9,12 @@ public class Obj extends Asset {
     boolean isSolid;
     WallQuadrant rotation;
 
-    public Obj(String name, TileType type, TextureRegion region){
-        super(name,type,region);
+    public Obj(String name, TileType type, TextureRegion region, String id){
+        super(name,type,region, id);
 
     }
-    public Obj(String name, TileType type, TextureRegion region, boolean isSolid) {
-        super(name, type, region);
+    public Obj(String name, TileType type, TextureRegion region, String id,boolean isSolid) {
+        super(name, type, region, id);
         this.isSolid = isSolid;
         //TODO Auto-generated constructor stub
     }

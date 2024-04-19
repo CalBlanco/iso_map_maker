@@ -43,19 +43,9 @@ public class TileAtlas {
         return assets.get(type).getAssetFromAtlas(name, assetName);
     }
 
-    public void dispose(){
-        
+    public Asset get(TileType type, int atlasId, int assetId){
+        return assets.get(type).getAssetById(atlasId, assetId);
     }
+    
 
-    /**
-     * TileMap: {
-     *  "Floor": {
-     *      "Grass":
-     *          {
-     *          "yellow_grass": Floor(yellow_grass, Floor, TextureRegion)
-     *      }
-     *  }
-     * }
-     * 
-     */
 }
