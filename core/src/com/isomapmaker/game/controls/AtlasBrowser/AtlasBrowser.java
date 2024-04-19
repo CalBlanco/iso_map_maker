@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.isomapmaker.game.controls.AtlasBrowser.components.AtlasView;
+import com.isomapmaker.game.controls.AtlasBrowser.components.MapSavingView;
 import com.isomapmaker.game.controls.AtlasBrowser.components.PaintToolView;
 
 public class AtlasBrowser extends Stage{
@@ -19,6 +20,7 @@ public class AtlasBrowser extends Stage{
         this.root.setFillParent(true);
         this.addActor(root);
         this.root.add(new Label("New UI Sux",skin)).colspan(3).row();
+        this.root.add(new MapSavingView(skin)).colspan(1).expand().left().row();
         
         ScrollPane scp = new ScrollPane(new AtlasView(skin, this));
         
