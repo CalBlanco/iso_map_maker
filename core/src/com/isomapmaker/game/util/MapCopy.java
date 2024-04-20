@@ -2,18 +2,11 @@ package com.isomapmaker.game.util;
 
 import com.isomapmaker.game.map.Assets.Tile;
 
+/**
+ * Utility class to help deep copy Tile information for undo/redo 
+ */
 public class MapCopy {
-    public static int getdiff(Tile[][] m1, Tile[][] m2){
-        int diff = 0;
-        for(int i=0; i< m1.length; i++){
-            for(int j=0; j< m1[i].length; j++){
-                if(m1[i][j] != m2[i][j]) diff++;
-            }
-        }
-
-        return diff;
-    }
-
+    
     /**Super deep copy */
     public static Tile[][] deepCopy(Tile[][] original){
         if(original == null) return null;

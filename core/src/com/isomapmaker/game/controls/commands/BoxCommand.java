@@ -8,7 +8,9 @@ import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
-
+/**
+ * Create a simple box to draw out of assets 
+ */
 public class BoxCommand extends Command {
     Asset floor;
     Vector2 tilePos, endpos;

@@ -3,6 +3,9 @@ package com.isomapmaker.game.map.Assets;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 
+/**
+ * Factory class for generating the correct type of Asset we need 
+ */
 public class AssetFactory {
     public AssetFactory(){}
 

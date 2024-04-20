@@ -18,15 +18,24 @@ import org.w3c.dom.Element;
 
 import org.w3c.dom.NodeList;
 
+/**
+ * Class to parse xml documents 
+ */
 public class XmlParse {
     
+    /**
+     * Using an asset file allocate the AssetContainers needed for us to interact with all of them 
+     * @param assetFile
+     * @return
+     */
     public static HashMap<TileType, AssetContainer> getAssets(String assetFile){
         try{
-            HashMap<TileType, AssetContainer> assets = new HashMap<TileType, AssetContainer>();
-            assets.put(TileType.Floor, new AssetContainer());
+            HashMap<TileType, AssetContainer> assets = new HashMap<TileType, AssetContainer>(); // our final output 
+            assets.put(TileType.Floor, new AssetContainer()); // Assign one per type, If I really wanted to do this better I could just loop over TileType values 
             assets.put(TileType.Wall, new AssetContainer());
             assets.put(TileType.Object, new AssetContainer());
 
+            // XML parsing stuff
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(assetFile);
@@ -69,6 +78,11 @@ public class XmlParse {
         }
     }
 
+    /**
+     * Get the TextureAtlas we need from the file 
+     * @param assetElement
+     * @return
+     */
     private static TextureAtlas parseAssetToAtlas(Element assetElement){
         
         String path = assetElement.getElementsByTagName("path").item(0).getTextContent();
@@ -76,6 +90,11 @@ public class XmlParse {
         return new TextureAtlas(path);
     }
 
+    /**
+     * Get the name of the asset for ui display 
+     * @param assetElement
+     * @return
+     */
     private static String parseAssetName(Element assetElement){
         String name = assetElement.getElementsByTagName("name").item(0).getTextContent();
         //System.out.println("parseAssetName: " + name);

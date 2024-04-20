@@ -5,7 +5,9 @@ import java.util.Vector;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-//Singleton Manager of tile maps
+/**
+ * Manage layers of TileMaps (Singleton pattern)
+ */
 public class TileMapManager {
     Vector<TileMap> layers;
     private int size = 400; 
@@ -112,22 +114,6 @@ public class TileMapManager {
             System.out.println( e.toString());
         }
     }
-
-    
-
-    // Load in file into appropriate layers
-    // Write an appropriate file to save layers 
-
-    // if each layer made a unique file 
-    // we could specify which files make up this "map" and load them in order
-
-    // Idea 0: 
-    //  - save all TileMap strings into the same folder
-    //  - create a file within that folder that composes them
-    
-    //  Then to load the map all we specify is the folder that holds all the tilemaps and the configuration file
-
-    // Might need to look more into this later
 
 
 }

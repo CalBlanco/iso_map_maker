@@ -19,6 +19,15 @@ public class PencilCommand extends Command {
     Vector2 tilePos;
     Vector2 screenPos;
 
+    /**
+     * Place the specified asset at the mouse position 
+     * @param file
+     * @param quadrant
+     * @param selection
+     * @param tilePos
+     * @param screenPos
+     * @param map
+     */
     public PencilCommand(String file, WallQuadrant quadrant, int selection, Vector2 tilePos, Vector2 screenPos, TileMap map) {
         super( map);
         

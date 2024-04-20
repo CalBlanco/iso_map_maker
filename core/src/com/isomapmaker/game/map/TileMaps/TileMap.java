@@ -17,13 +17,12 @@ import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.util.IsoUtil;
 import com.isomapmaker.game.util.MapCopy;
 
-// The purpose of this class is to take advantage of the SimpleTile interfaces (floors, walls, and objects)
-// Allow the parsing of a string into tile map
-// CRUD on floors
-// CRUD on walls
-// CRUD on objects 
-
-
+/**
+ * Class to control actual tiles that are active on the map 
+ * 
+ * Contains code to edit those tiles and the assets inside of them
+ * 
+ */
 public class TileMap {
 
     private int size;

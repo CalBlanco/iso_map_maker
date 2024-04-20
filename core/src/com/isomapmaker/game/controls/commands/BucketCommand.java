@@ -8,7 +8,9 @@ import com.isomapmaker.game.map.Assets.Floor;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
-
+/**
+ * Use the FloodFill alg to replace floor tiles (Does not work on objects or walls nor do I want or intend it to )
+ */
 public class BucketCommand extends Command {
     int x0,y0;
     Asset newFloor;

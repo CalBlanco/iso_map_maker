@@ -7,6 +7,9 @@ import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
+/**
+ * Erase the asset type under our cursor 
+ */
 public class PencilEraserCommand extends Command {
     TileType mode;
     Vector2 tilePos;

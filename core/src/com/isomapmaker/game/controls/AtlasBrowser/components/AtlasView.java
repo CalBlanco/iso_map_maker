@@ -29,6 +29,9 @@ import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
+/**
+ * View to render the available assets based on ModeController state
+ */
 public class AtlasView extends Table {
     /**
      * Just figured out I can make an actually good change listener by making a class that extends the type of Listener

@@ -3,6 +3,9 @@ package com.isomapmaker.game.util;
 import com.badlogic.gdx.math.Vector2;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
+/**
+ * Utility Class for converting between isometric and world cordinates, Also contains methods for converting an index to a 2d point, and getting a wall quadrant 
+ */
 public class IsoUtil {
     final public static Vector2 FLOOR_SIZE = new Vector2(128,64);
     /**

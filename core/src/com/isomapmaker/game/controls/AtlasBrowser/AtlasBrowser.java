@@ -11,6 +11,9 @@ import com.isomapmaker.game.controls.AtlasBrowser.components.AtlasView;
 import com.isomapmaker.game.controls.AtlasBrowser.components.MouseInfoView;
 import com.isomapmaker.game.controls.AtlasBrowser.components.PaintToolView;
 
+/**
+ * Main UI Code 
+ */
 public class AtlasBrowser extends Stage{
     
     Skin skin;

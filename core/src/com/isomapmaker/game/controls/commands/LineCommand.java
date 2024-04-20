@@ -9,7 +9,9 @@ import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
-
+/**
+ * Draw a line out of assets 
+ */
 public class LineCommand extends Command{
     Vector2 clickPos, endPos;
     Asset floor;
