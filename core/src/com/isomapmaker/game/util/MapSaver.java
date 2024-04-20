@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +51,12 @@ public class MapSaver {
      * @param mapName
      */
     public void saveNewMap(String mapName){
+        try {
+            Files.createDirectories(Paths.get("maps", mapName));
+        } catch (IOException e) {
+            // Handle the exception
+            e.printStackTrace();
+        }
         System.out.println("Called Save Wrapper");
         long startTime = System.currentTimeMillis();
         ModeController.getInstance().setSavingLoading(true);
@@ -74,16 +83,19 @@ public class MapSaver {
 
     private void saveMap(String mapName, int layer,TileMap map){
         try{
-            boolean made = new File("maps/"+mapName).mkdir();
+            
             long startTime = System.currentTimeMillis();
             
-                
-            BufferedWriter writer = new BufferedWriter(new FileWriter("maps/"+mapName+"/"+layer+".txt"));
-            writer.write(map.saveMap());
-            writer.close();
-            long endTime = System.currentTimeMillis();
-            System.out.println("\tTook " + ((endTime - startTime)) + " to save layer " + layer);
-            
+            FileWriter fw = new FileWriter("maps/"+mapName+"/"+layer+".txt");
+            BufferedWriter writer = new BufferedWriter(fw);
+            try
+            {
+                writer.write(map.saveMap());
+                long endTime = System.currentTimeMillis();
+                System.out.println("\tTook " + ((endTime - startTime)) + " to save layer " + layer);
+            }
+            catch(Exception e){e.printStackTrace();}
+            fw.close();
         }
         catch(Exception e){
             e.printStackTrace();
