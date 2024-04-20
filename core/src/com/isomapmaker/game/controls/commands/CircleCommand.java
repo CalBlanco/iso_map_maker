@@ -35,7 +35,7 @@ public class CircleCommand extends Command{
 
     private boolean circle(){
         Vector<Integer[]> c = PaintTools.circle(x0,y0,r);
-        
+       
 
         switch(ModeController.getInstance().getAssetState()){
             case Wall:

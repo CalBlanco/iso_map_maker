@@ -31,10 +31,12 @@ public class LineCommand extends Command{
         
         switch(ModeController.getInstance().getAssetState()){
             case Floor:
+                
                 for(int i = 0; i<l.size(); i++){
                     
                     map.setFloor(l.get(i)[0], l.get(i)[1],floor);
                 }
+                
             break;
             case Wall:
                 for(int i = 0; i<l.size(); i++){
