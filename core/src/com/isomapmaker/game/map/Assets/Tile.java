@@ -150,7 +150,9 @@ public class Tile {
         return new int[]{Integer.parseInt(spl[0]), Integer.parseInt(spl[1])};
     }
 
-
+    /**
+     * Remove all the assets on the tile by assigned them all to null
+     */
     public void clearTile(){
         this.floor = null;
         this.walls.replace(WallQuadrant.top, null);
