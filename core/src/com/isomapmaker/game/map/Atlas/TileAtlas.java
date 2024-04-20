@@ -46,6 +46,13 @@ public class TileAtlas {
     public Asset get(TileType type, int atlasId, int assetId){
         return assets.get(type).getAssetById(atlasId, assetId);
     }
+
+    public void dispose(){
+        TileType[] tpes = TileType.values();
+        for(int i=0; i<tpes.length; i++){
+            assets.get(tpes[i]).dispose();
+        }
+    }
     
 
 }

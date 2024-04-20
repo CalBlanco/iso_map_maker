@@ -50,7 +50,7 @@ public class TileMap {
         this.size = size;
         this.tileOffset = tileOffset;
         this.defaultTexture = null;
-        this.highlight = new TextureRegion(new Texture(Gdx.files.internal("highlight.png")));
+        //this.highlight = new TextureRegion(new Texture(Gdx.files.internal("highlight.png")));
         this.map = new Tile[size][size];
         reloadMap();
     }
@@ -67,13 +67,16 @@ public class TileMap {
      * Render this map based on its offset
      * @param b
      */
+
+    private Vector2 renderTVector = new Vector2();
+    private Vector2 outVector = new Vector2();
     public void render(SpriteBatch b){
         b.setColor(1f,1f,1f,1f);
         // iterate back to front
         for(int i=size-1; i>=0; i--){
             for(int j=size-1; j>=0; j--){
                 // get world cordinates incorperating layer offset
-                Vector2 wpos = IsoUtil.isometricToWorldPos(new Vector2(i,j).add(tileOffset.x, tileOffset.y), IsoUtil.FLOOR_SIZE);
+                Vector2 wpos = IsoUtil.isometricToWorldPos(renderTVector.set(i,j).add(tileOffset.x, tileOffset.y), IsoUtil.FLOOR_SIZE, outVector);
                 // render floor
                 if(map[i][j] != null) map[i][j].render(b, wpos);
                 

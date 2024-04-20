@@ -149,21 +149,24 @@ public class AssetPlacer implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         resetFocus();
         clickPos = tilePos;
+        System.out.println(clickPos.toString());
         
         return true;
         }
 
     Vector2 endClickTVector = new Vector2();
+    Vector3 endClickCamTVector3 = new Vector3();
+    Vector2 endclick = new Vector2();
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         resetFocus();
         // if click pos != tile pos we have moved the cursor while selecting
         // handle area selection
-        Vector3 wpos = cam.unproject(camTVector.set(screenX,screenY,0));
-        Vector2 endclick = IsoUtil.worldPosToIsometric(endClickTVector.set(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
+        Vector3 wpos = cam.unproject(endClickCamTVector3.set(screenX,screenY,0));
+        endclick = IsoUtil.worldPosToIsometric(endClickTVector.set(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE, endclick);
         
 
-
+        System.out.println(clickPos.toString() +", " + endclick.toString());
         switch(this.paintState){
             case Box:
                 BoxCommand box = new BoxCommand(clickPos, endclick, ModeController.getInstance().getActiveAsset(), map);
@@ -197,14 +200,14 @@ public class AssetPlacer implements InputProcessor {
     
     Vector3 camTVector = new Vector3();
     Vector2 tileMathTVector = new Vector2();
-
+    
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         
         
         Vector3 wpos = cam.unproject(camTVector.set(screenX,screenY,0));
         screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/4f, wpos.y-IsoUtil.FLOOR_SIZE.y/4f);
-        tilePos = IsoUtil.worldPosToIsometric(tileMathTVector.set(wpos.x-IsoUtil.FLOOR_SIZE.x/2f,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
+        tilePos = IsoUtil.worldPosToIsometric(tileMathTVector.set(wpos.x-IsoUtil.FLOOR_SIZE.x/2f,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE, tilePos);
         //quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
         
@@ -262,8 +265,9 @@ public class AssetPlacer implements InputProcessor {
     /*
      * Render the pencil tile tool availability
      */
+    private Vector2 outVector = new Vector2();
     private void pencilTileRender(SpriteBatch b){
-        tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(tilePos), IsoUtil.FLOOR_SIZE);
+        tVector = IsoUtil.isometricToWorldPos(lineTVector20.set(1,1).scl(layer).add(tilePos), IsoUtil.FLOOR_SIZE, tVector);
         b.setColor(1f, 1f, 1f, 0.7f);
         try{
         switch (mode) {
@@ -283,16 +287,20 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1f,1f,1f,1f);
     }
 
+    private Vector3 lineTVector30 = new Vector3();
+    private Vector2 lineTVector20 = new Vector2();
+    private Vector2 lineTVector21 = new Vector2();
+    Vector2 ht = new Vector2();
     private void lineRender(SpriteBatch b){
         if (mode != TileType.Floor) return; // remove this after implementing some wall code
-        Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
-        Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
+        Vector3 hpos = cam.unproject(lineTVector30.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+        ht = IsoUtil.worldPosToIsometric(lineTVector20.set(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE, ht);
+        Vector2 v = clickPos != null ? lineTVector20.set(1,1).scl(layer).add(clickPos) : lineTVector20.set(1,1).scl(layer).add(tilePos);
         b.setColor(1f,1f,1f,0.7f);
         
-        Vector<Integer[]> linePoints = PaintTools.line(v, new Vector2(1,1).scl(layer).add(ht));
+        Vector<Integer[]> linePoints = PaintTools.line(v, lineTVector20.set(1,1).scl(layer).add(ht));
         for(int i=0; i<linePoints.size(); i++){
-            tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
+            tVector = IsoUtil.isometricToWorldPos(lineTVector20.set(1,1).scl(layer).add(lineTVector21.set(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE, tVector);
             b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         }
         b.setColor(1,1,1,1);
@@ -301,15 +309,15 @@ public class AssetPlacer implements InputProcessor {
     
     private void circleRender(SpriteBatch b){
         if (mode != TileType.Floor) return; // remove this after implementing some wall code
-        Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
-        Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
+        Vector3 hpos = cam.unproject(lineTVector30.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+        ht = IsoUtil.worldPosToIsometric(lineTVector20.set(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE, ht);
+        Vector2 v = clickPos != null ? lineTVector20.set(1,1).scl(layer).add(clickPos) : lineTVector20.set(1,1).scl(layer).add(tilePos);
         b.setColor(1f,1f,1f,0.7f);
         
-        Vector<Integer[]> linePoints = PaintTools.circle(v,(int) new Vector2(1,1).scl(layer).add(ht).dst(v));
+        Vector<Integer[]> linePoints = PaintTools.circle(v,(int) lineTVector20.set(1,1).scl(layer).add(ht).dst(v));
         try{
         for(int i=0; i<linePoints.size(); i++){
-            tVector = IsoUtil.isometricToWorldPos(new Vector2(1,1).scl(layer).add(new Vector2(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE);
+            tVector = IsoUtil.isometricToWorldPos(lineTVector20.set(1,1).scl(layer).add(lineTVector21.set(linePoints.get(i)[0],linePoints.get(i)[1])), IsoUtil.FLOOR_SIZE, tVector);
             b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         }
         }
@@ -319,15 +327,15 @@ public class AssetPlacer implements InputProcessor {
 
     private void boxRender(SpriteBatch b){
         if (mode != TileType.Floor) return; // remove this after implementing some wall code
-        Vector3 hpos = cam.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        Vector2 ht = IsoUtil.worldPosToIsometric(new Vector2(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE);
-        Vector2 v = clickPos != null ? new Vector2(1,1).scl(layer).add(clickPos) : new Vector2(1,1).scl(layer).add(tilePos);
+        Vector3 hpos = cam.unproject(lineTVector30.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+        ht = IsoUtil.worldPosToIsometric(lineTVector20.set(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE, ht);
+        Vector2 v = clickPos != null ? lineTVector20.set(1,1).scl(layer).add(clickPos) : lineTVector20.set(1,1).scl(layer).add(ht);
         Vector<Vector2> bSel = PaintTools.box(v, ht);
         b.setColor(1f,1f,1f,0.7f);
-        tVector = IsoUtil.isometricToWorldPos(v, IsoUtil.FLOOR_SIZE);
+        tVector = IsoUtil.isometricToWorldPos(v, IsoUtil.FLOOR_SIZE, outVector);
         b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         for(int i=0;i<bSel.size(); i++){
-            tVector = IsoUtil.isometricToWorldPos(bSel.get(i).add(new Vector2(1,1).scl(layer)), IsoUtil.FLOOR_SIZE);
+            tVector = IsoUtil.isometricToWorldPos(bSel.get(i).add(lineTVector20.set(1,1).scl(layer)), IsoUtil.FLOOR_SIZE, tVector);
             b.draw(ModeController.getInstance().getActiveAsset().getRegion(), tVector.x, tVector.y);
         }
         b.setColor(1,1,1,1);

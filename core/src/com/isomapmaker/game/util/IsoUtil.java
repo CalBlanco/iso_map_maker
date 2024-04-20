@@ -11,10 +11,12 @@ public class IsoUtil {
      * @param size the size of the tile (should normally 128x64)
      * @return A Vector2 containing the world cordinates
      */
-    public static Vector2 isometricToWorldPos(Vector2 isoPos, Vector2 size) {
+    private static Vector2 outVector = new Vector2();
+    public static Vector2 isometricToWorldPos(Vector2 isoPos, Vector2 size, Vector2 seter) {
         float x = (isoPos.x - isoPos.y) * (FLOOR_SIZE.x / 2f);
         float y = (isoPos.x + isoPos.y) * (FLOOR_SIZE.y / 2f);
-        return new Vector2((int)x, (int)y);
+        seter.set((int)x, (int)y);
+        return seter;
     }
  
     /**
@@ -23,10 +25,11 @@ public class IsoUtil {
      * @param size the floor size (should normally be 128x64)
      * @return
      */
-    public static Vector2 worldPosToIsometric(Vector2 worldPos, Vector2 size) {
+    public static Vector2 worldPosToIsometric(Vector2 worldPos, Vector2 size, Vector2 seter) {
         float x = (worldPos.x / (FLOOR_SIZE.x / 2f) + worldPos.y / (FLOOR_SIZE.y / 2f)) / 2f  - 0.5f;
         float y = (worldPos.y  / (FLOOR_SIZE.y / 2f) - worldPos.x / (FLOOR_SIZE.x / 2f)) / 2f - 0.05f;
-        return new Vector2((int)Math.floor(x), (int)Math.floor(y));
+        seter.set((int)Math.floor(x), (int)Math.floor(y));
+        return seter;
     }
 
     /**
@@ -49,7 +52,8 @@ public class IsoUtil {
      * @return
      */
     public static WallQuadrant getTileQuadrant(Vector2 worldPos, Vector2 mousePos) {
-        Vector2 isoPos = isometricToWorldPos(worldPos, FLOOR_SIZE);
+        Vector2 nv = new Vector2();
+        Vector2 isoPos = isometricToWorldPos(worldPos, FLOOR_SIZE, nv);
         int tileX = (int) ((worldPos.x - isoPos.x) / FLOOR_SIZE.x);
         int tileY = (int) ((worldPos.y - isoPos.y) / FLOOR_SIZE.y);
         float halfWidth = FLOOR_SIZE.x / 2;

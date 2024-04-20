@@ -186,7 +186,7 @@ public class IsoMapMaker extends Game {
 	public void dispose () {
 		batch.dispose();
 		hudBatch.dispose();
-		
+		TileAtlas.getInstance().dispose();
 
 		
 	}

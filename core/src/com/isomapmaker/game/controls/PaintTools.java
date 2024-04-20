@@ -61,7 +61,7 @@ public class PaintTools {
         return line(new int[]{x0,y0}, new int[]{x1,y1});
     }
 
-
+    
     public static Vector<Integer[]> circle(int x0, int y0, int r){
         return circle(new Vector2(x0,y0), r);
     }
@@ -91,6 +91,7 @@ public class PaintTools {
     }
 
 
+    
     public static Vector<Vector2> box(Vector2 a, Vector2 b){
         int lx = (int) (a.x < b.x ? a.x : b.x);
         int ly = (int) (a.y < b.y ? a.y : b.y);

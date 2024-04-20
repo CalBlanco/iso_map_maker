@@ -38,7 +38,7 @@ public class MouseInfoView extends Table {
             lastPos.set(ap.tilePos);
             temp = this.findActor("mouseInfo");
         
-            temp.setText("Screen: " + ap.screenPos.toString() +"\n" +"Tile: " + ap.tilePos.toString() + "," + manager.getLayer(0).getTileString((int)lastPos.x, (int)lastPos.y) );
+            temp.setText("Screen: " + ap.screenPos.toString() +"\n" +"Tile: " + ap.tilePos.toString() ); // + "," + manager.getLayer(0).getTileString((int)lastPos.x, (int)lastPos.y)
         }
         
 

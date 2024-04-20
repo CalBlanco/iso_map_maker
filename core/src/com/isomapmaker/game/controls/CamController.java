@@ -137,12 +137,15 @@ public class CamController implements InputProcessor {
         return false;
     }
 
+    private Vector2 tVector = new Vector2();
+    private Vector3 tVector3 = new Vector3();
+    private Vector2 tVector2 = new Vector2();
     // This is just remenants from when the camera controller was more tightly linked to the asset placement lmao
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        Vector3 v = camera.unproject(new Vector3(screenX,screenY,0));
-        Vector2 world = new Vector2(v.x-FLOOR_SIZE.x/2,v.y-FLOOR_SIZE.y/2);
-        hoverTile = IsoUtil.worldPosToIsometric(world, FLOOR_SIZE);
+        Vector3 v = camera.unproject(tVector3.set(screenX,screenY,0));
+        Vector2 world = tVector.set(v.x-FLOOR_SIZE.x/2,v.y-FLOOR_SIZE.y/2);
+        hoverTile = IsoUtil.worldPosToIsometric(world, FLOOR_SIZE, tVector2);
         hoverWorldPos.set(world.x,world.y);
         return false;
     }

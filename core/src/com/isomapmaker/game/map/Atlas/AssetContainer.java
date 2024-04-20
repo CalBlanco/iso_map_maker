@@ -15,9 +15,10 @@ import com.isomapmaker.game.map.Atlas.enums.TileType;
 public class AssetContainer {
     HashMap<String, AssetAtlas> assets;
     HashMap<Integer, String> idMap;
-
+    Vector<TextureAtlas> atlases;
     AssetFactory factory;
     public AssetContainer(){
+        this.atlases = new Vector<TextureAtlas>();
         this.assets = new HashMap<String, AssetAtlas>();
         this.idMap = new HashMap<Integer, String>();
         this.factory = new AssetFactory();
@@ -45,6 +46,7 @@ public class AssetContainer {
      * @param textures
      */
     public void addTextureAtlas(String name, TileType type, String sid, TextureAtlas textures){
+        this.atlases.add(textures);
         Array<TextureAtlas.AtlasRegion> regions = textures.getRegions();
         int id = Integer.parseInt(sid);
         this.assets.put(name, new AssetAtlas(id));
@@ -75,6 +77,8 @@ public class AssetContainer {
             }
 
         }
+
+        
     }
 
 
@@ -126,5 +130,13 @@ public class AssetContainer {
             return null;
         }
     }
+
+    public void dispose(){
+        for(int i=0; i<atlases.size(); i++){
+            atlases.get(i).dispose();
+        }
+    }
+
+
     
 }
