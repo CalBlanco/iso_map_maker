@@ -57,6 +57,8 @@ public class IsoMapMaker extends Game {
 	AtlasBrowser atlasBrowser;
 
 
+	float renderAlpha = 1.0f;
+
 
 	@Override
 	public void create () {
@@ -146,7 +148,8 @@ public class IsoMapMaker extends Game {
 	public void render () {
 
 	
-		
+		if(ModeController.getInstance().getSavingLoading()) renderAlpha = 0.5f;
+		else renderAlpha = 1f;
 
 		assetPlacer.setState(ModeController.getInstance().getState());
 		ScreenUtils.clear(0, 0, 0, 1);
@@ -159,6 +162,7 @@ public class IsoMapMaker extends Game {
 
 
 		batch.begin(); // map batch
+		batch.setColor(renderAlpha, renderAlpha, renderAlpha, renderAlpha);
 		TileMapManager.getInstance().render(batch); // render the map
 		//batch.draw(TileAtlas.getInstance().getAssetsByType(TileType.Object).getRegion("Containers(Dumpster)", "dmpsterpink_open-bottom"), 0,0);
 		assetPlacer.activeTileRender(batch);

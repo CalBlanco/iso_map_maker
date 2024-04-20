@@ -1,6 +1,7 @@
 package com.isomapmaker.game.controls.AtlasBrowser.components;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -25,6 +26,9 @@ public class PaintToolView extends Table {
     Skin skin;
     TextureAtlas uiItems;
     String curName;
+
+    ImageTextButton saveButton;
+    ImageTextButton loadButton;
     public PaintToolView(Skin skin){
         super(skin);
         this.skin = skin;
@@ -89,8 +93,8 @@ public class PaintToolView extends Table {
         sty.down = im.getDrawable();
         sty.over = im.getDrawable();
         sty.font = skin.getFont("title-font");
-        imText = new ImageTextButton("", sty);
-        imText.addListener(new ChangeListener() {
+        saveButton = new ImageTextButton("", sty);
+        saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 
@@ -98,7 +102,7 @@ public class PaintToolView extends Table {
             }
         });
 
-        t.add(imText).colspan(2).center().padLeft(10).padRight(10).row();
+        t.add(saveButton).colspan(2).center().padLeft(10).padRight(10).row();
         // load 
 
         im = new Image(uiItems.findRegion("load"));
@@ -108,14 +112,14 @@ public class PaintToolView extends Table {
         sty.down = im.getDrawable();
         sty.over = im.getDrawable();
         sty.font = skin.getFont("title-font");
-        imText = new ImageTextButton("", sty);
-        imText.addListener(new ChangeListener() {
+        loadButton = new ImageTextButton("", sty);
+        loadButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 MapSaver.getInstance().readMaps(curName);
             }
         });
-        t.add(imText).colspan(2).center().padLeft(10).padRight(10).row();
+        t.add(loadButton).colspan(2).center().padLeft(10).padRight(10).row();
 
         this.add(t).colspan(2).right().row();
         
@@ -165,4 +169,24 @@ public class PaintToolView extends Table {
         }
     }
 
+
+    public void updateState(){
+        if(ModeController.getInstance().getSavingLoading()){
+            saveButton.setDisabled(true);
+            loadButton.setDisabled(true);
+        }
+        else{
+            saveButton.setDisabled(false);
+            loadButton.setDisabled(false);
+        }
+    }
+
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        // TODO Auto-generated method stub
+        super.draw(batch, parentAlpha);
+
+        updateState();
+    }
 }

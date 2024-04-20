@@ -15,7 +15,7 @@ public class ModeController {
     private String activeRegion; // The active atlas region we want 
     private WallQuadrant activeQuad;
 
-  
+    private boolean isSavingLoading = false;
 
     public static ModeController getInstance(){
         if(ModeController.instance == null){
@@ -96,7 +96,12 @@ public class ModeController {
         setQuadrant(WallQuadrant.values()[next]);
     }
 
+    
+    public void setSavingLoading(boolean state){
+        isSavingLoading = state;
+    }
 
+    public boolean getSavingLoading(){ return isSavingLoading;}
 
 
 

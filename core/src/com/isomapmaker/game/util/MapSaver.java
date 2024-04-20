@@ -7,8 +7,9 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-
+import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 public class MapSaver {
@@ -49,6 +50,7 @@ public class MapSaver {
     public void saveNewMap(String mapName){
         System.out.println("Called Save Wrapper");
         long startTime = System.currentTimeMillis();
+        ModeController.getInstance().setSavingLoading(true);
         TileMapManager manager = TileMapManager.getInstance();
         ExecutorService exec = Executors.newFixedThreadPool(4);
         exec.submit(() -> saveMap(mapName, 0,  manager.getLayer(0)));
@@ -57,6 +59,14 @@ public class MapSaver {
         exec.submit(() -> saveMap(mapName, 3,  manager.getLayer(3)));
 
         exec.shutdown();
+
+        try {
+            exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS); // Wait for all tasks to complete
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        ModeController.getInstance().setSavingLoading(false);
         long endTime = System.currentTimeMillis();
 
         System.out.println("Took " + ((endTime - startTime)) + " to save the map");
@@ -86,10 +96,25 @@ public class MapSaver {
      * @param mapName
      */
     public void readMaps(String mapName){
+        ModeController.getInstance().setSavingLoading(true);
         System.out.println("Called Load Wrapper");
+
+        long startTime = System.currentTimeMillis();
         ExecutorService exec = Executors.newFixedThreadPool(1);
         exec.submit(() -> readSavedMap(mapName));
         exec.shutdown();
+
+        
+        try {
+            exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS); // Wait for all tasks to complete
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        ModeController.getInstance().setSavingLoading(false);
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("Took " + ((endTime - startTime)) + " to load the map");
     }
 
 
@@ -97,7 +122,7 @@ public class MapSaver {
         File dir = new File("maps/"+mapName);
         TileMapManager manager = TileMapManager.getInstance();
         try{
-            long startTime = System.currentTimeMillis();
+            
             File[] matches = dir.listFiles(new FilenameFilter(){
                 @Override
                 public boolean accept(File di, String name){
@@ -112,10 +137,7 @@ public class MapSaver {
                 read = new BufferedReader(new FileReader(matches[i]));
                 manager.getLayer(i).loadMap(read.lines().toArray(String[]::new));
             }
-
-            long endTime = System.currentTimeMillis();
-
-            System.out.println("Took " + ((endTime - startTime)) + " to load the map");
+            
         }
         catch(Exception e){
             e.printStackTrace();
