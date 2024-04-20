@@ -5,13 +5,16 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.controls.PaintModes;
 import com.isomapmaker.game.controls.commands.Commander;
+import com.isomapmaker.game.util.MapSaver;
 
 /**
  * Simple View for the paint tools currently supported in the game 
@@ -21,17 +24,22 @@ public class PaintToolView extends Table {
 
     Skin skin;
     TextureAtlas uiItems;
+    String curName;
     public PaintToolView(Skin skin){
         super(skin);
         this.skin = skin;
+        curName = "testmap";
         uiItems = new TextureAtlas(Gdx.files.internal("atlas/UI/MenuItems.atlas"));
 
+        
         Table t = new Table(skin);
-        t.add(new PaintToolButton(skin, "pencil")).expand().row();
-        t.add(new PaintToolButton(skin, "bucket")).expand().row();
-        t.add(new PaintToolButton(skin, "line")).expand().row();
-        t.add(new PaintToolButton(skin, "circle")).expand().row();
-        t.add(new PaintToolButton(skin, "box")).expand().row();
+        
+        //Paint tools
+        t.add(new PaintToolButton(skin, "pencil")).colspan(2).center().row();
+        t.add(new PaintToolButton(skin, "bucket")).colspan(2).center().row();
+        t.add(new PaintToolButton(skin, "line")).colspan(2).center().row();
+        t.add(new PaintToolButton(skin, "circle")).colspan(2).center().row();
+        t.add(new PaintToolButton(skin, "box")).colspan(2).center().row();
         
 
         // add in 2 buttons manually for undo and redo
@@ -42,14 +50,14 @@ public class PaintToolView extends Table {
         sty.down = im.getDrawable();
         sty.over = im.getDrawable();
         sty.font = skin.getFont("default-font");
-        ImageTextButton imText = new ImageTextButton("undo", sty);
+        ImageTextButton imText = new ImageTextButton("", sty);
         imText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Commander.getInstance().undo();
             }
         });
-        t.add(imText).expand();
+        t.add(imText).colspan(1);
 
         im = new Image(uiItems.findRegion("redo"));
         im.setScaling(Scaling.fill);
@@ -58,7 +66,7 @@ public class PaintToolView extends Table {
         sty.down = im.getDrawable();
         sty.over = im.getDrawable();
         sty.font = skin.getFont("default-font");
-        imText = new ImageTextButton("redo", sty);
+        imText = new ImageTextButton("", sty);
         imText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -66,11 +74,64 @@ public class PaintToolView extends Table {
             }
         });
 
-        t.add(imText).expand().row();
+        t.add(imText).colspan(1).row();
 
 
-        this.add(t).grow();
+        
+        
+       
+        // need 2 buttons for now 
+        // save 
+        im = new Image(uiItems.findRegion("save"));
+        im.setScaling(Scaling.contain);
+        sty = new ImageTextButton.ImageTextButtonStyle();
+        sty.up = im.getDrawable();
+        sty.down = im.getDrawable();
+        sty.over = im.getDrawable();
+        sty.font = skin.getFont("title-font");
+        imText = new ImageTextButton("", sty);
+        imText.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                
+                MapSaver.getInstance().saveNewMap(curName);
+            }
+        });
+
+        t.add(imText).colspan(2).center().padLeft(10).padRight(10).row();
+        // load 
+
+        im = new Image(uiItems.findRegion("load"));
+        im.setScaling(Scaling.contain);
+        sty = new ImageTextButton.ImageTextButtonStyle();
+        sty.up = im.getDrawable();
+        sty.down = im.getDrawable();
+        sty.over = im.getDrawable();
+        sty.font = skin.getFont("title-font");
+        imText = new ImageTextButton("", sty);
+        imText.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                MapSaver.getInstance().readMaps(curName);
+            }
+        });
+        t.add(imText).colspan(2).center().padLeft(10).padRight(10).row();
+
+        this.add(t).colspan(2).right().row();
+        
+        TextField tf = new TextField("", skin);
+        tf.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                curName = tf.getText();
+            }
+        });
+
+        this.add(tf);
+        this.debugAll();
         this.background("default-pane-noborder");
+
+
 
     }
 
@@ -98,7 +159,7 @@ public class PaintToolView extends Table {
                 }
             });
             
-            this.add(imText).grow();
+            this.add(imText).grow().padLeft(10).padRight(10);
 
 
         }

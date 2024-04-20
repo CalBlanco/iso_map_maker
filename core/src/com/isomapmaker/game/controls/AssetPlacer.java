@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.isomapmaker.game.controls.AtlasBrowser.AtlasBrowser;
 import com.isomapmaker.game.controls.commands.BoxCommand;
 import com.isomapmaker.game.controls.commands.BucketCommand;
 import com.isomapmaker.game.controls.commands.CircleCommand;
@@ -20,6 +21,7 @@ import com.isomapmaker.game.controls.commands.Commander;
 import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
+import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
@@ -40,8 +42,8 @@ public class AssetPlacer implements InputProcessor {
     int layer = 0;
     TileMap map;
 
-    Vector2 tilePos;
-    Vector2 screenPos;
+    public Vector2 tilePos;
+    public Vector2 screenPos;
     WallQuadrant quadrant = WallQuadrant.top;
     TileType mode = TileType.Floor;
     String file = "Dry";
@@ -60,8 +62,12 @@ public class AssetPlacer implements InputProcessor {
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
     Pixmap pencil,pm;
 
+    AtlasBrowser atlasBrowser = null;
+
     public AssetPlacer(OrthographicCamera cam, TileMapManager manager){
-        this.paintState = ModeController.getInstance().getState(); 
+
+        
+        this.paintState = ModeController.getInstance().getState();
         this.cam = cam; 
         this.manager = manager;
         this.map = manager.getLayer(layer);
@@ -83,6 +89,7 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        resetFocus();
         // TODO Auto-generated method stub
         switch(keycode){
             case Input.Keys.C: // Eraser tool 
@@ -90,7 +97,6 @@ public class AssetPlacer implements InputProcessor {
                 Commander.getInstance().run(peraser);
                 return true;
             case Input.Keys.PAGE_UP: // shift up a layer
-                System.out.println("Layers: " + manager.maxLayer());
                 if(layer+1 > manager.maxLayer()) return false; // make a new layer if there is not one
                 layer +=1;
                 map = manager.getLayer(layer); // get next layer
@@ -99,9 +105,6 @@ public class AssetPlacer implements InputProcessor {
                 if(layer-1 < 0) return false;
                 layer -= 1;
                 map = manager.getLayer(layer);
-                return true;
-            case Input.Keys.DEL: // remove the top layer (don't think I want this anymore with fixed layers )
-                if(manager.maxLayer() != 0) manager.popLayer();
                 return true;
             case Input.Keys.L: // Change edit mode to line 
                 setState(PaintModes.Line);
@@ -132,8 +135,9 @@ public class AssetPlacer implements InputProcessor {
                 break;
             case Input.Keys.R: // Change Rotation 
                 ModeController.getInstance().incrementQuadrant();
-                System.out.println("Aye aye");
+                
                 break;
+
             
         }
         return false;
@@ -143,18 +147,21 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        resetFocus();
         clickPos = tilePos;
         
         return true;
         }
 
+    Vector2 endClickTVector = new Vector2();
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        resetFocus();
         // if click pos != tile pos we have moved the cursor while selecting
         // handle area selection
-        Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
-        Vector2 endclick = IsoUtil.worldPosToIsometric(new Vector2(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
-        System.out.println("Mouse Raised");
+        Vector3 wpos = cam.unproject(camTVector.set(screenX,screenY,0));
+        Vector2 endclick = IsoUtil.worldPosToIsometric(endClickTVector.set(wpos.x, wpos.y), IsoUtil.FLOOR_SIZE);
+        
 
 
         switch(this.paintState){
@@ -188,15 +195,17 @@ public class AssetPlacer implements InputProcessor {
       }
 
     
+    Vector3 camTVector = new Vector3();
+    Vector2 tileMathTVector = new Vector2();
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         
         
-        Vector3 wpos = cam.unproject(new Vector3(screenX,screenY,0));
+        Vector3 wpos = cam.unproject(camTVector.set(screenX,screenY,0));
         screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/4f, wpos.y-IsoUtil.FLOOR_SIZE.y/4f);
-        tilePos = IsoUtil.worldPosToIsometric(new Vector2(wpos.x-IsoUtil.FLOOR_SIZE.x/2f,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
-        quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
+        tilePos = IsoUtil.worldPosToIsometric(tileMathTVector.set(wpos.x-IsoUtil.FLOOR_SIZE.x/2f,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE);
+        //quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
         
         
         return true;
@@ -380,5 +389,15 @@ public class AssetPlacer implements InputProcessor {
         return false;
         
     }
+
+
+    public void setAtlasBrowser(AtlasBrowser atlasBrowser){this.atlasBrowser = atlasBrowser;}
+
+    public AtlasBrowser getAtlasBrowser(){return this.atlasBrowser;}
     
+    public void resetFocus(){
+        if(this.atlasBrowser == null) return;
+        this.atlasBrowser.unfocusAll();
+    }
+
 }

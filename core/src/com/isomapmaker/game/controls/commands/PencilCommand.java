@@ -32,7 +32,7 @@ public class PencilCommand extends Command {
 
     private boolean pencil(){
         TileType mode = ModeController.getInstance().getAssetState();
-        System.out.println("Pencil: " + tilePos.toString() +", " + mode.toString() +", " + quad);
+        //System.out.println("Pencil: " + tilePos.toString() +", " + mode.toString() +", " + quad);
         switch(mode){
             case Floor:
                 try{

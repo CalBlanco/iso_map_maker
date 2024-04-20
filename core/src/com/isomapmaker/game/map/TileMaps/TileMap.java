@@ -130,8 +130,9 @@ public class TileMap {
      */
     public void setWall(int x, int y, WallQuadrant quad, Asset w){
         if(!inBounds(x, y)) return;
-        if (map[x][y] == null) map[x][y]= new Tile();
+        if (map[x][y] == null) map[x][y] = new Tile();
         map[x][y].setWall(w, quad);
+        
     }
 
     /**
@@ -200,7 +201,7 @@ public void setObject(int x, int y, Asset o){
      */
     public String getTileString(int x, int y){
         if(!inBounds(x, y)) return "";
-        return map[x][y].toString();
+        return map[x][y].toString2();
     }
 
 
@@ -210,16 +211,25 @@ public void setObject(int x, int y, Asset o){
      * @return a string containing tile information for map loading
      */
     public String saveMap(){
-        String out = "";
+        String out = ""; // final output
+        String chunk = ""; // chunk / line 
         for(int i=0; i< size; i++){
+
             for(int j=0; j<size; j++){
-                if(map[i][j] != null) out+= map[i][j].saveString() +",";
+                if(map[i][j] != null) chunk += map[i][j].saveString() +",";
             }
-            out += "\n";
+
+            
+            if(chunk.length() == size) chunk = "=";
+
+            out += chunk+"\n";
+            chunk = ""; // reset the chunk
         }
 
         return out;
     }
+    
+
     
 
     /**
@@ -229,15 +239,17 @@ public void setObject(int x, int y, Asset o){
      * @param loader
      */
     public void loadMap(String[] inMap ){
-        reloadMap(); // wipe everything and load from this
+        
 
-        /* for(int line=0; line < inMap.length && line < size; line++){ // ensure our provided map is not bigger than allowed map 
+        for(int line=0; line < inMap.length && line < size; line++){ // ensure our provided map is not bigger than allowed map 
             // load a tile one by one here
             String[] tiles = inMap[line].split(",", size);
+            if(inMap[line].equals("=")) continue;
             for(int tile=0; tile<tiles.length && tile < size; tile++){ // ensure we only place tiles that would fit in size
-                map[line][tile].parseString(tiles[tile], loader );
+                map[line][tile] = new Tile();
+                map[line][tile].parseString(tiles[tile]);
             }
-        } */
+        } 
     }
 
     
