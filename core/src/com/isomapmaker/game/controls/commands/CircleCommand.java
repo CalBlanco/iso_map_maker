@@ -13,7 +13,9 @@ import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
-
+/**
+ * Draw a cirlce out of assets 
+ */
 public class CircleCommand extends Command{
     int x0, y0, r;
     Asset floor;

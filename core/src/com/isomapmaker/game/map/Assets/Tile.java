@@ -8,6 +8,9 @@ import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
+/**
+ * Contains logic for rendering the required assets (Floor, Walls, Objects )
+ */
 public class Tile {
     HashMap<WallQuadrant, Wall> walls;
     Floor floor;

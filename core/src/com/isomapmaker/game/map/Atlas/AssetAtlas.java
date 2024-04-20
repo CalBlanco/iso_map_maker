@@ -5,6 +5,11 @@ import java.util.Vector;
 
 import com.isomapmaker.game.map.Assets.Asset;
 
+/**
+ * Provides the assets from a asset file 
+ * 
+ * The asset containers are made up from all of the asset files for a given tile type
+ */
 public class AssetAtlas {
     HashMap<String, AssetPack> atlas;
     HashMap<Integer, String> idMap;

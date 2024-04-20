@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
+/**
+ * Object container 
+ */
 public class Obj extends Asset {
 
     boolean isSolid;

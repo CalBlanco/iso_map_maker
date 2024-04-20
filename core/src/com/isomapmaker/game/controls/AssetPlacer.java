@@ -30,6 +30,9 @@ import com.isomapmaker.game.util.MapSaver;
 import com.isomapmaker.game.util.CursorSetter;
 import com.isomapmaker.game.util.IsoUtil;
 
+/**
+ * Class that places assets down on the TileMap's specifically it interacts with the TileMapManager to get the active layer's TileMap and then interacts with that map
+ */
 public class AssetPlacer implements InputProcessor {
     private enum State {Line, Box, Circle, Pencil, Bucket};
     final Vector2[] activeOffsets = new Vector2[]{new Vector2(-256,-64), new Vector2(0,0), new Vector2(256,-64)};
@@ -238,6 +241,11 @@ public class AssetPlacer implements InputProcessor {
 ███████║   ██║   ██║  ██║   ██║   ███████╗    ██║  ██║███████╗██║ ╚████║██████╔╝███████╗██║  ██║
 ╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝
      */
+
+    /**
+     * Render the appropriate highlights based on the PaintMode
+     * @param b
+     */
     public void activeTileRender(SpriteBatch b){
         switch(this.paintState){
             case Pencil:
@@ -262,10 +270,11 @@ public class AssetPlacer implements InputProcessor {
        
     }
 
-    /*
+    
+    private Vector2 outVector = new Vector2();
+    /**
      * Render the pencil tile tool availability
      */
-    private Vector2 outVector = new Vector2();
     private void pencilTileRender(SpriteBatch b){
         tVector = IsoUtil.isometricToWorldPos(lineTVector20.set(1,1).scl(layer).add(tilePos), IsoUtil.FLOOR_SIZE, tVector);
         b.setColor(1f, 1f, 1f, 0.7f);
@@ -293,6 +302,10 @@ public class AssetPlacer implements InputProcessor {
     private Vector2 lineTVector22 = new Vector2();
     Vector2 ht = new Vector2();
     
+    /**
+     * Render the line tool 
+     * @param b
+     */
     private void lineRender(SpriteBatch b){
         
         Vector3 hpos = cam.unproject(lineTVector30.set(Gdx.input.getX(), Gdx.input.getY(), 0)); // unproject mouse position from screen to world
@@ -312,6 +325,10 @@ public class AssetPlacer implements InputProcessor {
 
     }
     
+    /**
+     * Render the cirlce tool 
+     * @param b
+     */
     private void circleRender(SpriteBatch b){
         
         Vector3 hpos = cam.unproject(lineTVector30.set(Gdx.input.getX(), Gdx.input.getY(), 0)); // unproject mouse position from screen to world
@@ -337,6 +354,10 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1,1,1,1);
     }
 
+    /**
+     * Render the box tool 
+     * @param b
+     */
     private void boxRender(SpriteBatch b){
        
         Vector3 hpos = cam.unproject(lineTVector30.set(Gdx.input.getX(), Gdx.input.getY(), 0)); // unproject mouse position from screen to world
@@ -367,6 +388,10 @@ public class AssetPlacer implements InputProcessor {
  ╚═════╝    ╚═╝   ╚═╝╚══════╝
  */
 
+ /**
+  * Change the paint mode 
+  * @param newState
+  */
  public void setState(PaintModes newState){
     ModeController.getInstance().setState(newState);
     this.paintState = ModeController.getInstance().getState();
@@ -416,10 +441,22 @@ public class AssetPlacer implements InputProcessor {
     }
 
 
+    /**
+     * Setter for atlas browser
+     * (Annoying requirement to clear the ui, I don't make the rules )
+     * @param atlasBrowser
+     */
     public void setAtlasBrowser(AtlasBrowser atlasBrowser){this.atlasBrowser = atlasBrowser;}
 
+    /**
+     * Idk why I even have this getter but whateva 
+     * @return
+     */
     public AtlasBrowser getAtlasBrowser(){return this.atlasBrowser;}
     
+    /**
+     * Clear the focus of the ui when the game is interacted with 
+     */
     public void resetFocus(){
         if(this.atlasBrowser == null) return;
         this.atlasBrowser.unfocusAll();

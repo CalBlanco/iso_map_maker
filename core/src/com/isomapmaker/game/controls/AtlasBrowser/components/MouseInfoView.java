@@ -9,6 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 
+/**
+ * Mouse information ui panel 
+ */
 public class MouseInfoView extends Table {
 
     String cordInfo = "";

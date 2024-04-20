@@ -39,7 +39,13 @@ public class CamController implements InputProcessor {
   
 
 
-    
+    /**
+     * Class to manage the camera movements 
+     * @param camera : Camera to control 
+     * @param zoomSpeed : Speed which the mouse zooms 
+     * @param panSpeed : Speed at which WASD move the camera 
+     * @param panMult : amount to multiply speed by when SHIFT is pressed 
+     */
     public CamController(OrthographicCamera camera, float zoomSpeed, float panSpeed, float panMult){
         
         this.zoomSpeed = zoomSpeed;
@@ -61,7 +67,10 @@ public class CamController implements InputProcessor {
         
     }
 
-
+    /**
+     * Move the camera based on user inputs 
+     * (This is implemented outside of the input processor I want it to move while the key is down not on every press and it was annoying doing extra work when I already had what I wanted working)
+     */
     private void panCamera(){
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
             camera.position.x -= this.finalPanSpeed;
@@ -87,7 +96,9 @@ public class CamController implements InputProcessor {
        
     }
 
-
+    /**
+     * Check for the speed multiplier and apply it 
+     */
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
@@ -100,6 +111,9 @@ public class CamController implements InputProcessor {
         return true;
     }
 
+    /**
+     * Reset the speed multiplier when the SHIFT key is released
+     */
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {

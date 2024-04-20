@@ -12,11 +12,16 @@ import com.isomapmaker.game.map.Assets.Wall;
 import com.isomapmaker.game.map.Assets.Obj;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 
+/**
+ * Contains the hashmaps for 
+ */
 public class AssetContainer {
     HashMap<String, AssetAtlas> assets;
     HashMap<Integer, String> idMap;
     Vector<TextureAtlas> atlases;
     AssetFactory factory;
+
+    
     public AssetContainer(){
         this.atlases = new Vector<TextureAtlas>();
         this.assets = new HashMap<String, AssetAtlas>();

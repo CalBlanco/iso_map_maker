@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 
+/**
+ * Wall asset containing any wall related logic 
+ */
 public class Wall extends Asset {
     WallQuadrant quadrant;
 

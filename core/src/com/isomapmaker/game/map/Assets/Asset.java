@@ -3,6 +3,9 @@ package com.isomapmaker.game.map.Assets;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 
+/**
+ * General asset class containing fullId(the asset's id), name, and texture region it draws
+ */
 public abstract class Asset {
     TextureRegion region;
     TileType type;

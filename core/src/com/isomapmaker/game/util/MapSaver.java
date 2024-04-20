@@ -15,6 +15,12 @@ import java.util.concurrent.TimeUnit;
 import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
+
+/**
+ * Class to save tile map information (Singleton Pattern so it can be accesed by other elements with out needing to pass the refernce around)
+ * 
+ * should add something in here to make sure two saves don't happen at the same time or anything 
+ */
 public class MapSaver {
     private static MapSaver instance;
     private static float completionP;

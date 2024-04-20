@@ -6,6 +6,9 @@ import java.util.Vector;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Paint tool utilities for drawing and rendering lines and circles 
+ */
 public class PaintTools {
     
     /**
