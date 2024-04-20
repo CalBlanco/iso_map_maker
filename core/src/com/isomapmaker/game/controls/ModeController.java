@@ -15,6 +15,8 @@ public class ModeController {
     private String activeRegion; // The active atlas region we want 
     private WallQuadrant activeQuad;
 
+  
+
     public static ModeController getInstance(){
         if(ModeController.instance == null){
             ModeController.instance = new ModeController();
@@ -76,7 +78,7 @@ public class ModeController {
         assetMode = type;
         activeFile = name;
         activeRegion = assetName;
-        System.out.println("Active Asset: " + assetMode.toString() +", " + activeFile +", " + activeRegion);
+        //System.out.println("Active Asset: " + assetMode.toString() +", " + activeFile +", " + activeRegion);
     }
 
     public void setQuadrant(WallQuadrant quad){
@@ -93,5 +95,11 @@ public class ModeController {
         int next = (quadIndex + 1) % 4; // this should always be 4
         setQuadrant(WallQuadrant.values()[next]);
     }
+
+
+
+
+
+
 
 }

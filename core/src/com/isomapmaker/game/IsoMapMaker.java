@@ -83,10 +83,11 @@ public class IsoMapMaker extends Game {
 
 		ip.addProcessor(atlasBrowser);
 		ip.addProcessor(cameraController);
-		
 		ip.addProcessor(assetPlacer);
 		
 		Gdx.input.setInputProcessor(ip);
+
+		assetPlacer.setAtlasBrowser(atlasBrowser);
 
 		int lastSize = 0;
 		Vector<String> names = TileAtlas.getInstance().getAssetsByType(TileType.Floor).keys();

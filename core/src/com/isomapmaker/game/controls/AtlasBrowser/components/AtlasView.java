@@ -89,7 +89,7 @@ public class AtlasView extends Table {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 ModeController.getInstance().setPlacementMode(type, name, assetName);
-                System.out.println("changed");
+                
             }
             
         }

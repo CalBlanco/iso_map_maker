@@ -28,7 +28,7 @@ public class PaintToolView extends Table {
     public PaintToolView(Skin skin){
         super(skin);
         this.skin = skin;
-        curName = "";
+        curName = "testmap";
         uiItems = new TextureAtlas(Gdx.files.internal("atlas/UI/MenuItems.atlas"));
 
         
@@ -57,7 +57,7 @@ public class PaintToolView extends Table {
                 Commander.getInstance().undo();
             }
         });
-        t.add(imText).expand();
+        t.add(imText).colspan(1);
 
         im = new Image(uiItems.findRegion("redo"));
         im.setScaling(Scaling.fill);
@@ -74,7 +74,7 @@ public class PaintToolView extends Table {
             }
         });
 
-        t.add(imText).expand().row();
+        t.add(imText).colspan(1).row();
 
 
         
@@ -93,12 +93,12 @@ public class PaintToolView extends Table {
         imText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Clicked in UI");
-                MapSaver.getInstance().saveNewMap("testmap");
+                
+                MapSaver.getInstance().saveNewMap(curName);
             }
         });
 
-        t.add(imText).colspan(2).center().row();
+        t.add(imText).colspan(2).center().padLeft(10).padRight(10).row();
         // load 
 
         im = new Image(uiItems.findRegion("load"));
@@ -112,13 +112,26 @@ public class PaintToolView extends Table {
         imText.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MapSaver.getInstance().readMaps("testmap");
+                MapSaver.getInstance().readMaps(curName);
             }
         });
-        t.add(imText).colspan(2).center().row();
+        t.add(imText).colspan(2).center().padLeft(10).padRight(10).row();
 
-        this.add(t).expand().right().row();
+        this.add(t).colspan(2).right().row();
+        
+        TextField tf = new TextField("", skin);
+        tf.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                curName = tf.getText();
+            }
+        });
+
+        this.add(tf);
+        this.debugAll();
         this.background("default-pane-noborder");
+
+
 
     }
 
@@ -146,7 +159,7 @@ public class PaintToolView extends Table {
                 }
             });
             
-            this.add(imText).grow();
+            this.add(imText).grow().padLeft(10).padRight(10);
 
 
         }

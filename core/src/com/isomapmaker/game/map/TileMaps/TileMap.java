@@ -230,19 +230,7 @@ public void setObject(int x, int y, Asset o){
     }
     
 
-    public void printTilesWithAssets(){
-        for(int i=0; i< size; i++){
-            for(int j=0; j<size; j++){
-                if(map[i][j] != null){
-                    
-                    System.out.println(map[i][j].toString());
-                    System.out.println(map[i][j].hasAnAsset());
-                }
-                
-            }
-           
-        }
-    }
+    
 
     /**
      * Load in a map providing the tile loader for the tile to get information from 

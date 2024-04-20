@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.isomapmaker.game.controls.AtlasBrowser.AtlasBrowser;
 import com.isomapmaker.game.controls.commands.BoxCommand;
 import com.isomapmaker.game.controls.commands.BucketCommand;
 import com.isomapmaker.game.controls.commands.CircleCommand;
@@ -61,6 +62,8 @@ public class AssetPlacer implements InputProcessor {
     Vector<Integer[]> tileSelection; // the currently selected tiles based on the tool 
     Pixmap pencil,pm;
 
+    AtlasBrowser atlasBrowser = null;
+
     public AssetPlacer(OrthographicCamera cam, TileMapManager manager){
 
         
@@ -86,7 +89,7 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        
+        resetFocus();
         // TODO Auto-generated method stub
         switch(keycode){
             case Input.Keys.C: // Eraser tool 
@@ -94,7 +97,6 @@ public class AssetPlacer implements InputProcessor {
                 Commander.getInstance().run(peraser);
                 return true;
             case Input.Keys.PAGE_UP: // shift up a layer
-                System.out.println("Layers: " + manager.maxLayer());
                 if(layer+1 > manager.maxLayer()) return false; // make a new layer if there is not one
                 layer +=1;
                 map = manager.getLayer(layer); // get next layer
@@ -136,9 +138,6 @@ public class AssetPlacer implements InputProcessor {
                 
                 break;
 
-            case Input.Keys.NUMPAD_5:
-                TileMapManager.getInstance().getLayer(0).printTilesWithAssets();
-            break;
             
         }
         return false;
@@ -148,6 +147,7 @@ public class AssetPlacer implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        resetFocus();
         clickPos = tilePos;
         
         return true;
@@ -156,6 +156,7 @@ public class AssetPlacer implements InputProcessor {
     Vector2 endClickTVector = new Vector2();
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        resetFocus();
         // if click pos != tile pos we have moved the cursor while selecting
         // handle area selection
         Vector3 wpos = cam.unproject(camTVector.set(screenX,screenY,0));
@@ -388,5 +389,15 @@ public class AssetPlacer implements InputProcessor {
         return false;
         
     }
+
+
+    public void setAtlasBrowser(AtlasBrowser atlasBrowser){this.atlasBrowser = atlasBrowser;}
+
+    public AtlasBrowser getAtlasBrowser(){return this.atlasBrowser;}
     
+    public void resetFocus(){
+        if(this.atlasBrowser == null) return;
+        this.atlasBrowser.unfocusAll();
+    }
+
 }
