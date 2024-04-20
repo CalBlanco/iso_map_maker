@@ -95,7 +95,7 @@ public class IsoMapMaker extends Game {
 
 		assetPlacer.setAtlasBrowser(atlasBrowser); // need this to update the ui idk libgx is confusing and annoying
 
-
+		placeAllAssets();
 
 	}
 

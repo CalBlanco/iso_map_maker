@@ -116,13 +116,18 @@ public class Tile {
     public Obj getObject(){return this.object;}
 
     static final String[] quadNames = {"top", "right", "left", "bottom"};
-    // should look like 100_1-200_2:200_1:e:e-303_3
+   
+    /**
+     * Parse the provided string into a tile 
+     * @param tile
+     */
     public void parseString(String tile){
+        
         String[] items = tile.split("-"); // split the tile string 
         if(items.length <= 1) return;
         int[] ids = new int[2]; // var for saving ids 
 
-        if(!items[0].equals("e")) { // if our floor tile is saved 
+        if(!items[0].equals("e") && !items[0].equals("e,")) { // if our floor tile is saved 
             ids = parseId(items[0]);            
             floor = (Floor)TileAtlas.getInstance().get(TileType.Floor, ids[0], ids[1]);
         }
@@ -134,7 +139,7 @@ public class Tile {
             walls.replace(WallQuadrant.valueOf(quadNames[i]), (Wall)TileAtlas.getInstance().get(TileType.Wall, ids[0], ids[1]));
         }
 
-        if(!items[2].equals("e")){
+        if(!items[2].equals("e") && !items[2].equals("e,")){
             ids = parseId(items[2]);
             object = (Obj) TileAtlas.getInstance().get(TileType.Object, ids[0], ids[1]);
         }
