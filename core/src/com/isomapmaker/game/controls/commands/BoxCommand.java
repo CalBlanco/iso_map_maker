@@ -42,10 +42,13 @@ public class BoxCommand extends Command {
                         map.setFloor(x,y,floor);
                         break;
                         case Wall:
-                            map.setWall(x,y,WallQuadrant.left,ModeController.getInstance().getWallRegion(WallQuadrant.left));
-                            map.setWall(x,y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
-                            map.setWall(x,y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
-                            map.setWall(x,y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+                            
+                            if(map.getWall(x-1,y, WallQuadrant.right) == null) map.setWall(x,y,WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                            if(map.getWall(x+1,y, WallQuadrant.left) == null) map.setWall(x,y,WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                            if(map.getWall(x,y+1, WallQuadrant.bottom) == null) map.setWall(x,y,WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                            if(map.getWall(x,y-1, WallQuadrant.top) == null) map.setWall(x,y,WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+        
+
                         break;
                         case Object:
                             map.setObject(x, y, floor);

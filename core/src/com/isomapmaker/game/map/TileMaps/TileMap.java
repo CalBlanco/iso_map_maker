@@ -101,7 +101,7 @@ public class TileMap {
      */
     public void setFloor(int x, int y, Asset f){
         if (!inBounds(x, y)) return;
-        if (map[x][y] == null) map[x][y]= new Tile();
+        //if (map[x][y] == null) map[x][y]= new Tile();
         map[x][y].setFloor(f);
 
     }
@@ -133,7 +133,7 @@ public class TileMap {
      */
     public void setWall(int x, int y, WallQuadrant quad, Asset w){
         if(!inBounds(x, y)) return;
-        if (map[x][y] == null) map[x][y] = new Tile();
+        //if (map[x][y] == null) map[x][y] = new Tile();
         map[x][y].setWall(w, quad);
         
     }
@@ -149,6 +149,28 @@ public class TileMap {
         if (!hasTile(x, y)) return null;
         return map[x][y].getWall(slot);
     }
+
+    /**
+     * Determine if the tile provided and the wall quadrant provided share a wall with a neighboring tile
+     * @param x
+     * @param y
+     * @param slot
+     * @return
+     */
+    public boolean hasSharedWall(int x, int y, WallQuadrant slot){
+        switch(slot){
+            case right:
+                if( getWall(x+1,y, WallQuadrant.left) != null ) return true;
+            case left:
+                if( getWall(x-1, y, WallQuadrant.right) != null ) return true;
+            case top:
+                if( getWall(x,y+1, WallQuadrant.bottom) != null ) return true;
+            case bottom:
+                if( getWall(x, y-1, WallQuadrant.top) != null ) return true;
+        }
+
+        return false;
+    }
 /*
  ██████╗ ██████╗      ██╗
 ██╔═══██╗██╔══██╗     ██║
@@ -160,7 +182,7 @@ public class TileMap {
 
 public void setObject(int x, int y, Asset o){
     if(!inBounds(x, y)) return;
-    if(map[x][y] == null) map[x][y] = new Tile();
+    //if(map[x][y] == null) map[x][y] = new Tile();
     map[x][y].setObject(o);
 }
 
@@ -249,7 +271,6 @@ public void setObject(int x, int y, Asset o){
             String[] tiles = inMap[line].split(",", size);
             if(inMap[line].equals("=")) continue;
             for(int tile=0; tile<tiles.length && tile < size; tile++){ // ensure we only place tiles that would fit in size
-                map[line][tile] = new Tile();
                 map[line][tile].parseString(tiles[tile]);
             }
         } 
@@ -263,7 +284,8 @@ public void setObject(int x, int y, Asset o){
     public void reloadMap(){
         for(int i=0; i< size; i++){
             for(int j=0; j<size; j++){
-                map[i][j] = new Tile();
+                if(map[i][j] == null) map[i][j] = new Tile();
+                else map[i][j].clearTile();
             }
         }
     }

@@ -43,29 +43,10 @@ public class CircleCommand extends Command{
                     int x = c.get(i)[0];
                     int y = c.get(i)[1];
                     
-                    int dx = x-x0;
-                    int dy = y-y0;
-
-                    if(dx == 0 && dy > 0) map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
-                    if(dx == 0 && dy < 0) map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
-                    if(dy == 0 && dx > 0) map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
-                    if(dy == 0 && dx < 0) map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
-                    if(dx < 0 && dy > 0){
-                        map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
-                        map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
-                    }
-                    if(dx < 0 && dy < 0){
-                        map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
-                        map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
-                    }
-                    if(dx > 0 && dy < 0){
-                        map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
-                        map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
-                    }
-                    if(dx > 0 && dy > 0){
-                        map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
-                        map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
-                    }
+                    if(map.getWall(x-1,y, WallQuadrant.right) == null) map.setWall(x,y,WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                    if(map.getWall(x+1,y, WallQuadrant.left) == null) map.setWall(x,y,WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                    if(map.getWall(x,y+1, WallQuadrant.bottom) == null) map.setWall(x,y,WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                    if(map.getWall(x,y-1, WallQuadrant.top) == null) map.setWall(x,y,WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
 
 
                 }
