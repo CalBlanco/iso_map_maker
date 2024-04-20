@@ -128,7 +128,7 @@ public class PaintToolView extends Table {
         });
 
         this.add(tf);
-        this.debugAll();
+        
         this.background("default-pane-noborder");
 
 
