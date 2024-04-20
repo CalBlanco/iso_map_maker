@@ -31,17 +31,22 @@ public class LineCommand extends Command{
         
         switch(ModeController.getInstance().getAssetState()){
             case Floor:
+                
                 for(int i = 0; i<l.size(); i++){
                     
                     map.setFloor(l.get(i)[0], l.get(i)[1],floor);
                 }
+                
             break;
             case Wall:
                 for(int i = 0; i<l.size(); i++){
-                    map.setWall(l.get(i)[0], l.get(i)[1], WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
-                    map.setWall(l.get(i)[0], l.get(i)[1], WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
-                    map.setWall(l.get(i)[0], l.get(i)[1], WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
-                    map.setWall(l.get(i)[0], l.get(i)[1], WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+                    int x = l.get(i)[0];
+                    int y = l.get(i)[1];
+                    if(map.getWall(x-1,y, WallQuadrant.right) == null) map.setWall(x,y,WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                    if(map.getWall(x+1,y, WallQuadrant.left) == null) map.setWall(x,y,WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                    if(map.getWall(x,y+1, WallQuadrant.bottom) == null) map.setWall(x,y,WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                    if(map.getWall(x,y-1, WallQuadrant.top) == null) map.setWall(x,y,WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+
                 }
                 break;
             case Object:

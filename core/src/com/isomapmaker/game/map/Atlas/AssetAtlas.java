@@ -38,8 +38,12 @@ public class AssetAtlas {
      * Get a list of keys for the assets contained in this map
      * @return
      */
+
+    Vector<String> keyCollection = new Vector<String>();
     public Vector<String> keys(){
-        return new Vector<String>(atlas.keySet());
+        keyCollection.clear();
+        keyCollection.addAll(atlas.keySet());
+        return keyCollection;
     }
 
     /**

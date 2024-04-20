@@ -32,13 +32,13 @@ public class MouseInfoView extends Table {
         super.draw(batch, parentAlpha);
         elapsed += Gdx.graphics.getDeltaTime();
 
-        if(elapsed < 1) return; 
+        if(elapsed < 0.25) return; 
         elapsed = 0;
         if(lastPos.x != ap.tilePos.x || lastPos.y != ap.tilePos.y){
             lastPos.set(ap.tilePos);
             temp = this.findActor("mouseInfo");
         
-            temp.setText("Screen: " + ap.screenPos.toString() +"\n" +"Tile: " + ap.tilePos.toString() ); // + "," + manager.getLayer(0).getTileString((int)lastPos.x, (int)lastPos.y)
+            temp.setText("Screen: " + ap.screenPos.toString() +"\n" +"Tile: " + ap.tilePos.toString()  + "," + manager.getLayer(0).getTileString((int)lastPos.x, (int)lastPos.y)); //
         }
         
 

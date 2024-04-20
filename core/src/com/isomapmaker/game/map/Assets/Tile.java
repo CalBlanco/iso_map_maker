@@ -20,8 +20,9 @@ public class Tile {
         this.object = copy.object;
     }
 
+
     public Tile(){
-        walls = new HashMap<WallQuadrant, Wall>();
+        walls = new HashMap<WallQuadrant, Wall>(4);
 
         WallQuadrant[] quads = WallQuadrant.values();
         for(int i=0; i<quads.length; i++){
@@ -141,5 +142,14 @@ public class Tile {
         return new int[]{Integer.parseInt(spl[0]), Integer.parseInt(spl[1])};
     }
 
+
+    public void clearTile(){
+        this.floor = null;
+        this.walls.replace(WallQuadrant.top, null);
+        this.walls.replace(WallQuadrant.left, null);
+        this.walls.replace(WallQuadrant.right, null);
+        this.walls.replace(WallQuadrant.bottom, null);
+        this.object = null;
+    }
     
 }

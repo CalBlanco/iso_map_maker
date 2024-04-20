@@ -35,24 +35,20 @@ public class CircleCommand extends Command{
 
     private boolean circle(){
         Vector<Integer[]> c = PaintTools.circle(x0,y0,r);
-        
+       
 
         switch(ModeController.getInstance().getAssetState()){
             case Wall:
                 for(int i = 0; i<c.size(); i++){
                     int x = c.get(i)[0];
                     int y = c.get(i)[1];
+                    
+                    if(map.getWall(x-1,y, WallQuadrant.right) == null) map.setWall(x,y,WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                    if(map.getWall(x+1,y, WallQuadrant.left) == null) map.setWall(x,y,WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                    if(map.getWall(x,y+1, WallQuadrant.bottom) == null) map.setWall(x,y,WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                    if(map.getWall(x,y-1, WallQuadrant.top) == null) map.setWall(x,y,WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
 
-                    //determine quads 
-                    // quad1: x > x0, y > y0 top and right wall
-                    // quad2: x < x0, y > y0 top and left
-                    // quad3: x< x0, y < y0 left and bottom
-                    // quad4: x > x0, y < y0 right and bottom
-                    map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
-                    map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
-                    map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
-                    map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
-                    //map.setFloor(c.get(i)[0], c.get(i)[1], (Asset) floor);
+
                 }
             break;
             case Floor:

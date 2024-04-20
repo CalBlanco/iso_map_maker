@@ -74,7 +74,7 @@ public class IsoMapMaker extends Game {
 		batch = new SpriteBatch();
 		hudBatch = new SpriteBatch();
 
-		cameraController = new CamController(cam, 0.05f, 5f, 5f); // camera controls 
+		cameraController = new CamController(cam, 0.05f, 7f, 5f); // camera controls 
 		assetPlacer = new AssetPlacer(cam, tileMapManager); // Asset placer that manages the map using the tile loader
 
 		
