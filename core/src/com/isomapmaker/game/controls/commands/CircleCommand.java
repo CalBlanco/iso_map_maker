@@ -42,17 +42,32 @@ public class CircleCommand extends Command{
                 for(int i = 0; i<c.size(); i++){
                     int x = c.get(i)[0];
                     int y = c.get(i)[1];
+                    
+                    int dx = x-x0;
+                    int dy = y-y0;
 
-                    //determine quads 
-                    // quad1: x > x0, y > y0 top and right wall
-                    // quad2: x < x0, y > y0 top and left
-                    // quad3: x< x0, y < y0 left and bottom
-                    // quad4: x > x0, y < y0 right and bottom
-                    map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
-                    map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
-                    map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
-                    map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
-                    //map.setFloor(c.get(i)[0], c.get(i)[1], (Asset) floor);
+                    if(dx == 0 && dy > 0) map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                    if(dx == 0 && dy < 0) map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+                    if(dy == 0 && dx > 0) map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                    if(dy == 0 && dx < 0) map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                    if(dx < 0 && dy > 0){
+                        map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                        map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                    }
+                    if(dx < 0 && dy < 0){
+                        map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+                        map.setWall(x, y, WallQuadrant.left, ModeController.getInstance().getWallRegion(WallQuadrant.left));
+                    }
+                    if(dx > 0 && dy < 0){
+                        map.setWall(x, y, WallQuadrant.bottom, ModeController.getInstance().getWallRegion(WallQuadrant.bottom));
+                        map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                    }
+                    if(dx > 0 && dy > 0){
+                        map.setWall(x, y, WallQuadrant.top, ModeController.getInstance().getWallRegion(WallQuadrant.top));
+                        map.setWall(x, y, WallQuadrant.right, ModeController.getInstance().getWallRegion(WallQuadrant.right));
+                    }
+
+
                 }
             break;
             case Floor:
