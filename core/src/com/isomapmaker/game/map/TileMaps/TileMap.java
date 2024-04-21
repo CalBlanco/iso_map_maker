@@ -100,7 +100,7 @@ public class TileMap {
      */
     public void setFloor(int x, int y, Asset f){
         if (!inBounds(x, y)) return;
-        //if (map[x][y] == null) map[x][y]= new Tile();
+        if (map[x][y] == null) map[x][y]= new Tile();
         map[x][y].setFloor(f);
 
     }
@@ -112,7 +112,7 @@ public class TileMap {
      * @return
      */
     public Floor getFloor(int x, int y){
-        if (!inBounds(x, y)) return null;
+        if (!hasTile(x, y)) return null;
         return map[x][y].getFloor();
     }
 /*
@@ -132,7 +132,7 @@ public class TileMap {
      */
     public void setWall(int x, int y, WallQuadrant quad, Asset w){
         if(!inBounds(x, y)) return;
-        //if (map[x][y] == null) map[x][y] = new Tile();
+        if (map[x][y] == null) map[x][y] = new Tile();
         map[x][y].setWall(w, quad);
         
     }
@@ -181,8 +181,15 @@ public class TileMap {
 
 public void setObject(int x, int y, Asset o){
     if(!inBounds(x, y)) return;
-    //if(map[x][y] == null) map[x][y] = new Tile();
+    if(map[x][y] == null) map[x][y] = new Tile();
     map[x][y].setObject(o);
+}
+
+
+
+public void clearTile(int x, int y){
+    if(!hasTile(x, y)) return;
+    map[x][y].clearTile();
 }
 
 /*
@@ -225,6 +232,7 @@ public void setObject(int x, int y, Asset o){
      */
     public String getTileString(int x, int y){
         if(!inBounds(x, y)) return "";
+        if(map[x][y] == null) return "";
         return map[x][y].toString2();
     }
 
@@ -270,6 +278,7 @@ public void setObject(int x, int y, Asset o){
             String[] tiles = inMap[line].split(",", size);
             if(inMap[line].equals("=")) continue;
             for(int tile=0; tile<tiles.length && tile < size; tile++){ // ensure we only place tiles that would fit in size
+                if(map[line][tile] == null) map[line][tile] = new Tile();
                 map[line][tile].parseString(tiles[tile]);
             }
         } 
@@ -283,8 +292,7 @@ public void setObject(int x, int y, Asset o){
     public void reloadMap(){
         for(int i=0; i< size; i++){
             for(int j=0; j<size; j++){
-                if(map[i][j] == null) map[i][j] = new Tile();
-                else map[i][j].clearTile();
+                map[i][j] = null;
             }
         }
     }

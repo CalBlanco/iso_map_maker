@@ -7,7 +7,7 @@ import java.util.Vector;
  */
 public class Commander {
     private static Commander instance; // The instance we return 
-    private Vector<Command> editStack, undoStack; // stacks to contain recently executed or undone commands
+    private CommandStack editStack, undoStack; // stacks to contain recently executed or undone commands
 
     // Ensure singleton (not considering multithread access)
     public static Commander getInstance(){
@@ -20,17 +20,10 @@ public class Commander {
 
     // Private constructor to ensure singleton status
     private Commander(){
-        editStack = new Vector<Command>();
-        undoStack = new Vector<Command>();
+        editStack = new CommandStack(10);
+        undoStack = new CommandStack(10);
     }
 
-    // Pop the last command if there is one 
-    private Command pop(Vector<Command> stack){
-        if(stack.size() < 1) return null;
-        Command com = stack.get(stack.size()-1);
-        stack.remove(stack.size()-1);
-        return com;
-    }
 
     /**
      * Execute the specified command and attach it to our command history 
@@ -38,16 +31,16 @@ public class Commander {
      */
     public void run(Command com){
         com.execute();
-        editStack.add(com);
+        editStack.push(com);
     }
 
     /**
      * Undo the most recently issued command and add it to our undo history
      */
     public void undo(){
-        Command com = pop(editStack);
+        Command com = editStack.pop();
         if(com == null) return;
-        undoStack.add(com);
+        undoStack.push(com);
         com.undo();
     }
 
@@ -55,7 +48,7 @@ public class Commander {
      * Redo our last undo (This stuff gets kind of funky with saving the map if issued to fast)
      */
     public void redo(){
-        Command com = pop(undoStack);
+        Command com = undoStack.pop();
         if(com == null) return;
         run(com);
     }
