@@ -18,7 +18,11 @@ public class Tile {
     
 
     public Tile(Tile copy){
-        this.walls = copy.walls;
+        this.walls = new HashMap<WallQuadrant, Wall>(4);
+        this.walls.put(WallQuadrant.bottom, copy.getWall(WallQuadrant.bottom));
+        this.walls.put(WallQuadrant.top, copy.getWall(WallQuadrant.top));
+        this.walls.put(WallQuadrant.left, copy.getWall(WallQuadrant.left));
+        this.walls.put(WallQuadrant.right, copy.getWall(WallQuadrant.right));
         this.floor = copy.floor;
         this.object = copy.object;
     }

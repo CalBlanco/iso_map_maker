@@ -15,10 +15,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.isomapmaker.game.controls.AtlasBrowser.AtlasBrowser;
 import com.isomapmaker.game.controls.commands.BoxCommand;
+import com.isomapmaker.game.controls.commands.BoxEraserCommand;
 import com.isomapmaker.game.controls.commands.BucketCommand;
 import com.isomapmaker.game.controls.commands.CircleCommand;
 import com.isomapmaker.game.controls.commands.Command;
 import com.isomapmaker.game.controls.commands.Commander;
+import com.isomapmaker.game.controls.commands.FullEraser;
 import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
@@ -99,7 +101,10 @@ public class AssetPlacer implements InputProcessor {
         // TODO Auto-generated method stub
         if(controlModifier){
             switch(keycode){
-                
+                case Input.Keys.C: // full tile clear 
+                    FullEraser eraser = new FullEraser(tilePos, map);
+                    Commander.getInstance().run(eraser);
+                break;
             }
         }
         else{
@@ -183,8 +188,14 @@ public class AssetPlacer implements InputProcessor {
         //
         switch(this.paintState){
             case Box:
-                BoxCommand box = new BoxCommand(clickPos, endclick, ModeController.getInstance().getActiveAsset(), map);
-                Commander.getInstance().run(box);
+                Command c = null;
+                if(controlModifier){
+                    c = new BoxEraserCommand(clickPos, endclick, map);
+                }
+                else{
+                    c = new BoxCommand(clickPos, endclick, ModeController.getInstance().getActiveAsset(), map);
+                }
+                Commander.getInstance().run(c);
                 break;
             case Circle:
                 CircleCommand circ = new CircleCommand((int)clickPos.x, (int)clickPos.y, (int)clickPos.dst(endclick), ModeController.getInstance().getActiveAsset(), map);
@@ -422,6 +433,10 @@ public class AssetPlacer implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         // TODO Auto-generated method stub
+        if(keycode == Input.Keys.CONTROL_LEFT){
+            controlModifier = false;
+            return true;
+        }
         return false;
     }
 

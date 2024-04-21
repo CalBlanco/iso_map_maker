@@ -14,6 +14,7 @@ public class MapCopy {
         for(int i=0; i< original.length; i++){
             copy[i] = new Tile[original[i].length];
             for(int j=0; j<original[i].length; j++){
+                if(original[i][j] == null) continue; 
                 copy[i][j] = new Tile(original[i][j]);
             }
         }
