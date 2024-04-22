@@ -233,7 +233,7 @@ public void clearTile(int x, int y){
     public String getTileString(int x, int y){
         if(!inBounds(x, y)) return "";
         if(map[x][y] == null) return "";
-        return map[x][y].toString2();
+        return map[x][y].toString();
     }
 
 
@@ -295,6 +295,29 @@ public void clearTile(int x, int y){
                 map[i][j] = null;
             }
         }
+    }
+
+
+    /**
+     * Set an entire tile
+     * @param x
+     * @param y
+     * @param t
+     */
+    public void setTile(int x, int y, Tile t){
+        if(!inBounds(x, y)) return;
+        map[x][y] = t;
+    }
+
+    /**
+     * Get a whole tile
+     * @param x
+     * @param y
+     * @return
+     */
+    public Tile getTile(int x, int y){
+        if(!inBounds(x, y)) return null;
+        return map[x][y];
     }
 
 

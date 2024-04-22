@@ -1,6 +1,8 @@
 package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
+import com.isomapmaker.game.map.Assets.Tile;
+import com.isomapmaker.game.map.Assets.TileDelta;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 
 public class BoxEraserCommand extends Command {
@@ -22,7 +24,10 @@ public class BoxEraserCommand extends Command {
 
         for(int x=lx; x<lx+dx+1; x++){
             for(int y=ly; y<ly+dy+1; y++){
+                Tile oldTile = map.getTile(x,y) == null ? null : new Tile(map.getTile(x,y));
                 map.clearTile(x, y);
+                TileDelta td = new TileDelta(x,y,oldTile, null);
+                this.deltas.add(td);
             }
         }
 

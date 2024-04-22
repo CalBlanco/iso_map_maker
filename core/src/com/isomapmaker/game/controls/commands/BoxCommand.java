@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.Floor;
+import com.isomapmaker.game.map.Assets.Tile;
+import com.isomapmaker.game.map.Assets.TileDelta;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
@@ -39,6 +41,7 @@ public class BoxCommand extends Command {
         for(int x=lx; x<lx+dx+1; x++){
             for(int y=ly; y<ly+dy+1; y++){
                 if(x == tilePos.x || x == endpos.x || y == tilePos.y || y == endpos.y){
+                    Tile oldTile = new Tile(map.getTile(x,y));
                     switch(type){
                         case Floor:
                         map.setFloor(x,y,floor);
@@ -56,6 +59,11 @@ public class BoxCommand extends Command {
                             map.setObject(x, y, floor);
                         break;
                     }
+
+                    Tile newTile = new Tile(map.getTile(x, y));
+
+                    TileDelta td = new TileDelta(x,y, oldTile, newTile);
+                    this.deltas.add(td);
                     
                 }
             }

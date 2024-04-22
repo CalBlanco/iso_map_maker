@@ -50,6 +50,8 @@ public class Commander {
     public void redo(){
         Command com = undoStack.pop();
         if(com == null) return;
-        run(com);
+
+        editStack.push(com);
+        com.redo();
     }
 }
