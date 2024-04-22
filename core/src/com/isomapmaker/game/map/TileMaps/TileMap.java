@@ -233,7 +233,7 @@ public void clearTile(int x, int y){
     public String getTileString(int x, int y){
         if(!inBounds(x, y)) return "";
         if(map[x][y] == null) return "";
-        return map[x][y].toString2();
+        return map[x][y].toString();
     }
 
 

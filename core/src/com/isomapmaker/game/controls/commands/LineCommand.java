@@ -29,7 +29,7 @@ public class LineCommand extends Command{
     }
 
     private boolean line(){
-        Vector<Integer[]> l = PaintTools.line(clickPos, endPos);
+        Vector<Integer[]> l = PaintTools.line((int)clickPos.x, (int)clickPos.y, (int)endPos.x, (int)endPos.y);
         
         switch(ModeController.getInstance().getAssetState()){
             case Floor:

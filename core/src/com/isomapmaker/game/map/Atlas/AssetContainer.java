@@ -118,23 +118,7 @@ public class AssetContainer {
     }
 
 
-    /**
-     * Get the Atlas' ID and Asset ID in a tuple (int[2]{atlasId, assetId})
-     * @param name
-     * @param assetName
-     * @return
-     */
-    public int[] getIds(String name, String assetName){
-        try{
-            int atlasId = this.assets.get(name).getId();
-            int assetId = this.assets.get(name).getAssetId(assetName);
-
-            return new int[]{atlasId,  assetId};
-        }
-        catch(Exception e){
-            return null;
-        }
-    }
+    
 
     public void dispose(){
         for(int i=0; i<atlases.size(); i++){

@@ -39,8 +39,7 @@ import com.isomapmaker.game.util.IsoUtil;
 public class AssetPlacer implements InputProcessor {
     private enum State {Line, Box, Circle, Pencil, Bucket};
     final Vector2[] activeOffsets = new Vector2[]{new Vector2(-256,-64), new Vector2(0,0), new Vector2(256,-64)};
-    private static final int[] bucket_row = { -1, 0, 1, 0 };
-    private static final int[] bucket_col = { 0, 1, 0, -1};
+    
  
     OrthographicCamera cam;
     TileMapManager manager;
@@ -334,7 +333,8 @@ public class AssetPlacer implements InputProcessor {
         ht = IsoUtil.worldPosToIsometric(lineTVector20.set(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE, ht); // convert to isometric cordinates 
         Vector2 v = clickPos != null ? lineTVector20.set(1,1).scl(layer).add(clickPos) : lineTVector20.set(1,1).scl(layer).add(ht); // get the click pos
 
-        Vector<Integer[]> linePoints = PaintTools.line(v, lineTVector22.set(1,1).scl(layer).add(ht)); 
+        Vector2 t = lineTVector22.set(1,1).scl(layer).add(ht);
+        Vector<Integer[]> linePoints = PaintTools.line((int)v.x, (int)v.y, (int)t.x, (int)t.y); 
         
         
         for(int i=0; i<linePoints.size(); i++){

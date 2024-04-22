@@ -21,12 +21,8 @@ public class PaintTools {
         l.add(new Integer[]{x,y});
     }
 
-    public static Vector<Integer[]> line(int[] start, int[] end){
-        int x0, y0, x1, y1;
-        x0 = start[0];
-        y0 = start[1];
-        x1 = end[0];
-        y1 = end[1];
+    public static Vector<Integer[]> line(int x0, int y0, int x1, int y1){
+        
 
        //System.out.println("Line from (" + x0 +"," + y0+"), to (" + x1 +"," +y1+")\n");
         Vector<Integer[]> points = new Vector<Integer[]>();
@@ -57,12 +53,7 @@ public class PaintTools {
 
         return points;
     }
-    public static Vector<Integer[]> line(Vector2 start, Vector2 end){
-        return line(new int[]{(int)start.x, (int)start.y}, new int[]{(int)end.x, (int)end.y});
-    }
-    public static Vector<Integer[]> line(int x0, int y0, int x1, int y1){
-        return line(new int[]{x0,y0}, new int[]{x1,y1});
-    }
+    
 
     
     public static Vector<Integer[]> circle(int x0, int y0, int r){

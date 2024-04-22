@@ -35,18 +35,6 @@ public class IsoUtil {
         return seter;
     }
 
-    /**
-     * Convert a 1d point into a 2d point given a width 
-     * @param index
-     * @param width
-     * @return
-     */
-    public static int[] convertTo2DPoint(int index, int width) {
-        int[] point = new int[2];
-        point[0] = index % width; // x-coordinate
-        point[1] = index / width; // y-coordinate
-        return point;
-    }
 
     /**
      * Get the quadrant the mouse is in for placing down a wall correctly
