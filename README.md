@@ -29,13 +29,21 @@ The `AssetPlacer` is responsible for drawing/removing tiles from the actual game
 The `map` directory contains two folders that handle tile rendering on the screen and tile information in the game.
 
 #### Tiles
-These are Graphical components `Floor, Object, Wall` which all implement the `SimpleTile` interface. This just gives a texture region a "game" definition as a Floor, Wall, or Object. It also contains some flags for later use in a game about the tile (i.e water is non-traversable, etc..)
 
-`SimpleTiles` all implement a `getTexture()` function that returns the texture region for the asset for rendering
-`SimpleTiles` all implement a `getName()` function which tells us information about what file / region this asset came from
+Tiles are represented by the `Tile` class. The `Tile` class contains 3 major fields `floor`, `walls`, and `object` which correspond to the active assets that need to be rendered for a tile.
 
-These simple tiles are then collected into a `Tile` 
-The `Tile` class contains a single `Floor` called `floor`, a `Dictionary` called `walls` containing keys `["top", "bottom", "left", "right"]` for wall placements, and a `Vector<Object>` called `objects` for containing objects later.
+`Tile.floor` is of the `Floor` class
+`Tile.walls` is a hashmap of `WallQuadrants` mapped to a `Wall` class (i think this could be simplified into an array of Walls where I just take the ordinal value of the enum to access the slot)
+`Tile.object` is of the  `Obj` class
+
+The `Tile` class contains all the code it needs to correctly render it's assets. As well as provides a couple utility functions to aid in saving, loading, and interacting with the assets in the class.
+
+#### Assets
+
+Assets are the new abstract class that controls the behavior of `Floor`, `Wall`, and `Obj`. The `Asset` class implements the following fields `name`, `fullId`, and `region`. 
+
+`Floor`, `Wall`, and `Obj` extend the `Asset` class. 
+
 
 #### TileMaps
 `TileLoader` is responsible for generating the `SimpleTiles` from assets. It parses an xml file that points to assets and provides asset information located in `assets/assets.xml`. 
