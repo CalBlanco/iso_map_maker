@@ -23,6 +23,9 @@ public class Tile {
      * @param copy
      */
     public Tile(Tile copy){
+
+        if(copy == null) return;
+        
         
         this._walls[WallQuadrant.top.ordinal()] = copy._walls[WallQuadrant.top.ordinal()];
         this._walls[WallQuadrant.bottom.ordinal()] = copy._walls[WallQuadrant.bottom.ordinal()];
@@ -79,12 +82,12 @@ public class Tile {
 
     public String toString(){
         String out ="Floor: ";
-        out += floor == null ? "...\nWalls:\n\tLeft: " : floor.getName() +"("+floor.getFullId()+")" +"\nWalls:\n\tLeft: ";
-        out += _walls[WallQuadrant.left.ordinal()] == null ? "...\n\tRight: " : _walls[WallQuadrant.left.ordinal()].getName() +"("+_walls[WallQuadrant.left.ordinal()].getFullId()+")" +"\n\tRight: "; 
-        out += _walls[WallQuadrant.right.ordinal()] == null ? "...\n\tTop: " : _walls[WallQuadrant.right.ordinal()].getName() +"("+_walls[WallQuadrant.right.ordinal()].getFullId()+")" +"\n\tTop: "; 
-        out += _walls[WallQuadrant.top.ordinal()] == null ? "...\n\tBottom: " : _walls[WallQuadrant.top.ordinal()].getName() +"("+_walls[WallQuadrant.top.ordinal()].getFullId()+")" +"\n\tBottom: "; 
-        out += _walls[WallQuadrant.bottom.ordinal()] == null ? "...\n\t" : _walls[WallQuadrant.bottom.ordinal()].getName() +"("+_walls[WallQuadrant.bottom.ordinal()].getFullId()+")"  +"\nObjects:\n\t"; 
-        out += object == null ? "Object: \n" : "Object: " + object.getName() +"("+object.getFullId()+")" +"\n";
+        out += floor == null ? "..., Walls:\tLeft: " : floor.getName() +"("+floor.getFullId()+")" +", Walls:\tLeft: ";
+        out += _walls[WallQuadrant.left.ordinal()] == null ? "...\tRight: " : _walls[WallQuadrant.left.ordinal()].getName() +"("+_walls[WallQuadrant.left.ordinal()].getFullId()+")" +"\tRight: "; 
+        out += _walls[WallQuadrant.right.ordinal()] == null ? "...\tTop: " : _walls[WallQuadrant.right.ordinal()].getName() +"("+_walls[WallQuadrant.right.ordinal()].getFullId()+")" +"\tTop: "; 
+        out += _walls[WallQuadrant.top.ordinal()] == null ? "...\tBottom: " : _walls[WallQuadrant.top.ordinal()].getName() +"("+_walls[WallQuadrant.top.ordinal()].getFullId()+")" +"\tBottom: "; 
+        out += _walls[WallQuadrant.bottom.ordinal()] == null ? "...\t" : _walls[WallQuadrant.bottom.ordinal()].getName() +"("+_walls[WallQuadrant.bottom.ordinal()].getFullId()+")"  +"Objects:\n\t"; 
+        out += object == null ? "Object:" : "Object: " + object.getName() +"("+object.getFullId()+")";
         return out;
     }
 
@@ -159,6 +162,14 @@ public class Tile {
         this._walls[WallQuadrant.right.ordinal()] =  null;
         this._walls[WallQuadrant.bottom.ordinal()] =  null;
         this.object = null;
+    }
+
+    public boolean equals(Tile tile){
+        if(tile == null) return false;
+
+        if(tile.floor == this.floor && tile._walls[0] == this._walls[0] && tile._walls[1] == this._walls[1] && tile._walls[2] == this._walls[2] && tile._walls[3] == this._walls[3] && tile.object == this.object ) return true;
+
+        return false;
     }
     
 }

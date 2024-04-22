@@ -389,7 +389,7 @@ public class AssetPlacer implements InputProcessor {
         
         Vector<Vector2> bSel = PaintTools.box(v, ht);
 
-        if(v.dst(ht) > 1) System.out.println(v.toString() +"," +  ht.toString());
+       
 
         b.setColor(1f,1f,1f,0.7f);
         tVector = IsoUtil.isometricToWorldPos(v, IsoUtil.FLOOR_SIZE, outVector);

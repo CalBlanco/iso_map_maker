@@ -298,4 +298,27 @@ public void clearTile(int x, int y){
     }
 
 
+    /**
+     * Set an entire tile
+     * @param x
+     * @param y
+     * @param t
+     */
+    public void setTile(int x, int y, Tile t){
+        if(!inBounds(x, y)) return;
+        map[x][y] = t;
+    }
+
+    /**
+     * Get a whole tile
+     * @param x
+     * @param y
+     * @return
+     */
+    public Tile getTile(int x, int y){
+        if(!inBounds(x, y)) return null;
+        return map[x][y];
+    }
+
+
 }
