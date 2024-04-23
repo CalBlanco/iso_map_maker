@@ -21,6 +21,7 @@ public class CommandStack {
             popOldest();
         }
         stack.add(c);
+        System.out.println("Added " + c.deltaSize() + " TileDeltas " );
     }
 
     /**
@@ -28,6 +29,7 @@ public class CommandStack {
      */
     public void popOldest(){
         if(stack.isEmpty()) return;
+        System.out.println("Removed " + stack.get(0).deltaSize() + " TileDeltas ");
         stack.remove(0);
     }
 }

@@ -21,7 +21,7 @@ public class Commander {
     // Private constructor to ensure singleton status
     private Commander(){
         editStack = new CommandStack(10);
-        undoStack = new CommandStack(10);
+        undoStack = new CommandStack(5);
     }
 
 

@@ -69,6 +69,11 @@ public abstract class Command {
     }
 
 
+    public int deltaSize(){
+        return this.deltas.size();
+    }
+
+
     
 
 
