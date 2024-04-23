@@ -205,7 +205,7 @@ public class AssetPlacer implements InputProcessor {
                 Commander.getInstance().run(li);
                 break;
             case Pencil:
-                PencilCommand pen = new PencilCommand(file, quadrant, selection, endclick, screenPos, map);
+                PencilCommand pen = new PencilCommand(file, ModeController.getInstance().getQuadrant(), selection, endclick, screenPos, map);
                 Commander.getInstance().run(pen);
                 break;
             case Bucket:

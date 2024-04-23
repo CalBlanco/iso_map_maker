@@ -143,6 +143,8 @@ public class AtlasView extends Table {
                 this.add(imText).pad(5);
                 
             }
+
+            this.add(new Label("Count: " + names.size(),skin));
         }
 
 

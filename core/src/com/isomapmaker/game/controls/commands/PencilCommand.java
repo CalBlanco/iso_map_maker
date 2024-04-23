@@ -58,7 +58,7 @@ public class PencilCommand extends Command {
                 try{
                     Wall w = (Wall)ModeController.getInstance().getActiveAsset();
                     
-                    map.setWall((int)tilePos.x, (int)tilePos.y, w.getQuadrant(), ModeController.getInstance().getActiveAsset());
+                    map.setWall((int)tilePos.x, (int)tilePos.y, quad, ModeController.getInstance().getActiveAsset());
                     newTile = new Tile(map.getTile((int)tilePos.x, (int)tilePos.y));
                     break;
                 }
