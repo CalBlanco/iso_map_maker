@@ -5,6 +5,10 @@
             <name>Basic Floor</name>
             <path>atlas/Floors/SimpletonFloors.atlas</path>
         </asset>
+        <asset uid="101">
+            <name>Cooler Floor</name>
+            <path>atlas/Floors/Floors2.atlas</path>
+        </asset>
     </Floor>
     <Wall>
         <asset uid="200">
