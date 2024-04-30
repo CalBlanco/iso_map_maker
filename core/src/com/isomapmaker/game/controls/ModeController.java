@@ -17,6 +17,7 @@ public class ModeController {
     private String activeFile; // The active atlas we are pulling from 
     private String activeRegion; // The active atlas region we want 
     private WallQuadrant activeQuad;
+    private int brushSize = 4;
 
     private boolean isSavingLoading = false;
 
@@ -37,6 +38,7 @@ public class ModeController {
         activeFile = TileAtlas.getInstance().getAssetsByType(assetMode).keys().get(0);
         activeRegion = TileAtlas.getInstance().getAssetsByType(assetMode).getRegionNames(activeFile).get(0);
         activeQuad = WallQuadrant.bottom;
+        brushSize = 2;
     }
 
     /**
@@ -161,6 +163,12 @@ public class ModeController {
         setQuadrant(WallQuadrant.values()[next]);
     }
 
+    public void decrementQuadrant(){
+        int quadIndex = activeQuad.ordinal();
+        int next = quadIndex - 1 < 0 ? 4 : quadIndex -1;
+        setQuadrant(WallQuadrant.values()[next]);
+    }
+
     /**
      * Set our save state (are we or aren't we saving)
      * @param state
@@ -172,7 +180,21 @@ public class ModeController {
     public boolean getSavingLoading(){ return isSavingLoading;}
 
 
+    public void setBrushSize(int size){
+        if(size < 1 || size > 256) return;
+        brushSize = size;
+    }
 
+    public void incrementBrushSize(int increment){
+        if(brushSize + increment > 1 || brushSize + increment < 256){
+            brushSize = brushSize + increment;
+            System.out.println("Setting brush to size: " + brushSize);
+        }
+    }
+
+    public int getBrushSize(){
+        return brushSize;
+    }
 
 
 }
