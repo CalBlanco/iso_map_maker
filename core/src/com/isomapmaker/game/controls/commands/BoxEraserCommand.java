@@ -12,8 +12,6 @@ public class BoxEraserCommand extends Command {
         super(map);
         this.start = start;
         this.end = end;
-
-        //TODO Auto-generated constructor stub
     }
 
     private void BoxErase(){

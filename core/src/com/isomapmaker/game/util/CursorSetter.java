@@ -1,9 +1,7 @@
 package com.isomapmaker.game.util;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Vector;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Cursor;

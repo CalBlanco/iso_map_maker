@@ -1,16 +1,8 @@
 package com.isomapmaker.game.map.Atlas;
 
 import java.util.HashMap;
-import java.util.Vector;
-
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.isomapmaker.game.map.Assets.Asset;
-import com.isomapmaker.game.map.Assets.AssetFactory;
-import com.isomapmaker.game.map.Assets.Floor;
-import com.isomapmaker.game.map.Assets.Obj;
-import com.isomapmaker.game.map.Assets.Wall;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
-import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.util.XmlParse;
 
 /**

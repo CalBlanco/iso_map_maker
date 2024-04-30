@@ -31,7 +31,6 @@ public class MouseInfoView extends Table {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // TODO Auto-generated method stub
         super.draw(batch, parentAlpha);
         elapsed += Gdx.graphics.getDeltaTime();
 

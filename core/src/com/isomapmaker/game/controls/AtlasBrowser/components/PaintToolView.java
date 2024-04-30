@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -158,7 +157,6 @@ public class PaintToolView extends Table {
             imText.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    // TODO Auto-generated method stub
                     ModeController.getInstance().setState(PaintModes.valueOf(imageName.substring(0,1).toUpperCase() + imageName.substring((1))));     
                 }
             });
@@ -184,7 +182,6 @@ public class PaintToolView extends Table {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // TODO Auto-generated method stub
         super.draw(batch, parentAlpha);
 
         updateState();

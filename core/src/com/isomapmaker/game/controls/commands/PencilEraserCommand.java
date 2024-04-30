@@ -21,7 +21,6 @@ public class PencilEraserCommand extends Command {
         this.mode = ModeController.getInstance().getAssetState();
         this.tilePos = tilePos;
         this.quad = quad;
-        //TODO Auto-generated constructor stub
     }
 
     @Override

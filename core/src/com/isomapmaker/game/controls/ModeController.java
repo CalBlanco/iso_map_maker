@@ -1,7 +1,6 @@
 package com.isomapmaker.game.controls;
 
 import com.isomapmaker.game.map.Assets.Asset;
-import com.isomapmaker.game.map.Assets.Tile;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;

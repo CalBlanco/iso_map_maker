@@ -2,18 +2,12 @@ package com.isomapmaker.game;
 
 import java.util.Collections;
 import java.util.Vector;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
-
 import com.isomapmaker.game.controls.AssetPlacer;
 import com.isomapmaker.game.controls.CamController;
 import com.isomapmaker.game.controls.ModeController;
@@ -21,14 +15,9 @@ import com.isomapmaker.game.controls.AtlasBrowser.AtlasBrowser;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
-
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.util.CursorSetter;
-import com.isomapmaker.game.util.IsoUtil;
-import com.isomapmaker.game.util.MapSaver;
-import com.isomapmaker.game.util.XmlParse;
-
 
 
 /**

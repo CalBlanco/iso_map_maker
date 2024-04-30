@@ -2,15 +2,11 @@ package com.isomapmaker.game.controls.commands;
 
 import com.badlogic.gdx.math.Vector2;
 import com.isomapmaker.game.controls.ModeController;
-
-import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.Assets.Tile;
 import com.isomapmaker.game.map.Assets.TileDelta;
-import com.isomapmaker.game.map.Assets.Wall;
 import com.isomapmaker.game.map.TileMaps.TileMap;
-import com.isomapmaker.game.util.IsoUtil;
 
 public class PencilCommand extends Command {
     
@@ -38,7 +34,6 @@ public class PencilCommand extends Command {
         this.selection = selection;
         this.tilePos = tilePos;
         this.screenPos = screenPos;
-        //TODO Auto-generated constructor stub
     }
 
     private boolean pencil(){
@@ -56,7 +51,6 @@ public class PencilCommand extends Command {
                 catch(Exception e){return false;}
             case Wall:
                 try{
-                    Wall w = (Wall)ModeController.getInstance().getActiveAsset();
                     
                     map.setWall((int)tilePos.x, (int)tilePos.y, quad, ModeController.getInstance().getActiveAsset());
                     newTile = new Tile(map.getTile((int)tilePos.x, (int)tilePos.y));

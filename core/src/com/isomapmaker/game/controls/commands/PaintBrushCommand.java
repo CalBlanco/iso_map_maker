@@ -3,7 +3,6 @@ package com.isomapmaker.game.controls.commands;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
-
 import com.badlogic.gdx.math.Vector2;
 import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.controls.PaintTools;
@@ -11,7 +10,6 @@ import com.isomapmaker.game.map.Assets.Tile;
 import com.isomapmaker.game.map.Assets.TileDelta;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.TileMaps.TileMap;
-import com.isomapmaker.game.util.IsoUtil;
 
 public class PaintBrushCommand extends Command {
     Set<String> points;
@@ -19,7 +17,6 @@ public class PaintBrushCommand extends Command {
     TileType mode;
     public PaintBrushCommand(TileMap map, Set<String> points) {
         super(map);
-        //TODO Auto-generated constructor stub
         this.points = points;
         this.radius = ModeController.getInstance().getBrushSize();
         mode = ModeController.getInstance().getAssetState();

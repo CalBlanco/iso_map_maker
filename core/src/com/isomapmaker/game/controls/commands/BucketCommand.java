@@ -3,7 +3,6 @@ package com.isomapmaker.game.controls.commands;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
-
 import com.isomapmaker.game.controls.ModeController;
 import com.isomapmaker.game.map.Assets.Asset;
 import com.isomapmaker.game.map.Assets.Floor;

@@ -4,9 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.isomapmaker.game.util.IsoUtil;
@@ -23,7 +21,6 @@ import com.isomapmaker.game.util.IsoUtil;
 public class CamController implements InputProcessor {
     final private static float MIN_ZOOM = .25f;
     final private static float MAX_ZOOM = 32.0f;
-    final private static Vector2 HOVER_OFFSET = new Vector2(-32f,-16f);
     final private static Vector2 FLOOR_SIZE = new Vector2(128,64);
     private OrthographicCamera camera;
 
@@ -34,8 +31,6 @@ public class CamController implements InputProcessor {
     public Vector2 hoverWorldPos;
     public Vector2 hoverTile;
 
-
-    private Vector2 loadVector;
   
 
 
@@ -54,7 +49,6 @@ public class CamController implements InputProcessor {
         this.finalPanSpeed = panSpeed;
         this.panMult = panMult;
         this.camera = camera;
-        this.loadVector = new Vector2();
         this.hoverWorldPos = new Vector2();
         this.hoverTile = new Vector2();
 

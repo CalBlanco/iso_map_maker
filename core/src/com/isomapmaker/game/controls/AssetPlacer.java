@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -27,20 +25,17 @@ import com.isomapmaker.game.controls.commands.LineCommand;
 import com.isomapmaker.game.controls.commands.PaintBrushCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
-import com.isomapmaker.game.map.Atlas.TileAtlas;
 import com.isomapmaker.game.map.Atlas.enums.TileType;
 import com.isomapmaker.game.map.Atlas.enums.WallQuadrant;
 import com.isomapmaker.game.map.TileMaps.TileMap;
 import com.isomapmaker.game.map.TileMaps.TileMapManager;
 import com.isomapmaker.game.util.MapSaver;
-import com.isomapmaker.game.util.CursorSetter;
 import com.isomapmaker.game.util.IsoUtil;
 
 /**
  * Class that places assets down on the TileMap's specifically it interacts with the TileMapManager to get the active layer's TileMap and then interacts with that map
  */
 public class AssetPlacer implements InputProcessor {
-    private enum State {Line, Box, Circle, Pencil, Bucket};
     final Vector2[] activeOffsets = new Vector2[]{new Vector2(-256,-64), new Vector2(0,0), new Vector2(256,-64)};
     
  
@@ -112,7 +107,6 @@ $$ | \$$\\$$$$$$$\ \$$$$$$$ |      $$ |      $$ |      \$$$$$$$\ $$$$$$$  |$$$$$
     @Override
     public boolean keyDown(int keycode) {
         resetFocus();
-        // TODO Auto-generated method stub
         if(controlModifier){
             switch(keycode){
                 case Input.Keys.C: // full tile clear 
@@ -195,7 +189,6 @@ $$ | \$$\\$$$$$$$\ \$$$$$$$ |      $$ |      $$ |      \$$$$$$$\ $$$$$$$  |$$$$$
 
     @Override
     public boolean keyUp(int keycode) {
-        // TODO Auto-generated method stub
         if(keycode == Input.Keys.CONTROL_LEFT){
             controlModifier = false;
             return true;
@@ -561,26 +554,22 @@ $$ | \$$\\$$$$$$$\ \$$$$$$$ |      $$ |      $$ |      \$$$$$$$\ $$$$$$$  |$$$$$
     
     @Override
     public boolean keyTyped(char character) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
-        // TODO Auto-generated method stub
         return false;
         
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        // TODO Auto-generated method stub
         return false;
         
     }

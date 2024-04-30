@@ -19,7 +19,6 @@ public class Obj extends Asset {
     public Obj(String name, TileType type, TextureRegion region, String id,boolean isSolid) {
         super(name, type, region, id);
         this.isSolid = isSolid;
-        //TODO Auto-generated constructor stub
     }
     
     public boolean isSolid(){return isSolid;}

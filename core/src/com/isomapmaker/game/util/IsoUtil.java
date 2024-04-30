@@ -14,7 +14,7 @@ public class IsoUtil {
      * @param size the size of the tile (should normally 128x64)
      * @return A Vector2 containing the world cordinates
      */
-    private static Vector2 outVector = new Vector2();
+    
     public static Vector2 isometricToWorldPos(Vector2 isoPos, Vector2 size, Vector2 seter) {
         float x = (isoPos.x - isoPos.y) * (FLOOR_SIZE.x / 2f);
         float y = (isoPos.x + isoPos.y) * (FLOOR_SIZE.y / 2f);
