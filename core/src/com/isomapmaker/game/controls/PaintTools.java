@@ -70,10 +70,10 @@ public class PaintTools {
         ym = (int) start.y;
 
         do {
-            savePoint(xm-x, ym+y, points); // +x,+y
-            savePoint(xm-y, ym-x, points); // -x,+y
-            savePoint(xm+x, ym-y, points); // -x,-y
-            savePoint(xm+y, ym+x, points); // +x, -y
+            savePoint(xm-x, ym+y, points); // +x,+y // 0
+            savePoint(xm-y, ym-x, points); // -x,+y // 1
+            savePoint(xm+x, ym-y, points); // -x,-y // 2
+            savePoint(xm+y, ym+x, points); // +x, -y // 3
         
             radius = err;
             if (radius <= y) err += ++y*2+1;

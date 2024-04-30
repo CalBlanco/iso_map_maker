@@ -8,5 +8,6 @@ public enum PaintModes {
     Box,
     Circle,
     Pencil,
-    Bucket
+    Bucket,
+    Brush
 }

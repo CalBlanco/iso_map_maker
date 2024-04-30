@@ -1,6 +1,8 @@
 package com.isomapmaker.game.controls;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
@@ -22,6 +24,7 @@ import com.isomapmaker.game.controls.commands.Command;
 import com.isomapmaker.game.controls.commands.Commander;
 import com.isomapmaker.game.controls.commands.FullEraser;
 import com.isomapmaker.game.controls.commands.LineCommand;
+import com.isomapmaker.game.controls.commands.PaintBrushCommand;
 import com.isomapmaker.game.controls.commands.PencilCommand;
 import com.isomapmaker.game.controls.commands.PencilEraserCommand;
 import com.isomapmaker.game.map.Atlas.TileAtlas;
@@ -92,7 +95,19 @@ public class AssetPlacer implements InputProcessor {
    
 
     // Only going to be useful in pencil mode for now needs to be expanded to brushes and selections
-    
+    /*
+$$\   $$\                          $$$$$$$\                                          
+$$ | $$  |                         $$  __$$\                                         
+$$ |$$  / $$$$$$\  $$\   $$\       $$ |  $$ | $$$$$$\   $$$$$$\   $$$$$$$\  $$$$$$$\ 
+$$$$$  / $$  __$$\ $$ |  $$ |      $$$$$$$  |$$  __$$\ $$  __$$\ $$  _____|$$  _____|
+$$  $$<  $$$$$$$$ |$$ |  $$ |      $$  ____/ $$ |  \__|$$$$$$$$ |\$$$$$$\  \$$$$$$\  
+$$ |\$$\ $$   ____|$$ |  $$ |      $$ |      $$ |      $$   ____| \____$$\  \____$$\ 
+$$ | \$$\\$$$$$$$\ \$$$$$$$ |      $$ |      $$ |      \$$$$$$$\ $$$$$$$  |$$$$$$$  |
+\__|  \__|\_______| \____$$ |      \__|      \__|       \_______|\_______/ \_______/ 
+                   $$\   $$ |                                                        
+                   \$$$$$$  |                                                        
+                    \______/                                                         
+     */
 
     @Override
     public boolean keyDown(int keycode) {
@@ -104,10 +119,22 @@ public class AssetPlacer implements InputProcessor {
                     FullEraser eraser = new FullEraser(tilePos, map);
                     Commander.getInstance().run(eraser);
                 break;
+                case Input.Keys.Q:
+                    
+                    ModeController.getInstance().incrementBrushSize(-2);
+                break;
+                case Input.Keys.R:
+                    
+                    ModeController.getInstance().incrementBrushSize(2);
+                break;
+
             }
         }
         else{
             switch(keycode){
+                case Input.Keys.CONTROL_LEFT:
+                    controlModifier = true;
+                    break;
                 case Input.Keys.C: // Eraser tool 
                     PencilEraserCommand peraser = new PencilEraserCommand(tilePos, ModeController.getInstance().getQuadrant(), map);
                     Commander.getInstance().run(peraser);
@@ -127,6 +154,9 @@ public class AssetPlacer implements InputProcessor {
                     return true;                
                 case Input.Keys.P: // Change edit mode to pencil 
                     setState(PaintModes.Pencil);
+                    return true;
+                case Input.Keys.I:
+                    setState(PaintModes.Brush);
                     return true;
                 case Input.Keys.O: // Change edit mode to cirlce 
                     setState(PaintModes.Circle);
@@ -152,22 +182,48 @@ public class AssetPlacer implements InputProcessor {
                 case Input.Keys.R: // Change Rotation 
                     ModeController.getInstance().incrementQuadrant();
                     break;
-                case Input.Keys.CONTROL_LEFT:
-                    controlModifier = true;
+                case Input.Keys.Q:
+                    ModeController.getInstance().decrementQuadrant();
                     break;
+                
                 
             }
         }
         return false;
       }
 
-   
 
+    @Override
+    public boolean keyUp(int keycode) {
+        // TODO Auto-generated method stub
+        if(keycode == Input.Keys.CONTROL_LEFT){
+            controlModifier = false;
+            return true;
+        }
+        return false;
+    }
+
+   
+    /*
+ __       __                                        
+|  \     /  \                                        
+| $$\   /  $$  ______   __    __   _______   ______  
+| $$$\ /  $$$ /      \ |  \  |  \ /       \ /      \ 
+| $$$$\  $$$$|  $$$$$$\| $$  | $$|  $$$$$$$|  $$$$$$\
+| $$\$$ $$ $$| $$  | $$| $$  | $$ \$$    \ | $$    $$
+| $$ \$$$| $$| $$__/ $$| $$__/ $$ _\$$$$$$\| $$$$$$$$
+| $$  \$ | $$ \$$    $$ \$$    $$|       $$ \$$     \
+ \$$      \$$  \$$$$$$   \$$$$$$  \$$$$$$$   \$$$$$$$
+     */
+
+    boolean mouseHeldDown = false;
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         resetFocus();
         clickPos = tilePos;
+
         
+        mouseHeldDown = true;
         
         return false;
         }
@@ -212,19 +268,28 @@ public class AssetPlacer implements InputProcessor {
                 BucketCommand buk = new BucketCommand((int)endclick.x, (int)endclick.y, ModeController.getInstance().getActiveAsset(), map);
                 Commander.getInstance().run(buk);
                 break;
+            case Brush:
+                PaintBrushCommand brush = new PaintBrushCommand(map, brushSelection);
+                Commander.getInstance().run(brush);
+                break;
             default:
+                mouseHeldDown = false;
                 return false;
         }
         clickPos = null;
+        mouseHeldDown = false; // reset mouse hold 
+
+        brushSelection.clear(); // clear the paintbrush
+
         return true;
-    
-        // TODO Auto-generated method stub
       }
 
     
     Vector3 camTVector = new Vector3();
     Vector2 tileMathTVector = new Vector2();
+    Set<String> brushSelection = new HashSet<String>();
     
+
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         
@@ -233,10 +298,13 @@ public class AssetPlacer implements InputProcessor {
         screenPos.set(wpos.x-IsoUtil.FLOOR_SIZE.x/4f, wpos.y-IsoUtil.FLOOR_SIZE.y/4f);
         tilePos = IsoUtil.worldPosToIsometric(tileMathTVector.set(wpos.x-IsoUtil.FLOOR_SIZE.x/2f,wpos.y-IsoUtil.FLOOR_SIZE.y/8), IsoUtil.FLOOR_SIZE, tilePos);
         //quadrant = IsoUtil.getTileQuadrant(tilePos, new Vector2(screenPos.x, screenPos.y));
+
         
         
         return true;
     }
+
+
 
     /*
 ██╗   ██╗   ██╗
@@ -283,6 +351,9 @@ public class AssetPlacer implements InputProcessor {
                 break;
             case Bucket:
                 pencilTileRender(b);
+                break;
+            case Brush:
+                brushRender(b);
                 break;
             default:
                 break;
@@ -401,6 +472,63 @@ public class AssetPlacer implements InputProcessor {
         b.setColor(1,1,1,1);
     }
 
+
+    // Holy fuck this is gnarly lmaoooooo 
+    /**Render paint brush selections */
+    Vector2 brushVector = new Vector2(0,0);
+    String[] brushPointSplit = new String[2];
+    Vector2 brushDrawVector1 = new Vector2(0,0);
+    Vector2 brushDrawVector2 = new Vector2(0,0);
+    Vector2 brushDrawVector3 = new Vector2(0,0);
+    Vector2 brushDrawVector4 = new Vector2(0,0);
+    private void brushRender(SpriteBatch b){
+        // Paint Brush specific (save points we have visited)
+        Vector3 hpos = cam.unproject(lineTVector30.set(Gdx.input.getX(), Gdx.input.getY(), 0)); // unproject mouse position from screen to world
+        ht = IsoUtil.worldPosToIsometric(lineTVector20.set(hpos.x,hpos.y), IsoUtil.FLOOR_SIZE, ht); // convert to isometric cordinates 
+
+        String pointString = ht.x +"x" + ht.y;
+        if(ModeController.getInstance().getState() == PaintModes.Brush && !brushSelection.contains(pointString) && mouseHeldDown){
+            brushSelection.add(pointString);
+            System.out.println("Added: " + pointString);
+        }
+
+        if(brushSelection.size() < 0) return;
+
+        b.setColor(1f,1f,1f,0.7f);
+        for(String s: brushSelection){
+            brushPointSplit = s.split("x",2);
+            brushVector.set(Float.parseFloat(brushPointSplit[0]), Float.parseFloat(brushPointSplit[1]));
+
+            //generate circle at point based on brush size
+            Vector<Integer[]> circlePoints = PaintTools.circle(brushVector, ModeController.getInstance().getBrushSize());
+            int uniquePoints = circlePoints.size() / 4; // get unique number of points 
+            for(int i=0; i< uniquePoints; i++){
+                
+                // want a line from points [(0+4*i)] to 1+4*i and 2+4*i to 3+4*i to fill circle
+                int p1 = 0+4*i;
+                int p2 = 1+4*i;
+                int p3 = 2+4*i;
+                int p4 = 3+4*i;
+                Vector<Integer[]> topLine = PaintTools.line(circlePoints.get(p1)[0], circlePoints.get(p1)[1], circlePoints.get(p2)[0], circlePoints.get(p2)[1]);
+                Vector<Integer[]> bottomLine = PaintTools.line(circlePoints.get(p3)[0], circlePoints.get(p3)[1], circlePoints.get(p4)[0], circlePoints.get(p4)[1]);
+
+                for(int linePoint = 0; linePoint < topLine.size(); linePoint++){
+                    brushDrawVector3.set(topLine.get(linePoint)[0],topLine.get(linePoint)[1]); // set the isometric cordinates into temp vectors
+                    brushDrawVector4.set(bottomLine.get(linePoint)[0],bottomLine.get(linePoint)[1]);
+                    
+                    // get the world pos
+                    IsoUtil.isometricToWorldPos(brushDrawVector3, IsoUtil.FLOOR_SIZE, brushDrawVector1); 
+                    IsoUtil.isometricToWorldPos(brushDrawVector4, IsoUtil.FLOOR_SIZE, brushDrawVector2); 
+                    b.draw(ModeController.getInstance().getActiveAsset().getRegion(), brushDrawVector1.x, brushDrawVector1.y);
+                    b.draw(ModeController.getInstance().getActiveAsset().getRegion(), brushDrawVector2.x, brushDrawVector2.y);
+                }
+            }
+
+        }
+
+        b.setColor(1,1,1,1);
+    }
+
 /*
 ██╗   ██╗████████╗██╗██╗     
 ██║   ██║╚══██╔══╝██║██║     
@@ -430,16 +558,7 @@ public class AssetPlacer implements InputProcessor {
 ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝     
         Unimplemented interface methods                       
  */
-    @Override
-    public boolean keyUp(int keycode) {
-        // TODO Auto-generated method stub
-        if(keycode == Input.Keys.CONTROL_LEFT){
-            controlModifier = false;
-            return true;
-        }
-        return false;
-    }
-
+    
     @Override
     public boolean keyTyped(char character) {
         // TODO Auto-generated method stub

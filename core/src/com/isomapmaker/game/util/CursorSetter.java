@@ -34,7 +34,7 @@ public class CursorSetter {
         return CursorSetter.instance;
     }
 
-    Pixmap Pencil, Circle, Box, Bucket, Line;
+    Pixmap Pencil, Circle, Box, Bucket, Line, Brush;
     private CursorSetter(){
         modeFileMap = new HashMap<PaintModes, FileHandle>();
         modeFileMap.put(PaintModes.Pencil, Gdx.files.internal("pencil.png"));
@@ -42,6 +42,7 @@ public class CursorSetter {
         modeFileMap.put(PaintModes.Line, Gdx.files.internal("line.png"));
         modeFileMap.put(PaintModes.Box, Gdx.files.internal("box.png"));
         modeFileMap.put(PaintModes.Bucket, Gdx.files.internal("bucket.png"));
+        modeFileMap.put(PaintModes.Brush, Gdx.files.internal("cursor.png"));
         
         cursors = new Cursor[6];
 
@@ -49,13 +50,15 @@ public class CursorSetter {
         Circle = new Pixmap(modeFileMap.get(PaintModes.Circle));
         Box = new Pixmap(modeFileMap.get(PaintModes.Box));
         Bucket = new Pixmap(modeFileMap.get(PaintModes.Bucket));
-        Line = new Pixmap(modeFileMap.get(PaintModes.Pencil));
+        Line = new Pixmap(modeFileMap.get(PaintModes.Line));
+        Brush = new Pixmap(modeFileMap.get(PaintModes.Brush));
 
         cursors[PaintModes.Pencil.ordinal()] = Gdx.graphics.newCursor(Pencil,15,15);
         cursors[PaintModes.Circle.ordinal()] = Gdx.graphics.newCursor(Circle,15,15);
         cursors[PaintModes.Line.ordinal()] = Gdx.graphics.newCursor(Line, 15,15);
         cursors[PaintModes.Box.ordinal()] = Gdx.graphics.newCursor(Box, 15,15);
         cursors[PaintModes.Bucket.ordinal()] = Gdx.graphics.newCursor(Bucket, 15,15);
+        cursors[PaintModes.Brush.ordinal()] = Gdx.graphics.newCursor(Brush, 15,15);
         
     }
 
