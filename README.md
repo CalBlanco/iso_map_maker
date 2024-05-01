@@ -58,11 +58,15 @@ Assets are the new abstract class that controls the behavior of `Floor`, `Wall`,
 
 **Current** 
 
-Updated Paint Ui with Accurate Selection Highlighting
+Paint Brush tool now working, Memory takes a bit of a hit doing the render but resets to scale with map size after placement.
+
+https://github.com/Jimdangle/iso_map_maker/assets/72684566/fb65aa66-d1e2-4352-88c6-83d6e6515d4b
 
 
+Made fixes to improve memory footprint
 
-https://github.com/Jimdangle/iso_map_maker/assets/72684566/9a072044-7c81-49d2-a097-f80432a98bf1
+https://github.com/Jimdangle/iso_map_maker/assets/72684566/2f5c9e54-956e-4993-a1bf-f6cde4405c91
+
 
 
 
@@ -101,6 +105,10 @@ Command Pattern and Commander (Singleton pattern controlling command stack) impl
 
 https://github.com/Jimdangle/iso_map_maker/assets/72684566/13ee0a6e-f2e7-4677-bd50-f04d2597ae19
 
+
+Updated Paint Ui with Accurate Selection Highlighting
+
+https://github.com/Jimdangle/iso_map_maker/assets/72684566/9a072044-7c81-49d2-a097-f80432a98bf1
 
 
 
