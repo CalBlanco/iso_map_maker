@@ -63,6 +63,7 @@ public class IsoMapMaker extends Game {
 
 		tileMapManager = TileMapManager.getInstance(); // Manages tilemaps for multiple layers 
 
+		TileMapManager.getInstance().setOrthoCamera(cam);
 		
 		batch = new SpriteBatch(); // Create the sprite batches
 		hudBatch = new SpriteBatch();

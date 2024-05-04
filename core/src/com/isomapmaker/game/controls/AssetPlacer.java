@@ -298,23 +298,6 @@ $$ | \$$\\$$$$$$$\ \$$$$$$$ |      $$ |      $$ |      \$$$$$$$\ $$$$$$$  |$$$$$
     }
 
 
-
-    /*
-██╗   ██╗   ██╗
-██║   ██║   ██║
-██║   ██║   ██║
-██║   ██║   ██║
-╚██████╔╝██╗██║
- ╚═════╝ ╚═╝╚═╝               
-     */
-    
-    
-    
-
-    
-
-
-    
     /*
 ███████╗████████╗ █████╗ ████████╗███████╗    ██████╗ ███████╗███╗   ██╗██████╗ ███████╗██████╗ 
 ██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██╔════╝    ██╔══██╗██╔════╝████╗  ██║██╔══██╗██╔════╝██╔══██╗
@@ -482,7 +465,7 @@ $$ | \$$\\$$$$$$$\ \$$$$$$$ |      $$ |      $$ |      \$$$$$$$\ $$$$$$$  |$$$$$
         String pointString = ht.x +"x" + ht.y;
         if(ModeController.getInstance().getState() == PaintModes.Brush && !brushSelection.contains(pointString) && mouseHeldDown){
             brushSelection.add(pointString);
-            System.out.println("Added: " + pointString);
+            //System.out.println("Added: " + pointString);
         }
 
         if(brushSelection.size() < 0) return;

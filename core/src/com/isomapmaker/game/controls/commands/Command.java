@@ -47,7 +47,7 @@ public abstract class Command {
      */
     public void undo(){
         //if(state != null) this.map.setMapState(state);
-        System.out.println("Size of deltas: " + deltas.size());
+        //System.out.println("Size of deltas: " + deltas.size());
         for(int i=0; i<deltas.size(); i++){
             deltas.get(i).undoDelta(map);
         }
@@ -58,7 +58,7 @@ public abstract class Command {
      * Redo Operation by re-applying the delta
      */
     public void redo(){
-        System.out.println("Size of deltas: " + deltas.size());
+       // System.out.println("Size of deltas: " + deltas.size());
         for(int i=0; i<deltas.size(); i++){
             deltas.get(i).applyDelta(map);
         }

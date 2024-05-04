@@ -2,8 +2,15 @@ package com.isomapmaker.game.map.TileMaps;
 
 import java.util.Vector;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.isomapmaker.game.controls.ModeController;
+import com.isomapmaker.game.map.Atlas.TileAtlas;
+import com.isomapmaker.game.map.Atlas.enums.TileType;
+import com.isomapmaker.game.util.IsoUtil;
 
 /**
  * Manage layers of TileMaps (Singleton pattern)
@@ -12,6 +19,7 @@ public class TileMapManager {
     Vector<TileMap> layers;
     private int size = 400; 
     private static TileMapManager instance;
+    private OrthographicCamera cam;
     
 
 
@@ -48,10 +56,15 @@ public class TileMapManager {
 
     }
 
-   
-    // render
+    
+    /**
+     * Render based on render region (Not working as expected)
+     * @param b
+     */
     public void render(SpriteBatch b){
+        //getRenderRegion(); // recalc the render region 
         for(int i = 0; i<layers.size(); i++){ // render higher layers first? probably not actually lmao
+            //layers.get(i).render(b, (int)v[0].x, (int)v[1].x, (int)v[0].y, (int)v[1].y);
             layers.get(i).render(b);
         }
     }
@@ -114,6 +127,99 @@ public class TileMapManager {
             System.out.println( e.toString());
         }
     }
+
+    /**
+     * Set the orthographic camera to ensure we only render what we need to
+     * @param cam
+     */
+    public void setOrthoCamera(OrthographicCamera cam){
+        this.cam = cam;
+    }
+
+
+   
+     //Vars for setting the render region
+    // Corner vectors
+    Vector2 tlCorner = new Vector2();
+    Vector2 trCorner = new Vector2();
+    Vector2 blCorner = new Vector2();
+    Vector2 brCorner = new Vector2();
+    // temp math vectors
+    Vector3 unprojection = new Vector3();
+    Vector3 tVector0 = new Vector3();
+    Vector2 tVector2_0 = new Vector2();
+
+    //output arr
+    Vector2[] v = new Vector2[]{new Vector2(), new Vector2()};
+    
+     /**
+     * Calculate the active region we should be drawing
+     * 
+     *  Get corners,
+     *  Unproject
+     *  Convert to iso tiles
+     *  Figure out render square
+     *      
+     * @return
+     */
+    private void getRenderRegion(){
+        if (this.cam == null) return;
+
+        //TL corner
+        tVector0.set(0, 0, 0); // get the corner cords 
+        unprojection = cam.unproject(tVector0); // unproject it 
+        tVector2_0.set(unprojection.x, unprojection.y); // store the 2d vector results of unprojection 
+        IsoUtil.worldPosToIsometric(tVector2_0, IsoUtil.FLOOR_SIZE, tlCorner); // convert to game cordinates
+
+        //TR corner
+        tVector0.set(Gdx.graphics.getWidth(), 0, 0);
+        unprojection = cam.unproject(tVector0);
+        tVector2_0.set(unprojection.x, unprojection.y);
+        IsoUtil.worldPosToIsometric(tVector2_0, IsoUtil.FLOOR_SIZE, trCorner);
+
+        // For some reason this is grabbing a little bit too far to the right 
+        // BL corner
+        tVector0.set(0, Gdx.graphics.getHeight(), 0);
+        unprojection = cam.unproject(tVector0);
+        tVector2_0.set(unprojection.x, unprojection.y);
+        IsoUtil.worldPosToIsometric(tVector2_0, IsoUtil.FLOOR_SIZE, blCorner);
+        
+
+        //BR corner
+        tVector0.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 0);
+        unprojection = cam.unproject(tVector0);
+        tVector2_0.set(unprojection.x, unprojection.y);
+        IsoUtil.worldPosToIsometric(tVector2_0, IsoUtil.FLOOR_SIZE, blCorner);
+
+        //bound the vectors
+        fixBounds(tlCorner);
+        fixBounds(trCorner);
+        fixBounds(blCorner);
+        fixBounds(brCorner);
+
+        
+
+        v[0].set(blCorner.x, trCorner.x); // X Range 
+        v[1].set(blCorner.y, tlCorner.y); // Y Range
+        
+
+       //System.out.println("Corners:\n\ttl: " + tlCorner.toString() +"\ttr: " + trCorner.toString()+"\n\tbl: " + blCorner.toString() +"\tbr: " + brCorner.toString()+"\n\tBounds\n\t\tX: " + v[0].toString()+"\n\t\tY: " + v[1].toString());
+
+    }
+
+    /**
+     * Ensure the tiles we return are in bounds for the render
+     * @param vec
+     */
+    private void fixBounds(Vector2 vec){
+        if(vec.x < 0) vec.x = 0;
+        if(vec.x > size-1) vec.x = size-1;
+        if(vec.y < 0) vec.y = 0;
+        if(vec.y > size-1) vec.y = size-1;
+        
+
+    }
+
 
 
 }
