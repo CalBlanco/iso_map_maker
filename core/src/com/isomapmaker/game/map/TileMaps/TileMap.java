@@ -50,17 +50,30 @@ public class TileMap {
 
 
     
-
+    /**
+     * return our map 
+     * @return
+     */
     public Tile[][] getMapState(){return this.map;}
+    
+    /**
+     * Deep copy a map
+     * @param state
+     */
     public void setMapState(Tile[][] state){
         this.map = MapCopy.deepCopy(state);
     }
-    public int getSize(){return size;}
+
     /**
-     * Render this map based on its offset
+     * return this map's size
+     * @return
+     */
+    public int getSize(){return size;}
+
+    /**
+     * Render all map
      * @param b
      */
-
     private Vector2 renderTVector = new Vector2();
     private Vector2 outVector = new Vector2();
     public void render(SpriteBatch b){
@@ -77,6 +90,31 @@ public class TileMap {
         }
 
     }
+
+    /**
+     * Bounded render to reduce draws 
+     * @param b
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    public void render(SpriteBatch b, int x1, int y1, int x2, int y2){
+        b.setColor(1f,1f,1f,1f);
+        // iterate back to front
+        
+        for(int i=x2; i>=x1; i--){
+            for(int j=y2; j>=y1; j--){
+                // get world cordinates incorperating layer offset
+                Vector2 wpos = IsoUtil.isometricToWorldPos(renderTVector.set(i,j).add(tileOffset.x, tileOffset.y), IsoUtil.FLOOR_SIZE, outVector);
+                // render floor
+                if(map[i][j] != null) map[i][j].render(b, wpos);
+                
+            }
+        }
+
+    }
+
 
 /*
 ███████╗██╗      ██████╗  ██████╗ ██████╗ ███████╗
@@ -180,7 +218,11 @@ public void setObject(int x, int y, Asset o){
 }
 
 
-
+/**
+ * Completley clear all assets from a tile by calling its clear function 
+ * @param x
+ * @param y
+ */
 public void clearTile(int x, int y){
     if(!hasTile(x, y)) return;
     map[x][y].clearTile();
